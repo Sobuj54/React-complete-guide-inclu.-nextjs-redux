@@ -6,8 +6,11 @@ import { fetchEvents } from "../../util/http.js";
 
 export default function NewEventsSection() {
   const { data, isPending, isError, error } = useQuery({
-    queryKey: [],
-    queryFn: fetchEvents,
+    queryKey: ["events", { max: 3 }],
+    queryFn: ({ signal, queryKey }) => fetchEvents({ signal, ...queryKey[1] }),
+    staleTime: 5 * 1000,
+    // garbage colletion time. this says how long cahce will be kept before garbage collection.
+    gcTime: 30 * 1000,
   });
 
   let content;

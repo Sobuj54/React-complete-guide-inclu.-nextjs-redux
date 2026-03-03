@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { tokenStorage } from "../utils/token";
+import axiosPublic from "../api/axios";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext(null);
 
@@ -8,17 +10,30 @@ export const AuthProvider = ({ children }) => {
   const [status, setStatus] = useState("loading"); // loading | authenticated | unauthenticated
 
   useEffect(() => {
-    const hydrateAuth = () => {
+    const hydrateAuth = async () => {
       const token = tokenStorage.getAccessToken();
-      const expiry = tokenStorage.getExpiry();
 
-      // Check if token exists and if the refresh token is still valid
-      if (token && !tokenStorage.isExpired()) {
-        // In production, you'd decode the JWT or fetch /me here
-        // For now, we restore user from a secondary localStorage key or just set status
-        setStatus("authenticated");
-      } else {
+      if (!token || tokenStorage.isExpired()) {
         tokenStorage.clear();
+        setUser(null);
+        setStatus("unauthenticated");
+        return;
+      }
+
+      try {
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        const { data } = await axiosPublic.get("/Auth/profile", { headers });
+
+        setUser(data);
+        setStatus("authenticated");
+      } catch (error) {
+        console.error("Hydration failed:", error);
+        tokenStorage.clear();
+        setUser(null);
         setStatus("unauthenticated");
       }
     };
@@ -35,6 +50,7 @@ export const AuthProvider = ({ children }) => {
     tokenStorage.clear();
     setUser(null);
     setStatus("unauthenticated");
+    toast.success("Log out successful.");
   };
 
   const value = {
@@ -48,4 +64,10 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuthContext = () => useContext(AuthContext);
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuthContext must be used within an AuthProvider");
+  }
+  return context;
+};

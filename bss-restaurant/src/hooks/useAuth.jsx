@@ -11,7 +11,6 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
       const { data } = await axiosPublic.post("/Auth/signIn", credentials);
-      console.log("Response data:", data);
       return data;
     },
     onSuccess: (data) => {
@@ -22,7 +21,6 @@ export const useAuth = () => {
     onError: (error) => {
       const message = error.response?.data?.message || "Log in failed!";
       toast.error(message);
-      console.error("Login Error Details:", error.response?.data);
     },
   });
 

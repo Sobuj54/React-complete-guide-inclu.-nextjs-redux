@@ -3,28 +3,27 @@ import useAxiosSecure from "./useAxiosSecure";
 import { queryClient } from "../main";
 import toast from "react-hot-toast";
 
-const useCreateEmployee = () => {
+export const useUpdateEmployee = (id) => {
   const axiosSecure = useAxiosSecure();
 
   return useMutation({
     mutationFn: async (formData) => {
-      const data = await axiosSecure.post("/Employee/create", formData);
-      console.log(data);
-      return data.data;
+      const { data } = await axiosSecure.put(
+        `/Employee/update/${id}`,
+        formData,
+      );
+      return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Employee created successfully!", {
+      queryClient.invalidateQueries({ queryKey: ["employee", id] });
+      toast.success("Employee information updated successfully!", {
         style: { borderRadius: "1rem", fontWeight: "800" },
       });
     },
     onError: (error) => {
       const message =
-        error.response?.data?.message || "Failed to create employee";
+        error.response?.data?.message || "Failed to update employee";
       toast.error(message);
-      console.log(error.response.data);
     },
   });
 };
-
-export default useCreateEmployee;

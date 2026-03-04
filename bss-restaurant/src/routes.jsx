@@ -4,7 +4,11 @@ import DashboardLayout from "./layout/DashboardLayout";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NotFound from "./pages/not-found/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Employees from "./pages/dashboard/Employees";
+import Employees from "./pages/employees/Employees";
+import TablesPage from "./pages/tables/Tables";
+import OrdersPage from "./pages/orders/Orders";
+import NewOrderPage from "./pages/new-order/NewOrder";
+import FoodsPage from "./pages/foods/Foods";
 
 const router = createBrowserRouter([
   {
@@ -23,10 +27,28 @@ const router = createBrowserRouter([
         index: true,
         element: <Dashboard />,
       },
+      
       {
         path: "employees",
         element: <Employees />,
       },
+      {
+        path:"tables",
+        element: <TablesPage/>
+      }
+      ,
+      {
+        path:"orders",
+        element: <OrdersPage/>
+      },
+      {
+        path: "new-order",
+        element: <NewOrderPage/>
+      },
+      {
+        path: "foods",
+        element: <FoodsPage/>
+      }
     ],
   },
   {

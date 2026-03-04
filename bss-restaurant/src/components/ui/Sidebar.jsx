@@ -7,16 +7,17 @@ import {
   PlusCircle,
   LogOut,
   ChefHat,
+  Table,
 } from "lucide-react";
 import { useAuthContext } from "../../context/AuthContext";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-  { name: "New Order", path: "new-order", icon: PlusCircle },
-  { name: "Orders", path: "orders", icon: ClipboardList },
-  { name: "Foods", path: "foods", icon: UtensilsCrossed },
-  { name: "Tables", path: "tables", icon: ClipboardList },
   { name: "Employees", path: "employees", icon: Users },
+  { name: "Tables", path: "tables", icon: Table },
+  { name: "Orders", path: "orders", icon: ClipboardList },
+  { name: "New Order", path: "new-order", icon: PlusCircle },
+  { name: "Foods", path: "foods", icon: UtensilsCrossed },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {

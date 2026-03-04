@@ -1,12 +1,5 @@
 import { useState, useMemo } from "react";
-import {
-  Plus,
-  Mail,
-  Briefcase,
-  Edit2,
-  Trash2,
-  ChevronDown,
-} from "lucide-react";
+import { Plus, ChevronDown } from "lucide-react";
 import { useEmployees } from "../../hooks/useEmployees";
 import { useEmployee } from "../../hooks/useEmployee";
 import useCreateEmployee from "../../hooks/useCreateEmployee";
@@ -18,12 +11,18 @@ import ErrorState from "../../components/ErrorState";
 import EmployeeModal from "../../components/ui/EmployeeModal";
 import EmployeeForm from "../../components/ui/EmployeeForm";
 import Pagination from "../../components/Pagination";
+import EmployeeTable from "../../components/ui/EmployeeTable";
+import { useUpdateEmployee } from "../../hooks/useUpdateEmployee";
+import useDeleteEmployee from "../../hooks/useDeleteEmployee";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 
 export default function Employees() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState(null);
 
   const { mutate: createEmployee, isPending: isCreating } = useCreateEmployee();
 
@@ -33,8 +32,14 @@ export default function Employees() {
     isError,
     refetch,
   } = useEmployees(page, perPage);
+
   const { data: fullEmployeeData, isFetching: isFetchingSingle } =
     useEmployee(selectedEmployeeId);
+
+  const { mutate: updateEmployee, isPending: isUpdating } =
+    useUpdateEmployee(selectedEmployeeId);
+
+  const { mutate: deleteEmployee, isPending: isDeleting } = useDeleteEmployee();
 
   const employees = response?.data || [];
 
@@ -48,6 +53,23 @@ export default function Employees() {
     setIsModalOpen(true);
   };
 
+  const handleOpenDelete = (emp) => {
+    setEmployeeToDelete(emp);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (!employeeToDelete) return;
+
+    deleteEmployee(employeeToDelete.id, {
+      onSuccess: () => {
+        setIsDeleteModalOpen(false);
+        setEmployeeToDelete(null);
+        refetch();
+      },
+    });
+  };
+
   const mappedDefaultValues = useMemo(() => {
     if (!selectedEmployeeId || !fullEmployeeData) return null;
 
@@ -56,7 +78,7 @@ export default function Employees() {
 
     return {
       firstName: user.firstName || "",
-      middleName: user.middleName || "",
+      middleName: user?.middleName || "",
       lastName: user.lastName || "",
       email: user.email || "",
       designation: emp.designation || "",
@@ -68,33 +90,53 @@ export default function Employees() {
       dob: user.dob ? user.dob.split("T")[0] : "",
       joinDate: emp.joinDate ? emp.joinDate.split("T")[0] : "",
       nid: user.nid || "",
+      image: user?.image || null,
     };
   }, [fullEmployeeData, selectedEmployeeId]);
 
   const onFormSubmit = async (data) => {
     try {
-      let base64String = "";
-      if (data.image && data.image[0] instanceof File) {
-        base64String = await toBase64(data.image[0]);
-      }
+      const hasNewFile = data.image && data.image[0] instanceof File;
 
-      const payload = {
-        ...data,
-        phoneNumber: data.phone,
-        dob: data.dob ? new Date(data.dob).toISOString() : null,
+      let payload = {
+        designation: data.designation,
         joinDate: data.joinDate ? new Date(data.joinDate).toISOString() : null,
+        email: data.email,
+        phoneNumber: data.phone,
+        firstName: data.firstName,
+        middleName: data.middleName || "",
+        lastName: data.lastName,
+        fatherName: data.fatherName || "",
+        motherName: data.motherName || "",
+        spouseName: data.spouseName || "",
+        dob: data.dob ? new Date(data.dob).toISOString() : null,
+        nid: data.nid,
         genderId: data.gender === "Male" ? 1 : 2,
-        base64: base64String,
-        image: "",
       };
 
-      createEmployee(payload, {
-        onSuccess: () => {
-          setIsModalOpen(false);
-          setSelectedEmployeeId(null);
-          refetch();
-        },
-      });
+      if (hasNewFile) {
+        const file = data.image[0];
+        payload.image = file.name;
+        payload.base64 = await toBase64(file);
+      }
+
+      if (selectedEmployeeId) {
+        updateEmployee(payload, {
+          onSuccess: () => {
+            setIsModalOpen(false);
+            setSelectedEmployeeId(null);
+            refetch();
+          },
+        });
+      } else {
+        createEmployee(payload, {
+          onSuccess: () => {
+            setIsModalOpen(false);
+            setSelectedEmployeeId(null);
+            refetch();
+          },
+        });
+      }
     } catch (error) {
       console.error("Form Submission Error:", error);
     }
@@ -152,91 +194,11 @@ export default function Employees() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="bg-slate-50/50 border-b border-slate-100">
-                <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest">
-                  Employee
-                </th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest text-center">
-                  Designation
-                </th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest">
-                  Joined Date
-                </th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {employees.map((emp) => (
-                <tr
-                  key={emp.id}
-                  className="hover:bg-slate-50/80 transition-colors group"
-                >
-                  <td className="px-8 py-5">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 font-black overflow-hidden">
-                        {emp.user?.image ? (
-                          <img
-                            src={`https://bssrms.runasp.net/images/user/${emp.user.image}`}
-                            alt=""
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <span>{emp.user?.fullName?.charAt(0)}</span>
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-sm font-black text-slate-900">
-                          {emp.user?.fullName}
-                        </p>
-                        <p className="text-xs font-bold text-slate-400 flex items-center gap-1">
-                          <Mail size={12} /> {emp.user?.email}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-8 py-5 text-center">
-                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-black uppercase">
-                      <Briefcase size={12} /> {emp.designation}
-                    </span>
-                  </td>
-
-                  <td className="px-8 py-5">
-                    <div className="flex flex-col">
-                      <span className="text-sm font-bold text-slate-700">
-                        {new Date(emp.joinDate).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">
-                        Member since
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-8 py-5 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => handleOpenEdit(emp.id)}
-                        className="p-2.5 text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                      >
-                        <Edit2 size={18} />
-                      </button>
-                      <button className="p-2.5 text-red-500 bg-red-50 rounded-xl hover:bg-red-500 hover:text-white transition-all cursor-pointer">
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <EmployeeTable
+          employees={employees}
+          handleOpenEdit={handleOpenEdit}
+          handleDelete={handleOpenDelete}
+        />
 
         <Pagination
           currentPage={response?.current_page || 1}
@@ -246,6 +208,14 @@ export default function Employees() {
         />
       </div>
 
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        isLoading={isDeleting}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        itemName={employeeToDelete?.user?.fullName || "this employee"}
+      />
+
       <EmployeeModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -253,6 +223,7 @@ export default function Employees() {
           setSelectedEmployeeId(null);
         }}
         title={selectedEmployeeId ? "Edit Employee" : "Add New Employee"}
+        style="max-w-6xl h-full"
       >
         {selectedEmployeeId && isFetchingSingle ? (
           <div className="py-20 flex flex-col items-center justify-center gap-4 text-center">
@@ -266,7 +237,7 @@ export default function Employees() {
             defaultValues={mappedDefaultValues}
             onCancel={() => setIsModalOpen(false)}
             onSubmit={onFormSubmit}
-            isLoading={isCreating}
+            isLoading={isCreating || isUpdating}
           />
         )}
       </EmployeeModal>

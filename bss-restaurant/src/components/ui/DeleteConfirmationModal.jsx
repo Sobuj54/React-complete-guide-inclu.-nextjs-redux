@@ -1,5 +1,5 @@
 import { AlertTriangle, X } from "lucide-react";
-import EmployeeModal from "./EmployeeModal";
+import Modal from "./Modal";
 
 export default function DeleteConfirmationModal({
   isOpen,
@@ -9,7 +9,7 @@ export default function DeleteConfirmationModal({
   isLoading,
 }) {
   return (
-    <EmployeeModal
+    <Modal
       isOpen={isOpen}
       onClose={onClose}
       title="Confirm Deletion"
@@ -48,6 +48,6 @@ export default function DeleteConfirmationModal({
           </button>
         </div>
       </div>
-    </EmployeeModal>
+    </Modal>
   );
 }

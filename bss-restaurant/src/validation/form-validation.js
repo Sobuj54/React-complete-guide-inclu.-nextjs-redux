@@ -16,3 +16,9 @@ export const employeeSchema = z.object({
   nid: z.string().min(5, "NID Card number is required"),
   image: z.any().optional(),
 });
+
+export const tableSchema = z.object({
+  tableNumber: z.string().min(1, "Table number is required"),
+  numberOfSeats: z.coerce.number().min(1, "Must have at least 1 seat"),
+  image: z.any().optional(),
+});

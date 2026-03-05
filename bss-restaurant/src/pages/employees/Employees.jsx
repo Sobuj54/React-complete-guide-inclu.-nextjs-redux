@@ -8,7 +8,7 @@ import { toBase64 } from "../../utils/to-base64";
 // Components
 import EmployeeTableSkeleton from "../../components/ui/EmployeeTableSkeleton";
 import ErrorState from "../../components/ErrorState";
-import EmployeeModal from "../../components/ui/EmployeeModal";
+import Modal from "../../components/ui/Modal";
 import EmployeeForm from "../../components/ui/EmployeeForm";
 import Pagination from "../../components/Pagination";
 import EmployeeTable from "../../components/ui/EmployeeTable";
@@ -149,26 +149,26 @@ export default function Employees() {
     );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 duration-500 animate-in fade-in">
       <title>BSS Resto | Employees</title>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-3xl font-black text-slate-900">Staff Members</h1>
-          <p className="text-slate-500 font-medium">
+          <p className="font-medium text-slate-500">
             Manage team roles and details
           </p>
         </div>
         <button
           onClick={handleOpenAdd}
-          className="flex items-center justify-center gap-2 bg-orange-600 text-white px-6 py-3.5 rounded-2xl font-black hover:bg-orange-700 transition-all active:scale-95 shadow-lg shadow-orange-100"
+          className="flex items-center justify-center gap-2 bg-orange-600 text-white px-6 py-3.5 rounded-2xl font-black hover:bg-orange-700 transition-all active:scale-95 shadow-lg shadow-orange-100 cursor-pointer"
         >
           <Plus size={20} strokeWidth={3} /> Add New Employee
         </button>
       </div>
 
       <div className="bg-white border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-slate-50 flex items-center gap-3 bg-slate-50/30">
+        <div className="flex items-center gap-3 p-6 border-b border-slate-50 bg-slate-50/30">
           <span className="text-xs font-black uppercase text-slate-400">
             Show
           </span>
@@ -179,7 +179,7 @@ export default function Employees() {
                 setPerPage(Number(e.target.value));
                 setPage(1);
               }}
-              className="appearance-none bg-white border border-slate-200 rounded-xl px-4 py-2 pr-10 text-sm font-black text-slate-700 outline-none cursor-pointer"
+              className="px-4 py-2 pr-10 text-sm font-black bg-white border outline-none appearance-none cursor-pointer border-slate-200 rounded-xl text-slate-700"
             >
               {[5, 10, 20, 50].map((v) => (
                 <option key={v} value={v}>
@@ -189,7 +189,7 @@ export default function Employees() {
             </select>
             <ChevronDown
               size={14}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+              className="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400"
             />
           </div>
         </div>
@@ -216,7 +216,7 @@ export default function Employees() {
         itemName={employeeToDelete?.user?.fullName || "this employee"}
       />
 
-      <EmployeeModal
+      <Modal
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
@@ -226,8 +226,8 @@ export default function Employees() {
         style="max-w-6xl h-full"
       >
         {selectedEmployeeId && isFetchingSingle ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-4 text-center">
-            <div className="w-10 h-10 border-4 border-orange-100 border-t-orange-600 rounded-full animate-spin" />
+          <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
+            <div className="w-10 h-10 border-4 border-orange-100 rounded-full border-t-orange-600 animate-spin" />
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
               Fetching details...
             </p>
@@ -240,7 +240,7 @@ export default function Employees() {
             isLoading={isCreating || isUpdating}
           />
         )}
-      </EmployeeModal>
+      </Modal>
     </div>
   );
 }

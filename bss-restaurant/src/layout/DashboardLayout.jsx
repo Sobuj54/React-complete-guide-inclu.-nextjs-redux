@@ -11,7 +11,7 @@ export default function DashboardLayout() {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen font-sans bg-slate-50">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div

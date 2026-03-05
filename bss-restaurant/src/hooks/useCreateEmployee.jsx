@@ -9,7 +9,6 @@ const useCreateEmployee = () => {
   return useMutation({
     mutationFn: async (formData) => {
       const data = await axiosSecure.post("/Employee/create", formData);
-      console.log(data);
       return data.data;
     },
     onSuccess: () => {
@@ -22,7 +21,6 @@ const useCreateEmployee = () => {
       const message =
         error.response?.data?.message || "Failed to create employee";
       toast.error(message);
-      console.log(error.response.data);
     },
   });
 };

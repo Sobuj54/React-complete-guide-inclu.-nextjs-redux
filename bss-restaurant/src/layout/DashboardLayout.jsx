@@ -33,7 +33,7 @@ export default function DashboardLayout() {
         />
 
         {/* Dynamic Page Content */}
-        <main className="flex-1 w-full p-6 mx-auto lg:p-10 max-w-7xl">
+        <main className="flex-1 w-full p-6 mx-auto lg:p-10 max-w-full">
           <Outlet />
         </main>
       </div>

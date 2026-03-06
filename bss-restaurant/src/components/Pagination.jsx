@@ -10,7 +10,7 @@ export default function Pagination({
 
   return (
     <div
-      className={`p-8 border-t border-slate-100 bg-slate-50/30 flex items-center justify-between ${className}`}
+      className={`p-8 border-t border-slate-100 bg-slate-50/30 flex flex-col md:flex-row items-center gap-5 md:gap-0 justify-between ${className}`}
     >
       <div className="flex flex-col">
         <p className="text-xs font-black tracking-wider uppercase text-slate-600">

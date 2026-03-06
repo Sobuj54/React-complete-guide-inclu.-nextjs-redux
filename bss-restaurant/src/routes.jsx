@@ -14,6 +14,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginRegister />,
+    errorElement: <NotFound />,
   },
   {
     path: "/dashboard",
@@ -27,28 +28,27 @@ const router = createBrowserRouter([
         index: true,
         element: <Dashboard />,
       },
-      
+
       {
         path: "employees",
         element: <Employees />,
       },
       {
-        path:"tables",
-        element: <TablesPage/>
-      }
-      ,
+        path: "tables",
+        element: <TablesPage />,
+      },
       {
-        path:"orders",
-        element: <OrdersPage/>
+        path: "orders",
+        element: <OrdersPage />,
       },
       {
         path: "new-order",
-        element: <NewOrderPage/>
+        element: <NewOrderPage />,
       },
       {
         path: "foods",
-        element: <FoodsPage/>
-      }
+        element: <FoodsPage />,
+      },
     ],
   },
   {

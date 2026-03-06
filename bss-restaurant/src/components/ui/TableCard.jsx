@@ -6,8 +6,9 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react";
+import { memo } from "react";
 
-const TableCard = ({ table, onEdit, onDelete, onAddEmployee }) => {
+const TableCard = memo(({ table, onEdit, onDelete, onAddEmployee }) => {
   return (
     <div className="bg-white border-2 border-slate-100 rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-all group">
       {/* Table Image & Status */}
@@ -55,7 +56,7 @@ const TableCard = ({ table, onEdit, onDelete, onAddEmployee }) => {
             <Edit2 size={16} />
           </button>
           <button
-            onClick={() => onDelete(table.id)}
+            onClick={() => onDelete(table)}
             className="p-2 text-red-500 transition-all cursor-pointer bg-red-50 rounded-xl hover:bg-red-500 hover:text-white"
           >
             <Trash2 size={16} />
@@ -100,6 +101,6 @@ const TableCard = ({ table, onEdit, onDelete, onAddEmployee }) => {
       </div>
     </div>
   );
-};
+});
 
 export default TableCard;

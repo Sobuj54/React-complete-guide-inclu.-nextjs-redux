@@ -69,7 +69,7 @@ const TableCard = memo(({ table, onEdit, onDelete, onAddEmployee }) => {
       {/* Assigned Employees */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+          <span className="text-sm font-black text-slate-400 uppercase tracking-widest">
             Assigned Staff
           </span>
           <button
@@ -86,7 +86,7 @@ const TableCard = memo(({ table, onEdit, onDelete, onAddEmployee }) => {
             table.employees.map((emp) => (
               <div
                 key={emp.employeeTableId}
-                className="px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-[11px] font-black text-slate-600 flex items-center gap-2"
+                className="px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-sm font-black text-slate-600 flex items-center gap-2"
               >
                 <div className="w-2 h-2 bg-orange-500 rounded-full" />
                 {emp.name}

@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import useAxiosSecure from "./useAxiosSecure";
 import toast from "react-hot-toast";
 import { queryClient } from "../main";
+import useAxiosSecure from "./useAxiosSecure";
 
 const toastStyle = {
   borderRadius: "1.5rem",
@@ -26,7 +26,7 @@ export const useOrderMutations = () => {
 
   const updateStatus = useMutation({
     mutationFn: ({ id, status }) =>
-      axiosSecure.patch(`/Order/update-status/${id}`, { status }),
+      axiosSecure.put(`/Order/update-status/${id}`, { status }),
     onSuccess: () => {
       queryClient.invalidateQueries(["orders"]);
       toast.success("Order status updated!", { style: toastStyle });

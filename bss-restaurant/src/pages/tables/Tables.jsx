@@ -43,7 +43,6 @@ export default function Tables() {
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  // Data
   const {
     data: response,
     isLoading,

@@ -1,87 +1,107 @@
-import { Mail, Briefcase, Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, Star, User } from "lucide-react";
 
 const EmployeeTable = ({ employees, handleOpenEdit, handleDelete }) => {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left">
+    <div className="overflow-x-auto bg-white border border-slate-200 ">
+      <table className="w-full text-left border-collapse min-w-[800px] md:min-w-full">
         <thead>
-          <tr className="bg-slate-50/50 border-b border-slate-100">
-            <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest">
-              Employee
+          <tr className="bg-white border-b border-slate-100">
+            <th className="w-16 px-6 py-6"></th>
+            <th className="px-6 py-6 text-base font-bold text-green-700">
+              Name
             </th>
-            <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest text-center">
+            <th className="w-12 px-2 py-6 text-center"></th>
+            <th className="px-6 py-6 text-base font-bold text-green-700">
+              Email
+            </th>
+            <th className="px-6 py-6 text-base font-bold text-green-700">
               Designation
             </th>
-            <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest">
-              Joined Date
+            <th className="px-6 py-6 text-base font-bold text-green-700">
+              Join Date
             </th>
-            <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">
-              Actions
+            <th className="px-6 py-6 text-base font-bold text-green-700">
+              Phone
+            </th>
+            <th className="pr-12 py-6 text-base font-center font-bold text-green-700 text-right ">
+              Action
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-50">
+        <tbody className="divide-y divide-slate-100">
           {employees.map((emp) => (
             <tr
               key={emp.id}
-              className="hover:bg-slate-50/80 transition-colors group"
+              className="hover:bg-slate-50/50 transition-colors group"
             >
-              <td className="px-8 py-5">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 font-black overflow-hidden">
-                    {emp.user?.image ? (
-                      <img
-                        src={`https://bssrms.runasp.net/images/user/${emp.user.image}`}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span>{emp.user?.fullName?.charAt(0)}</span>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-slate-900">
-                      {emp.user?.fullName}
-                    </p>
-                    <p className="text-xs font-bold text-slate-400 flex items-center gap-1">
-                      <Mail size={12} /> {emp.user?.email}
-                    </p>
-                  </div>
+              <td className="px-6 py-4">
+                <div className="w-14 h-14 rounded-full overflow-hidden border border-slate-200 flex-shrink-0">
+                  {emp.user?.image ? (
+                    <img
+                      src={`https://bssrms.runasp.net/images/user/${emp.user.image}`}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">
+                      <User size={20} />
+                    </div>
+                  )}
                 </div>
               </td>
-              <td className="px-8 py-5 text-center">
-                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-black uppercase">
-                  <Briefcase size={12} /> {emp.designation}
+
+              <td className="px-6 py-4">
+                <p className="text-base text-slate-700 truncate max-w-[120px] md:max-w-none font-medium">
+                  {emp.user?.fullName}
+                </p>
+              </td>
+
+              <td className="px-2 py-4">
+                <Star
+                  size={16}
+                  className="text-orange-400 fill-orange-400 mx-auto"
+                />
+              </td>
+
+              <td className="px-6 py-4">
+                <p className="text-base text-slate-600 truncate max-w-[150px] md:max-w-none">
+                  {emp.user?.email}
+                </p>
+              </td>
+
+              <td className="px-6 py-4">
+                <p className="text-base text-slate-600 truncate max-w-[100px] md:max-w-none">
+                  {emp.designation}
+                </p>
+              </td>
+
+              <td className="px-6 py-4 text-slate-600 text-base whitespace-nowrap">
+                {new Date(emp.joinDate).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </td>
+
+              <td className="px-6 py-4 text-slate-600 text-base whitespace-nowrap">
+                <span className="truncate max-w-[100px] md:max-w-none block">
+                  {emp.user?.phoneNumber}
                 </span>
               </td>
 
-              <td className="px-8 py-5">
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-slate-700">
-                    {new Date(emp.joinDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">
-                    Member since
-                  </span>
-                </div>
-              </td>
-              <td className="px-8 py-5 text-right">
+              <td className="px-6 py-4 text-right">
                 <div className="flex justify-end gap-2">
                   <button
                     onClick={() => handleOpenEdit(emp.id)}
-                    className="p-2.5 text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                    className="p-2 text-slate-400 bg-white border border-slate-200 rounded-lg hover:text-slate-900 hover:border-slate-400 transition-all active:scale-95 cursor-pointer"
                   >
-                    <Edit2 size={18} />
+                    <Edit2 size={16} />
                   </button>
                   <button
-                    className="p-2.5 text-red-500 bg-red-50 rounded-xl hover:bg-red-500 hover:text-white transition-all cursor-pointer"
                     onClick={() => handleDelete(emp)}
+                    className="p-2 text-slate-400 bg-white border border-slate-200 rounded-lg hover:text-red-500 hover:border-red-200 transition-all active:scale-95 cursor-pointer"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
               </td>

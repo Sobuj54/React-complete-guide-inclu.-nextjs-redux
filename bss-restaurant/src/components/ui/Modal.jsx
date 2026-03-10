@@ -8,7 +8,7 @@ export default function Modal({ isOpen, onClose, title, children, style }) {
       <div
         className={`w-full  mx-auto  bg-white rounded-[3rem] shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right duration-500 ${style}`}
       >
-        <div className="flex items-center justify-between p-8 border-b border-slate-50">
+        <div className="flex items-center justify-between p-8 bg-slate-50 ">
           <div>
             <h2 className="text-2xl font-black text-slate-900">{title}</h2>
             <p className="font-medium text-slate-500">
@@ -22,7 +22,7 @@ export default function Modal({ isOpen, onClose, title, children, style }) {
             <X size={24} strokeWidth={3} />
           </button>
         </div>
-        <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
+        <div className="flex-1 p-8 overflow-y-auto custom-scrollbar bg-slate-50">
           {children}
         </div>
       </div>

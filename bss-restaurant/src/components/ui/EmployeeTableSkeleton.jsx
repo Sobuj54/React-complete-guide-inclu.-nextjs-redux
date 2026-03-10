@@ -37,15 +37,6 @@ const EmployeeRowSkeleton = () => (
 export default function EmployeeTableSkeleton() {
   return (
     <div className="space-y-8">
-      {/* Header Section Skeleton */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-pulse">
-        <div className="space-y-2">
-          <div className="h-10 w-64 bg-slate-200 rounded-2xl" />
-          <div className="h-5 w-56 bg-slate-100 rounded-lg" />
-        </div>
-        <div className="h-14 w-48 bg-slate-200 rounded-2xl" />
-      </div>
-
       {/* Table Container Skeleton */}
       <div className="bg-white border border-slate-200 rounded-4xl overflow-hidden shadow-sm">
         {/* Table Controls (Per Page) */}

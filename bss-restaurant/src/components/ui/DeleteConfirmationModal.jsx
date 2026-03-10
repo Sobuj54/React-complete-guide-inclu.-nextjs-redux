@@ -34,7 +34,7 @@ export default function DeleteConfirmationModal({
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-red-100 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center"
+            className="w-full bg-red-500 hover:bg-red-600 text-white/90 py-4 rounded-2xl font-black  transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center cursor-pointer"
           >
             {isLoading ? "Deleting..." : "Yes, Delete Member"}
           </button>
@@ -42,7 +42,7 @@ export default function DeleteConfirmationModal({
           <button
             onClick={onClose}
             disabled={isLoading}
-            className="w-full bg-slate-50 hover:bg-slate-100 text-slate-500 py-4 rounded-2xl font-black transition-all"
+            className="w-full bg-slate-50 hover:bg-slate-100 text-slate-500 py-4 rounded-2xl font-black transition-all cursor-pointer"
           >
             Cancel
           </button>

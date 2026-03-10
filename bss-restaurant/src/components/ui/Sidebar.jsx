@@ -27,7 +27,7 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside
       className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 
+        fixed inset-y-0 left-0 z-50 w-72 bg-slate-700 border-r border-slate-500 
         transform transition-transform duration-300 ease-in-out 
         lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen 
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
@@ -36,10 +36,10 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="flex flex-col h-full">
         {/* Logo Area */}
         <div className="flex items-center gap-3 px-8 py-10">
-          <div className="p-2.5 text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg shadow-orange-200">
+          <div className="p-2.5 text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg ">
             <ChefHat size={26} />
           </div>
-          <span className="text-2xl font-black tracking-tight text-slate-900">
+          <span className="text-2xl font-black tracking-tight text-white">
             BSS Resto
           </span>
         </div>
@@ -55,8 +55,8 @@ export default function Sidebar({ isOpen, onClose }) {
                 onClick={onClose}
                 className={`flex items-center gap-3 px-4 py-3.5 text-sm font-semibold rounded-2xl transition-all duration-200 ${
                   isActive
-                    ? "bg-orange-600 text-white shadow-md shadow-orange-200"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                    ? "bg-orange-600 text-white "
+                    : "text-white/80 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
@@ -70,7 +70,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="p-6 mt-auto border-t border-slate-100">
           <button
             onClick={logout}
-            className="flex items-center w-full gap-3 px-4 py-3.5 text-sm font-bold text-red-500 transition-all rounded-2xl hover:bg-red-100 cursor-pointer"
+            className="flex items-center w-full gap-3 px-4 py-3.5 text-sm font-bold text-orange-500 transition-all rounded-2xl hover:bg-white/90 cursor-pointer"
           >
             <LogOut size={20} />
             Sign Out

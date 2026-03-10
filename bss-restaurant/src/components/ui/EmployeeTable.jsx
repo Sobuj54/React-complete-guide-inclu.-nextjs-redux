@@ -2,28 +2,18 @@ import { Edit2, Trash2, Star, User } from "lucide-react";
 
 const EmployeeTable = ({ employees, handleOpenEdit, handleDelete }) => {
   return (
-    <div className="overflow-x-auto bg-white border border-slate-200 ">
+    <div className="overflow-x-auto ">
       <table className="w-full text-left border-collapse min-w-[800px] md:min-w-full">
         <thead>
-          <tr className="bg-white border-b border-slate-100">
+          <tr className="bg-slate-50 border-b border-slate-100">
             <th className="w-16 px-6 py-6"></th>
-            <th className="px-6 py-6 text-base font-bold text-green-700">
-              Name
-            </th>
+            <th className="px-6 py-6 text-base font-bold ">Name</th>
             <th className="w-12 px-2 py-6 text-center"></th>
-            <th className="px-6 py-6 text-base font-bold text-green-700">
-              Email
-            </th>
-            <th className="px-6 py-6 text-base font-bold text-green-700">
-              Designation
-            </th>
-            <th className="px-6 py-6 text-base font-bold text-green-700">
-              Join Date
-            </th>
-            <th className="px-6 py-6 text-base font-bold text-green-700">
-              Phone
-            </th>
-            <th className="pr-12 py-6 text-base font-center font-bold text-green-700 text-right ">
+            <th className="px-6 py-6 text-base font-bold ">Email</th>
+            <th className="px-6 py-6 text-base font-bold ">Designation</th>
+            <th className="px-6 py-6 text-base font-bold ">Join Date</th>
+            <th className="px-6 py-6 text-base font-bold ">Phone</th>
+            <th className="pr-12 py-6 text-base font-center font-bold  text-right ">
               Action
             </th>
           </tr>
@@ -32,7 +22,7 @@ const EmployeeTable = ({ employees, handleOpenEdit, handleDelete }) => {
           {employees.map((emp) => (
             <tr
               key={emp.id}
-              className="hover:bg-slate-50/50 transition-colors group"
+              className="hover:bg-slate-50/50 transition-colors group border-b-[1px] border-b-slate-200 font-medium"
             >
               <td className="px-6 py-4">
                 <div className="w-14 h-14 rounded-full overflow-hidden border border-slate-200 flex-shrink-0">
@@ -70,8 +60,10 @@ const EmployeeTable = ({ employees, handleOpenEdit, handleDelete }) => {
               </td>
 
               <td className="px-6 py-4">
-                <p className="text-base text-slate-600 truncate max-w-[100px] md:max-w-none">
-                  {emp.designation}
+                <p className="text-base text-slate-600 truncate max-w-[100px] md:max-w-none ">
+                  <span className="bg-green-100 text-green-700 px-3 py-1 font-medium rounded-sm inline-block">
+                    {emp.designation}
+                  </span>
                 </p>
               </td>
 
@@ -93,13 +85,14 @@ const EmployeeTable = ({ employees, handleOpenEdit, handleDelete }) => {
                 <div className="flex justify-end gap-2">
                   <button
                     onClick={() => handleOpenEdit(emp.id)}
-                    className="p-2 text-slate-400 bg-white border border-slate-200 rounded-lg hover:text-slate-900 hover:border-slate-400 transition-all active:scale-95 cursor-pointer"
+                    className="p-2 text-slate-400 bg-white border border-slate-200 rounded-lg hover:text-white hover:bg-green-400 transition-all active:scale-95 cursor-pointer"
                   >
                     <Edit2 size={16} />
                   </button>
+
                   <button
                     onClick={() => handleDelete(emp)}
-                    className="p-2 text-slate-400 bg-white border border-slate-200 rounded-lg hover:text-red-500 hover:border-red-200 transition-all active:scale-95 cursor-pointer"
+                    className="p-2 text-slate-400 bg-white border border-slate-200 rounded-lg hover:text-white hover:bg-red-500 transition-all active:scale-95 cursor-pointer"
                   >
                     <Trash2 size={16} />
                   </button>

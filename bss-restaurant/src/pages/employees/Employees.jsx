@@ -149,48 +149,43 @@ export default function Employees() {
     );
 
   return (
-    <div className="space-y-8 duration-500 animate-in fade-in">
+    <div className="space-y-8 duration-500 animate-in fade-in pt-5">
       <title>BSS Resto | Employees</title>
 
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900">Staff Members</h1>
-          <p className="font-medium text-slate-500">
-            Manage team roles and details
-          </p>
-        </div>
-        <button
-          onClick={handleOpenAdd}
-          className="flex items-center justify-center gap-2 bg-orange-600 text-white px-6 py-3.5 rounded-2xl font-black hover:bg-orange-700 transition-all active:scale-95 shadow-lg shadow-orange-100 cursor-pointer"
-        >
-          <Plus size={20} strokeWidth={3} /> Add New Employee
-        </button>
-      </div>
-
-      <div className="bg-white border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm">
-        <div className="flex items-center gap-3 p-6 border-b border-slate-50 bg-slate-50/30">
-          <span className="text-xs font-black uppercase text-slate-400">
-            Show
-          </span>
-          <div className="relative">
-            <select
-              value={perPage}
-              onChange={(e) => {
-                setPerPage(Number(e.target.value));
-                setPage(1);
-              }}
-              className="px-4 py-2 pr-10 text-sm font-black bg-white border outline-none appearance-none cursor-pointer border-slate-200 rounded-xl text-slate-700"
+      <div className="rounded-md overflow-hidden shadow-md bg-white">
+        <div className="flex align-center justify-between border-b-[1px] border-b-slate-200">
+          <div className="flex items-center gap-3 p-6 border-b border-slate-50 bg-slate-50/30">
+            <span className="text-xs font-black uppercase text-slate-400">
+              Show
+            </span>
+            <div className="relative">
+              <select
+                value={perPage}
+                onChange={(e) => {
+                  setPerPage(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="px-4 py-2 pr-10 text-sm font-black bg-white border outline-none appearance-none cursor-pointer border-slate-200 rounded-xl text-slate-700"
+              >
+                {[5, 10, 20, 50].map((v) => (
+                  <option key={v} value={v}>
+                    {v}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={14}
+                className="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400"
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-center px-2 md:px-5 ">
+            <button
+              onClick={handleOpenAdd}
+              className="flex items-center justify-center md:gap-2 bg-orange-600 text-white px-4 md:px-6 py-2 md:py-3.5 rounded-sm md:rounded-2xl font-black hover:bg-orange-700 transition-all active:scale-95 cursor-pointer"
             >
-              {[5, 10, 20, 50].map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={14}
-              className="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400"
-            />
+              <Plus size={20} strokeWidth={3} /> Add New Employee
+            </button>
           </div>
         </div>
 

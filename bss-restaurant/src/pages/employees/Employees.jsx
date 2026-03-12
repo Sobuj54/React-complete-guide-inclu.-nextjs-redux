@@ -182,9 +182,9 @@ export default function Employees() {
           <div className="flex items-center justify-center px-2 md:px-5 ">
             <button
               onClick={handleOpenAdd}
-              className="flex items-center justify-center md:gap-2 bg-orange-600 text-white px-4 md:px-6 py-2 md:py-3.5 rounded-sm md:rounded-2xl font-black hover:bg-orange-700 transition-all active:scale-95 cursor-pointer"
+              className="flex items-center justify-center md:gap-2 bg-orange-600 text-white px-2 md:px-4 py-2 md:py-3 rounded-sm md:rounded-md font-bold hover:bg-orange-700 transition-all active:scale-95 cursor-pointer"
             >
-              <Plus size={20} strokeWidth={3} /> Add New Employee
+              <Plus size={20} strokeWidth={3} /> Add Employee
             </button>
           </div>
         </div>

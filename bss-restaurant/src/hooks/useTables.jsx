@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import useAxiosSecure from "./useAxiosSecure";
 import toast from "react-hot-toast";
 
@@ -12,15 +17,15 @@ const toastStyle = {
 export const useTables = (page = 1, perPage = 10, search = "") => {
   const axiosSecure = useAxiosSecure();
   return useQuery({
-    queryKey: ["tables", page, perPage, search],
+    queryKey: ["tables", page, perPage],
     queryFn: async () => {
       const { data } = await axiosSecure.get("/Table/datatable", {
         params: { Page: page, Per_Page: perPage, Search: search },
       });
       return data;
     },
-    placeholderData: (previousData) => previousData,
-    staleTime: 5000,
+    placeholderData: keepPreviousData,
+    staleTime: 100000,
   });
 };
 

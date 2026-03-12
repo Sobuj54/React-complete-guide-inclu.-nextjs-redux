@@ -58,10 +58,10 @@ export default function Dashboard() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="p-6 bg-white rounded-lg shadow-sm hover:shadow-lg  transition-all group"
+            className="p-6 bg-white rounded-md shadow-sm hover:shadow-lg  transition-all group"
           >
             <div
-              className={`w-12 h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center mb-4  transition-transform shadow-md`}
+              className={`w-12 h-12 rounded-md ${stat.bg} ${stat.color} flex items-center justify-center mb-4  transition-transform shadow-md`}
             >
               <stat.icon size={24} />
             </div>
@@ -75,7 +75,7 @@ export default function Dashboard() {
         {/* Recent Orders Table */}
         <div className="xl:col-span-2 overflow-hidden shadow-md bg-white/90 rounded-md">
           <div className="p-6 border-b-[1px] border-slate-200 flex items-center justify-between ">
-            <h2 className="text-lg md:text-xl font-bold">Recent Orders</h2>
+            <h2 className="text-md md:text-lg font-bold">Recent Orders</h2>
             <span className="text-xs font-medium px-3 py-1 bg-blue-400/90 rounded-xs hover:bg-blue-500 text-white/90">
               TODAY : {data.todaysOrders}
             </span>
@@ -84,13 +84,11 @@ export default function Dashboard() {
             <table className="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr className="bg-slate-100/80 border-b-[1px] border-b-slate-200">
-                  <th className="px-6 py-4 text-base text-slate-500">
-                    Order ID
-                  </th>
-                  <th className="px-6 py-4 text-base text-slate-500">Table</th>
-                  <th className="px-6 py-4 text-base text-slate-500">Amount</th>
-                  <th className="px-6 py-4 text-base text-slate-500">Status</th>
-                  <th className="px-6 py-4 text-base text-slate-500">Time</th>
+                  <th className="px-6 py-4 text-sm text-slate-500">Order ID</th>
+                  <th className="px-6 py-4 text-sm text-slate-500">Table</th>
+                  <th className="px-6 py-4 text-sm text-slate-500">Amount</th>
+                  <th className="px-6 py-4 text-sm text-slate-500">Status</th>
+                  <th className="px-6 py-4 text-sm text-slate-500">Time</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -102,10 +100,10 @@ export default function Dashboard() {
                     <td className="px-6 py-4 text-sm font-medium truncate max-w-[120px] md:max-w-none">
                       # {order.orderNumber}
                     </td>
-                    <td className="px-6 py-4 text-base truncate max-w-[120px]">
+                    <td className="px-6 py-4 text-sm font-medium truncate max-w-[120px]">
                       {order.tableNumber || "Walk-in"}
                     </td>
-                    <td className="px-6 py-4 text-base text-emerald-700 font-medium truncate max-w-[120px]">
+                    <td className="px-6 py-4 text-sm text-emerald-700 font-medium truncate max-w-[120px]">
                       ৳ {order.amount.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 truncate max-w-[130px]">
@@ -139,20 +137,18 @@ export default function Dashboard() {
 
         {/* Top Selling Foods */}
         <div className="bg-white rounded-md  shadow-md">
-          <div className="flex items-center justify-between mb-8 bg-slate-50 p-3 md:p-6 border-b-[1px] border-b-slate-200">
+          <div className="flex items-center justify-between mb-3 bg-slate-50 p-3 md:p-6 border-b-[1px] border-b-slate-200">
             <div className="flex items-center gap-2">
               <TrendingUp className="text-green-500" size={20} />
-              <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">
-                Top Sellers
-              </h2>
+              <h2 className="text-lg font-bold">Top Sellers</h2>
             </div>
             <Star className="text-orange-400 fill-orange-400" size={18} />
           </div>
-          <div className="space-y-5">
+          <div className="space-y-2">
             {data.topSellingFoods.map((food, index) => (
               <div
                 key={food.id}
-                className="flex items-center gap-4 group  hover:bg-slate-50 transition-all border-b-[1px] border-b-slate-200 px-3 md:px-6 pb-5"
+                className="flex items-center gap-4 group  hover:bg-slate-50 transition-all border-b-[1px] border-b-slate-200 px-3 md:px-6 pb-3"
               >
                 <span className="text-sm font-black text-green-600 w-5">
                   #{index + 1}

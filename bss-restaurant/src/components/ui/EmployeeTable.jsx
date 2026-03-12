@@ -7,13 +7,13 @@ const EmployeeTable = ({ employees, handleOpenEdit, handleDelete }) => {
         <thead>
           <tr className="bg-slate-50 border-b border-slate-100">
             <th className="w-16 px-6 py-6"></th>
-            <th className="px-6 py-6 text-base font-bold ">Name</th>
-            <th className="w-12 px-2 py-6 text-center"></th>
-            <th className="px-6 py-6 text-base font-bold ">Email</th>
-            <th className="px-6 py-6 text-base font-bold ">Designation</th>
-            <th className="px-6 py-6 text-base font-bold ">Join Date</th>
-            <th className="px-6 py-6 text-base font-bold ">Phone</th>
-            <th className="pr-12 py-6 text-base font-center font-bold  text-right ">
+            <th className="px-6 py-6 text-base  font-semibold">Name</th>
+            <th className="w-12 px-2 py-6 text-center "></th>
+            <th className="px-6 py-6 text-base  font-semibold">Email</th>
+            <th className="px-6 py-6 text-base  font-semibold">Designation</th>
+            <th className="px-6 py-6 text-base  font-semibold">Join Date</th>
+            <th className="px-6 py-6 text-base  font-semibold">Phone</th>
+            <th className="pr-12 py-6 text-base font-center  font-semibold text-right ">
               Action
             </th>
           </tr>
@@ -54,7 +54,7 @@ const EmployeeTable = ({ employees, handleOpenEdit, handleDelete }) => {
               </td>
 
               <td className="px-6 py-4">
-                <p className="text-base text-slate-600 truncate max-w-[150px] md:max-w-none">
+                <p className="text-base text-slate-700 truncate max-w-[150px] md:max-w-none">
                   {emp.user?.email}
                 </p>
               </td>

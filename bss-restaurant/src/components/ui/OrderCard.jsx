@@ -46,7 +46,7 @@ export default function OrderCard({ order, onUpdateStatus, onDelete, onEdit }) {
   }).format(new Date(order.orderTime));
 
   return (
-    <div className="group bg-white border-[3px] border-slate-100 rounded-[2.5rem] p-3 md:p-6 transition-all hover:shadow-2xl hover:shadow-orange-100/50 flex flex-col h-full shadow-xl">
+    <div className="group bg-white/80 border-slate-100 rounded-md p-3 md:p-6 transition-all shadow-xl flex flex-col h-full">
       <div className="flex justify-between items-start mb-5">
         <div
           className={`flex items-center gap-2 px-4 py-1.5 rounded-full border-2 font-black text-[10px] uppercase tracking-tighter ${config.color}`}

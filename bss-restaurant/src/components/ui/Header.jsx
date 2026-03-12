@@ -4,7 +4,7 @@ function Header({ toggleSidebar, isSidebarOpen, user }) {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 border-b bg-white/80 backdrop-blur-md border-slate-200 lg:px-10">
       <button
-        className="p-2 -ml-2 transition-colors rounded-lg lg:hidden text-slate-600 hover:bg-slate-100 cursor-pointer"
+        className="p-2 -ml-2 transition-colors rounded-md lg:hidden text-slate-600 hover:bg-slate-100 cursor-pointer"
         onClick={toggleSidebar}
       >
         {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -25,7 +25,7 @@ function Header({ toggleSidebar, isSidebarOpen, user }) {
               {user?.role || "Admin"}
             </p>
           </div>
-          <div className="flex items-center justify-center font-bold text-white shadow-lg w-11 h-11 rounded-2xl bg-slate-900 shadow-slate-200">
+          <div className="flex items-center justify-center font-bold text-white shadow-lg w-11 h-11 rounded-md bg-slate-700 shadow-slate-200">
             {user?.userName?.[0].toUpperCase() || "A"}
           </div>
         </div>

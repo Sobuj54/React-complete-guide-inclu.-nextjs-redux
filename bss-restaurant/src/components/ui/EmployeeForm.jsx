@@ -89,7 +89,7 @@ export default function EmployeeForm({
           <label className="text-sm font-black text-slate-700">
             Upload Image
           </label>
-          <div className="border-2 border-dashed border-slate-200 rounded-[2rem] h-[215px] flex flex-col items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer relative overflow-hidden group">
+          <div className="border-2 border-dashed border-slate-200 rounded-lg h-[215px] flex flex-col items-center justify-center bg-white hover:bg-slate-100 transition-colors cursor-pointer relative overflow-hidden group">
             {preview ? (
               <div className="relative w-full h-full">
                 <img
@@ -113,12 +113,10 @@ export default function EmployeeForm({
               </div>
             ) : (
               <>
-                <div className="p-4 bg-white rounded-2xl shadow-sm mb-2 text-slate-400">
+                <div className="p-4 bg-slate-400 rounded-lg shadow-sm mb-2 text-white">
                   <Upload size={24} />
                 </div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  + Select File
-                </p>
+                <p className="text-sm font-mediuma">+ Select File</p>
               </>
             )}
             <input
@@ -181,7 +179,7 @@ export default function EmployeeForm({
           </label>
           <select
             {...register("gender")}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none transition-all text-sm font-medium bg-white"
+            className="w-full px-4 py-3 rounded-md border border-black outline-none transition-all text-sm font-medium bg-white"
           >
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
@@ -219,14 +217,14 @@ export default function EmployeeForm({
         <button
           type="button"
           onClick={onCancel}
-          className="px-8 py-3.5 rounded-2xl font-black text-slate-500 hover:bg-slate-100 transition-all text-center"
+          className="px-8 py-3.5 rounded-md font-black  transition-all text-center bg-slate-200  cursor-pointer hover:bg-slate-300"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className={`bg-orange-600 hover:bg-orange-700 text-white px-10 py-3.5 rounded-2xl font-black shadow-lg shadow-orange-200 transition-all active:scale-95 text-center ${isLoading && "cursor-not-allowed"}`}
+          className={`bg-orange-600 hover:bg-orange-700 text-white px-10 py-3.5 rounded-md font-black transition-all active:scale-95 text-center cursor-pointer ${isLoading && "cursor-not-allowed"}`}
         >
           {isLoading ? "Saving..." : "Save Changes"}
         </button>

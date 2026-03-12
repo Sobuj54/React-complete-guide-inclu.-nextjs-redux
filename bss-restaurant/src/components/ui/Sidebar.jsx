@@ -36,7 +36,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="flex flex-col h-full">
         {/* Logo Area */}
         <div className="flex items-center gap-3 px-8 py-10">
-          <div className="p-2.5 text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg ">
+          <div className="p-2.5 text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-md shadow-lg ">
             <ChefHat size={26} />
           </div>
           <span className="text-2xl font-black tracking-tight text-white">
@@ -53,7 +53,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 key={item.name}
                 to={item.path}
                 onClick={onClose}
-                className={`flex items-center gap-3 px-4 py-3.5 text-sm font-semibold rounded-2xl transition-all duration-200 ${
+                className={`flex items-center gap-3 px-4 py-3.5 text-sm font-semibold rounded-sm transition-all duration-200 ${
                   isActive
                     ? "bg-orange-600 text-white "
                     : "text-white/80 hover:bg-slate-100 hover:text-slate-900"
@@ -70,7 +70,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="p-6 mt-auto border-t border-slate-100">
           <button
             onClick={logout}
-            className="flex items-center w-full gap-3 px-4 py-3.5 text-sm font-bold text-orange-500 transition-all rounded-2xl hover:bg-white/90 cursor-pointer"
+            className="flex items-center w-full gap-3 px-4 py-3.5 text-sm font-bold text-orange-600 transition-all rounded-md hover:bg-white/90 cursor-pointer bg-white"
           >
             <LogOut size={20} />
             Sign Out

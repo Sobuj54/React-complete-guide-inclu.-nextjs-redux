@@ -16,7 +16,7 @@ export default function AuthPage() {
     <>
       <title>Sign In</title>
       <meta name="description" content="BSS Resto app Sign In" />
-      <div className="flex w-full min-h-screen bg-slate-50">
+      <div className="flex w-full min-h-screen bg-slate-100">
         {/* Left Side: Branding */}
         <div className="relative hidden w-1/2 overflow-hidden bg-orange-600 lg:flex">
           <div className="absolute inset-0 z-10 bg-black/40" />

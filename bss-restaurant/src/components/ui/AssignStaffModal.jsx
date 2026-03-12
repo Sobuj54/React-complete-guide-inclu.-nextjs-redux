@@ -1,5 +1,23 @@
-import { Check } from "lucide-react";
-import Modal from "./Modal";
+import React from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+  Checkbox,
+  Typography,
+  Box,
+  CircularProgress,
+  IconButton,
+  Divider,
+} from "@mui/material";
+import { Check, X, Users, User } from "lucide-react";
 
 export default function AssignStaffModal({
   isOpen,
@@ -12,78 +30,247 @@ export default function AssignStaffModal({
   isSubmitting,
 }) {
   return (
-    <Modal
-      isOpen={isOpen}
+    <Dialog
+      open={isOpen}
       onClose={onClose}
-      title="Assign Staff"
-      style="max-w-xl"
+      fullWidth
+      maxWidth="sm"
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          padding: 1,
+        },
+      }}
+      sx={{
+        "& .MuiPaper-root": {
+          backgroundColor: "grey.100", // Change to your desired color
+        },
+      }}
     >
-      <div className="space-y-6">
-        <p className="font-bold text-slate-400 text-sm">
+      {/* Header */}
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          pb: 1,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+          }}
+        >
+          <Users size={24} className="text-orange-500" />
+          <Typography variant="h6" sx={{ fontWeight: 900, color: "#1e293b" }}>
+            Assign Staff
+          </Typography>
+        </Box>
+        <IconButton onClick={onClose} size="small">
+          <X size={20} />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent dividers sx={{ py: 2 }}>
+        <Typography
+          variant="body2"
+          sx={{ mb: 2, fontWeight: 700, color: "text.secondary" }}
+        >
           Select staff members to assign to this table:
-        </p>
-        <div className="max-h-80 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+        </Typography>
+
+        {/* Staff List Area */}
+        <Box sx={{ minHeight: 200, maxHeight: 400, overflowY: "auto" }}>
           {isLoading ? (
-            <div className="py-10 text-center font-black text-slate-300 uppercase tracking-widest text-[10px] animate-pulse">
-              Loading staff...
-            </div>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                py: 8,
+                gap: 2,
+              }}
+            >
+              <CircularProgress
+                size={32}
+                thickness={5}
+                sx={{ color: "#f97316" }}
+              />
+              <Typography
+                variant="caption"
+                sx={{
+                  fontWeight: 900,
+                  letterSpacing: 1,
+                  color: "text.disabled",
+                }}
+              >
+                FETCHING STAFF...
+              </Typography>
+            </Box>
           ) : staff?.length > 0 ? (
-            staff.map((emp) => {
-              const currentId = emp.employeeId || emp.id;
-              const isSelected = selectedEmployees.includes(currentId);
-              return (
-                <div
-                  key={currentId}
-                  onClick={() => onToggle(currentId)}
-                  className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all cursor-pointer ${
-                    isSelected
-                      ? "border-orange-500 bg-orange-50/50"
-                      : "border-slate-100 hover:border-slate-200 bg-white"
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-black text-slate-500">
-                      {emp.name?.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-black text-slate-900">{emp.name}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                        {emp.role || "Server"}
-                      </p>
-                    </div>
-                  </div>
-                  {isSelected && (
-                    <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white">
-                      <Check size={14} strokeWidth={4} />
-                    </div>
-                  )}
-                </div>
-              );
-            })
+            <List sx={{ width: "100%", bgcolor: "gery.200" }}>
+              {staff.map((emp) => {
+                const currentId = emp.employeeId || emp.id;
+                const isSelected = selectedEmployees.includes(currentId);
+
+                return (
+                  <ListItem
+                    key={currentId}
+                    disablePadding
+                    sx={{
+                      mb: 2,
+                      border: "1px solid",
+                      borderColor: isSelected ? "orange.200" : "grey.100",
+                      bgcolor: isSelected ? "orange.200" : "white",
+                      borderRadius: 1,
+                      transition: "all 0.2s",
+                      "&:hover": {
+                        bgcolor: isSelected ? "orange.100" : "grey.100",
+                      },
+                      boxShadow: 1,
+                    }}
+                  >
+                    <Box
+                      onClick={() => onToggle(currentId)}
+                      sx={{
+                        display: "flex",
+                        width: "100%",
+                        alignItems: "center",
+                        p: 1.5,
+                        cursor: "pointer",
+                        gap: "5px",
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar
+                          src={
+                            emp.image
+                              ? `https://bssrms.runasp.net/images/employee/${emp.image}`
+                              : undefined
+                          }
+                          sx={{
+                            bgcolor: isSelected ? "orange.500" : "grey.500",
+                            fontWeight: 900,
+                          }}
+                        >
+                          {!emp.image &&
+                            (emp.name?.charAt(0) || <User size={18} />)}
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontWeight: 900, color: "#0f172a" }}
+                          >
+                            {emp.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              fontWeight: 700,
+                              textTransform: "uppercase",
+                              color: "text.disabled",
+                            }}
+                          >
+                            {emp.role || "Server"}
+                          </Typography>
+                        }
+                      />
+                      <Checkbox
+                        edge="end"
+                        checked={isSelected}
+                        sx={{
+                          color: "grey.500",
+                          "&.Mui-checked": { color: "#f97316" },
+                        }}
+                        icon={
+                          <Box
+                            sx={{
+                              width: 24,
+                              height: 24,
+                              border: "2px solid #9E9E9E",
+                              borderRadius: 0.5,
+                              color: "white",
+                            }}
+                          />
+                        }
+                        checkedIcon={
+                          <Box
+                            sx={{
+                              width: 24,
+                              height: 24,
+                              bgcolor: "#f97316",
+                              borderRadius: 0.5,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Check size={16} color="white" strokeWidth={4} />
+                          </Box>
+                        }
+                      />
+                    </Box>
+                  </ListItem>
+                );
+              })}
+            </List>
           ) : (
-            <div className="py-10 text-center font-bold text-slate-300 italic">
-              No available staff found.
-            </div>
+            <Box sx={{ py: 10, textAlign: "center" }}>
+              <Typography
+                variant="body2"
+                sx={{ fontStyle: "italic", color: "text.disabled" }}
+              >
+                No available staff found.
+              </Typography>
+            </Box>
           )}
-        </div>
-        <div className="flex gap-4 pt-4">
-          <button
-            onClick={onClose}
-            className="flex-1 py-4 font-black text-slate-400 uppercase tracking-widest text-[10px] cursor-pointer"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={selectedEmployees.length === 0 || isSubmitting}
-            className="flex-1 py-4 bg-orange-500 text-white font-black rounded-2xl hover:bg-orange-600 active:scale-95 transition-all shadow-xl shadow-orange-100 disabled:opacity-50 disabled:grayscale cursor-pointer"
-          >
-            {isSubmitting
-              ? "Assigning..."
-              : `Assign ${selectedEmployees.length} Members`}
-          </button>
-        </div>
-      </div>
-    </Modal>
+        </Box>
+      </DialogContent>
+
+      {/* Actions */}
+      <DialogActions sx={{ p: 3, gap: 1 }}>
+        <Button
+          onClick={onClose}
+          fullWidth
+          sx={{
+            fontWeight: 900,
+            color: "text.secondary",
+            textTransform: "uppercase",
+            letterSpacing: 1,
+            fontSize: "0.75rem",
+            py: 1.5,
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={onConfirm}
+          disabled={selectedEmployees.length === 0 || isSubmitting}
+          variant="contained"
+          fullWidth
+          disableElevation
+          sx={{
+            py: 1.5,
+            bgcolor: "#f97316",
+            fontWeight: 900,
+            borderRadius: 1.5,
+            "&:hover": { bgcolor: "#ea580c" },
+            "&:disabled": { bgcolor: "grey.200" },
+          }}
+        >
+          {isSubmitting ? (
+            <CircularProgress size={20} sx={{ color: "white" }} />
+          ) : (
+            `Assign ${selectedEmployees.length} Members`
+          )}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

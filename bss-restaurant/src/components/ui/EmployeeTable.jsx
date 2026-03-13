@@ -1,108 +1,238 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Avatar,
+  IconButton,
+  Typography,
+  Chip,
+  TablePagination,
+  Box,
+  Skeleton,
+} from "@mui/material";
 import { Edit2, Trash2, Star, User } from "lucide-react";
 
-const EmployeeTable = ({ employees, handleOpenEdit, handleDelete }) => {
+const EmployeeTable = ({
+  employees,
+  handleOpenEdit,
+  handleDelete,
+  totalEntries,
+  perPage,
+  page,
+  onPageChange,
+  onPerPageChange,
+  isLoading,
+}) => {
+  const skeletonRows = Array.from(new Array(perPage || 5));
+
   return (
-    <div className="overflow-x-auto ">
-      <table className="w-full text-left border-collapse min-w-[800px] md:min-w-full">
-        <thead>
-          <tr className="bg-slate-50 border-b border-slate-100">
-            <th className="w-16 px-6 py-6"></th>
-            <th className="px-6 py-6 text-base  font-semibold">Name</th>
-            <th className="w-12 px-2 py-6 text-center "></th>
-            <th className="px-6 py-6 text-base  font-semibold">Email</th>
-            <th className="px-6 py-6 text-base  font-semibold">Designation</th>
-            <th className="px-6 py-6 text-base  font-semibold">Join Date</th>
-            <th className="px-6 py-6 text-base  font-semibold">Phone</th>
-            <th className="pr-12 py-6 text-base font-center  font-semibold text-right ">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100">
-          {employees.map((emp) => (
-            <tr
-              key={emp.id}
-              className="hover:bg-slate-50/50 transition-colors group border-b-[1px] border-b-slate-200 font-medium"
-            >
-              <td className="px-6 py-4">
-                <div className="w-14 h-14 rounded-full overflow-hidden border border-slate-200 flex-shrink-0">
-                  {emp.user?.image ? (
-                    <img
-                      src={`https://bssrms.runasp.net/images/user/${emp.user.image}`}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">
-                      <User size={20} />
-                    </div>
-                  )}
-                </div>
-              </td>
+    <Paper
+      elevation={0}
+      sx={{
+        width: "100%",
+        overflow: "hidden",
+        borderRadius: "7px",
+        border: "1px solid #e2e8f0",
+      }}
+    >
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 800 }} aria-label="employee table">
+          <TableHead>
+            <TableRow sx={{ bgcolor: "#f8fafc" }}>
+              <TableCell sx={{ width: 80 }} />
+              <TableCell>Name</TableCell>
+              <TableCell align="center" sx={{ width: 50 }} />
+              <TableCell>Email</TableCell>
+              <TableCell>Designation</TableCell>
+              <TableCell>Join Date</TableCell>
+              <TableCell>Phone</TableCell>
+              <TableCell align="right" sx={{ pr: 4 }}>
+                Action
+              </TableCell>
+            </TableRow>
+          </TableHead>
 
-              <td className="px-6 py-4">
-                <p className="text-base text-slate-700 truncate max-w-[120px] md:max-w-none font-medium">
-                  {emp.user?.fullName}
-                </p>
-              </td>
+          <TableBody>
+            {isLoading
+              ? skeletonRows.map((_, index) => (
+                  <TableRow key={`skeleton-${index}`}>
+                    <TableCell>
+                      <Skeleton
+                        variant="rectangular"
+                        width={48}
+                        height={30}
+                        sx={{ borderRadius: "1px" }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton variant="text" width="120px" height={20} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton
+                        variant="circular"
+                        width={16}
+                        height={16}
+                        sx={{ margin: "auto" }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton variant="text" width="150px" height={20} />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton variant="rectangular" width={80} height={24} />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton variant="text" width={100} height={20} />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton variant="text" width={120} height={20} />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          gap: 1,
+                        }}
+                      >
+                        <Skeleton
+                          variant="rectangular"
+                          width={32}
+                          height={32}
+                          sx={{ borderRadius: "1px" }}
+                        />
+                        <Skeleton
+                          variant="rectangular"
+                          width={32}
+                          height={32}
+                          sx={{ borderRadius: "1px" }}
+                        />
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : employees.map((emp) => (
+                  <TableRow key={emp.id} hover>
+                    <TableCell>
+                      <Avatar
+                        src={
+                          emp.user?.image
+                            ? `https://bssrms.runasp.net/images/user/${emp.user.image}`
+                            : ""
+                        }
+                        sx={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: "5px",
+                          border: "1px solid #e2e8f0",
+                        }}
+                      >
+                        <User size={20} />
+                      </Avatar>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">
+                        {emp.user?.fullName}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="left">
+                      <Star
+                        size={16}
+                        className="text-orange-400 fill-orange-400"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{emp.user?.email}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={emp.designation}
+                        size="small"
+                        sx={{
+                          bgcolor: "oklch(93.5% 0.084 155.995)",
+                          color: "oklch(44.8% 0.119 151.328)",
+                          borderRadius: "3px",
+                          fontSize: "13px",
+                          fontWeight: 500,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
+                        {new Date(emp.joinDate).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
+                        {emp.user?.phoneNumber}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          gap: 1,
+                        }}
+                      >
+                        <IconButton
+                          size="medium"
+                          onClick={() => handleOpenEdit(emp.id)}
+                          sx={{
+                            borderRadius: "5px",
+                            border: "1px solid #e2e8f0",
+                            "&:hover": { bgcolor: "#22c55e", color: "white" },
+                          }}
+                        >
+                          <Edit2 size={14} />
+                        </IconButton>
+                        <IconButton
+                          size="medium"
+                          onClick={() => handleDelete(emp)}
+                          sx={{
+                            borderRadius: "5px",
+                            border: "1px solid #e2e8f0",
+                            "&:hover": { bgcolor: "#ef4444", color: "white" },
+                          }}
+                        >
+                          <Trash2 size={14} />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-              <td className="px-2 py-4">
-                <Star
-                  size={16}
-                  className="text-orange-400 fill-orange-400 mx-auto"
-                />
-              </td>
-
-              <td className="px-6 py-4">
-                <p className="text-base text-slate-700 truncate max-w-[150px] md:max-w-none">
-                  {emp.user?.email}
-                </p>
-              </td>
-
-              <td className="px-6 py-4">
-                <p className="text-base text-slate-600 truncate max-w-[100px] md:max-w-none ">
-                  <span className="bg-green-100 text-green-700 px-3 py-1 font-medium rounded-sm inline-block">
-                    {emp.designation}
-                  </span>
-                </p>
-              </td>
-
-              <td className="px-6 py-4 text-slate-600 text-base whitespace-nowrap">
-                {new Date(emp.joinDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </td>
-
-              <td className="px-6 py-4 text-slate-600 text-base whitespace-nowrap">
-                <span className="truncate max-w-[100px] md:max-w-none block">
-                  {emp.user?.phoneNumber}
-                </span>
-              </td>
-
-              <td className="px-6 py-4 text-right">
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => handleOpenEdit(emp.id)}
-                    className="p-2 text-slate-400 bg-white border border-slate-200 rounded-lg hover:text-white hover:bg-green-400 transition-all active:scale-95 cursor-pointer"
-                  >
-                    <Edit2 size={16} />
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(emp)}
-                    className="p-2 text-slate-400 bg-white border border-slate-200 rounded-lg hover:text-white hover:bg-red-500 transition-all active:scale-95 cursor-pointer"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <TablePagination
+        component="div"
+        count={totalEntries || 0}
+        page={page - 1}
+        onPageChange={(e, newPage) => onPageChange(newPage + 1)}
+        rowsPerPage={perPage}
+        onRowsPerPageChange={(e) =>
+          onPerPageChange(parseInt(e.target.value, 10))
+        }
+        rowsPerPageOptions={[5, 10, 20, 50]}
+        sx={{
+          borderTop: "1px solid #e2e8f0",
+          ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows":
+            {
+              textTransform: "capitalize",
+              fontSize: "14px",
+            },
+        }}
+      />
+    </Paper>
   );
 };
 

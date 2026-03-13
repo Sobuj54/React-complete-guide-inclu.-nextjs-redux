@@ -158,8 +158,6 @@ export default function Tables() {
   const headerCellStyle = {
     py: 2,
     px: 3,
-    fontWeight: 900,
-    color: "#64748b",
     whiteSpace: "nowrap",
   };
 
@@ -243,7 +241,7 @@ export default function Tables() {
               ),
               sx: {
                 borderRadius: 1,
-                fontWeight: 700,
+                fontWeight: 600,
                 bgcolor: "white",
                 fontSize: "14px",
               },
@@ -278,7 +276,7 @@ export default function Tables() {
       <TableContainer
         component={Paper}
         sx={{
-          borderRadius: "10px",
+          borderRadius: "7px",
           // responsive overflow handling
           width: "100%",
           overflowX: "auto",
@@ -329,7 +327,7 @@ export default function Tables() {
                     <Typography
                       variant="h6"
                       sx={{
-                        fontWeight: 900,
+                        fontWeight: 500,
                         color: "#1e293b",
                         fontSize: "0.95rem",
                         whiteSpace: "nowrap",
@@ -339,20 +337,19 @@ export default function Tables() {
                     </Typography>
                   </TableCell>
                   <TableCell align="center" sx={{ px: 4 }}>
-                    <Box
+                    <Typography
+                      variant="h6"
                       sx={{
-                        display: "inline-block",
-                        px: 2,
-                        py: 0.5,
-                        bgcolor: "#f1f5f9",
-                        borderRadius: 1.5,
                         fontWeight: 900,
+                        color: "#1e293b",
+                        fontSize: "0.95rem",
+                        whiteSpace: "nowrap",
                       }}
                     >
                       {table.numberOfSeats}
-                    </Box>
+                    </Typography>
                   </TableCell>
-                  <TableCell sx={{ px: 4 }}>
+                  <TableCell>
                     <Chip
                       icon={
                         table.isOccupied ? (
@@ -398,14 +395,17 @@ export default function Tables() {
                         onClick={() => handleOpenAssign(table.id)}
                         sx={{
                           border: "2px dashed oklch(79.2% 0.209 151.711)",
-                          "&:hover": { bgcolor: "oklch(79.2% 0.209 151.711)" },
+                          "&:hover": {
+                            bgcolor: "oklch(79.2% 0.209 151.711)",
+                            color: "white",
+                          },
                         }}
                       >
                         <UserPlus size={18} />
                       </IconButton>
                     </Box>
                   </TableCell>
-                  <TableCell align="right" sx={{ px: 4 }}>
+                  <TableCell align="right" sx={{ pl: 5 }}>
                     <Stack
                       direction="row"
                       spacing={1}

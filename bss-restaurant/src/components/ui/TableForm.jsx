@@ -76,7 +76,7 @@ export default function TableFormModal({
       open={isOpen}
       onClose={onClose}
       fullWidth
-      maxWidth="sm" // Changed from xs to sm to allow proper expansion
+      maxWidth="md" // Changed from xs to sm to allow proper expansion
       PaperProps={{
         sx: {
           borderRadius: "10px", // Consistent with your UI design
@@ -86,7 +86,7 @@ export default function TableFormModal({
       }}
     >
       <DialogTitle
-        sx={{ display: "flex", alignItems: "center", gap: 2, pb: 1 }}
+        sx={{ display: "flex", alignItems: "center", gap: 2, pb: 3 }}
       >
         <Box
           sx={{

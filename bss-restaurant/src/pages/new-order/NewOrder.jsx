@@ -1,16 +1,28 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  IconButton,
+  Badge,
+  Drawer,
+  Button,
+  Avatar,
+  Grid,
+  Stack,
+  InputAdornment,
+  Skeleton,
+} from "@mui/material";
 import {
   Search,
   ShoppingCart,
   X,
-  Loader2,
-  Utensils,
   ShoppingBasket,
   Trash2,
+  ArrowRight,
+  User,
 } from "lucide-react";
 import { useOrderData, useOrderMutation } from "../../hooks/useNewOrder";
-import TableSelection from "../../components/ui/TableSelection";
-import FoodMenu from "../../components/ui/FoodMenu";
 
 export default function NewOrderPage() {
   const [selectedTable, setSelectedTable] = useState(null);
@@ -53,9 +65,7 @@ export default function NewOrderPage() {
 
   const removeFromCart = (id) =>
     setCart(cart.filter((item) => item.foodId !== id));
-
   const totalAmount = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleSubmit = () => {
     const payload = {
@@ -76,175 +86,342 @@ export default function NewOrderPage() {
   };
 
   return (
-    <div className="h-screen bg-[#f8fafc] p-4 lg:p-8 font-sans overflow-hidden flex flex-col">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 flex-shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-green-500 rounded-2xl shadow-lg shadow-green-100 text-white">
-            <Utensils size={24} />
-          </div>
-          <div>
-            <h1 className="text-xl font-black text-slate-800 uppercase tracking-tight">
-              BSS Resto
-            </h1>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              New Order Terminal
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4 w-full md:w-auto">
-          {/* Global Search Input */}
-          <div className="relative flex-1 md:w-80">
-            <input
-              type="text"
-              placeholder="Search Food..."
-              className="w-full bg-white border-2 border-slate-100 rounded-2xl py-3 px-4 pl-12 font-bold text-sm focus:border-green-500 outline-none transition-all"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Search
-              className="absolute left-4 top-3.5 text-slate-300"
-              size={18}
-            />
-          </div>
-
-          {/* Cart Trigger Button */}
-          <button
-            onClick={() => setIsDrawerOpen(true)}
-            className="relative p-3.5 bg-white border-2 border-slate-100 rounded-2xl text-slate-600 hover:border-green-500 transition-all shadow-sm"
+    <Box sx={{ minHeight: "100vh", bgcolor: "#f1f1f1", p: 3 }}>
+      {/* Top Bar - Matches Image Search style */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3 }}>
+        <Stack direction="row" spacing={0}>
+          <TextField
+            placeholder="Search Food"
+            size="small"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{
+              width: 250,
+              "& .MuiOutlinedInput-root": {
+                bgcolor: "white",
+                borderRadius: "4px 0 0 4px",
+                height: 35,
+                fontSize: "13px",
+              },
+            }}
+          />
+          <Button
+            variant="contained"
+            disableElevation
+            sx={{
+              bgcolor: "#5cb85c",
+              minWidth: 40,
+              borderRadius: "0 4px 4px 0",
+              height: 35,
+              "&:hover": { bgcolor: "#4cae4c" },
+            }}
           >
-            <ShoppingBasket size={24} />
-            {cartItemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-4 border-[#f8fafc]">
-                {cartItemCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
+            <Search size={18} />
+          </Button>
+        </Stack>
+      </Box>
 
-      <div className="flex-1 flex flex-col lg:flex-row gap-8 min-h-0">
-        <TableSelection
-          tablesQuery={tablesQuery}
-          selectedTable={selectedTable}
-          setSelectedTable={setSelectedTable}
-        />
-        <FoodMenu
-          selectedTable={selectedTable}
-          foodsQuery={foodsQuery}
-          searchTerm={searchTerm}
-          handleAddToCart={handleAddToCart}
-        />
-      </div>
-
-      <div
-        className={`fixed inset-0 z-50 transition-all duration-500 ${isDrawerOpen ? "visible" : "invisible"}`}
-      >
-        {/* Backdrop */}
-        <div
-          className={`absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-500 ${isDrawerOpen ? "opacity-100" : "opacity-0"}`}
-          onClick={() => setIsDrawerOpen(false)}
-        />
-
-        {/* Drawer Panel */}
-        <div
-          className={`absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl transition-transform duration-500 transform ${isDrawerOpen ? "translate-x-0" : "translate-x-full"} flex flex-col border-l-8 border-green-500 rounded-l-[3rem]`}
-        >
-          {/* Drawer Header */}
-          <div className="p-8 border-b border-slate-50 flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-50 rounded-xl text-green-600">
-                <ShoppingCart size={24} />
-              </div>
-              <h2 className="font-black uppercase text-xl text-slate-800">
-                Your Cart
-              </h2>
-            </div>
-            <button
-              onClick={() => setIsDrawerOpen(false)}
-              className="p-2 hover:bg-slate-50 rounded-full transition-colors"
-            >
-              <X size={24} className="text-slate-400" />
-            </button>
-          </div>
-
-          {/* Cart Items List */}
-          <div className="flex-1 overflow-y-auto p-8 space-y-4 no-scrollbar">
-            {cart.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center opacity-20 text-slate-400">
-                <ShoppingBasket size={80} className="mb-4" />
-                <p className="font-black text-2xl uppercase">Empty Cart</p>
-              </div>
-            ) : (
-              cart.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center gap-4 bg-slate-50 p-4 rounded-[2rem] border-2 border-slate-100"
-                >
-                  <img
-                    src={`https://bssrms.runasp.net/images/food/${item.image}`}
-                    className="w-16 h-16 rounded-2xl object-cover"
-                    alt={item.name}
+      <Grid container spacing={3}>
+        {/* LEFT: Table Selection */}
+        <Grid item xs={12} md={3}>
+          <Typography
+            align="center"
+            sx={{ fontWeight: 700, mb: 2, fontSize: "14px", color: "#333" }}
+          >
+            SELECT A TABLE ({tablesQuery.data?.length || 0})
+          </Typography>
+          <Stack spacing={2}>
+            {tablesQuery.isLoading
+              ? [1, 2, 3].map((i) => (
+                  <Skeleton
+                    key={i}
+                    variant="rectangular"
+                    height={150}
+                    sx={{ borderRadius: "8px" }}
                   />
-                  <div className="flex-1">
-                    <p className="font-black text-slate-800 text-xs uppercase">
-                      {item.name}
-                    </p>
-                    <p className="text-[10px] font-black text-slate-400 uppercase mt-1">
-                      Qty: {item.quantity} x {item.unitPrice}৳
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-black text-slate-800 text-sm mb-1">
-                      {item.totalPrice}৳
-                    </p>
-                    <button
-                      onClick={() => removeFromCart(item.foodId)}
-                      className="text-red-400 hover:text-red-600 transition-colors"
+                ))
+              : tablesQuery.data?.map((table) => (
+                  <Box
+                    key={table.id}
+                    onClick={() => setSelectedTable(table)}
+                    sx={{
+                      bgcolor: "white",
+                      border: `1px solid ${selectedTable?.id === table.id ? "#5cb85c" : "#ccc"}`,
+                      borderRadius: "8px",
+                      p: 2,
+                      cursor: "pointer",
+                      textAlign: "center",
+                      transition: "all 0.2s",
+                      "&:hover": { borderColor: "#5cb85c" },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        bgcolor: "#eee",
+                        borderRadius: "8px",
+                        height: 100,
+                        mb: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                      }}
                     >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+                      <img
+                        src={`https://bssrms.runasp.net/images/table/${table.image}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        alt=""
+                        onError={(e) =>
+                          (e.target.src = "https://via.placeholder.com/150")
+                        }
+                      />
+                    </Box>
+                    <Typography sx={{ fontSize: "13px", color: "#333" }}>
+                      {table.tableNumber} ({table.numberOfSeats} Seats)
+                    </Typography>
+                  </Box>
+                ))}
+          </Stack>
+        </Grid>
 
-          {/* Drawer Footer / Checkout */}
-          <div className="p-10 bg-white border-t-4 border-slate-50 space-y-6">
-            <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block px-1">
-                Customer Phone
-              </label>
-              <input
-                type="text"
-                placeholder="01XXX-XXXXXX"
-                className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 px-5 font-bold text-sm focus:border-green-500 outline-none transition-all shadow-inner"
+        {/* RIGHT: Food Menu */}
+        <Grid item xs={12} md={9} sx={{ position: "relative" }}>
+          <Typography
+            sx={{ fontWeight: 700, mb: 2, fontSize: "14px", color: "#333" }}
+          >
+            ADD FOOD TO CART ({foodsQuery.data?.length || 0})
+          </Typography>
+
+          <Stack spacing={2}>
+            {foodsQuery.isLoading
+              ? [1, 2].map((i) => (
+                  <Skeleton
+                    key={i}
+                    variant="rectangular"
+                    height={120}
+                    sx={{ borderRadius: "8px" }}
+                  />
+                ))
+              : foodsQuery.data
+                  ?.filter((f) =>
+                    f.name.toLowerCase().includes(searchTerm.toLowerCase()),
+                  )
+                  .map((food) => (
+                    <Box
+                      key={food.id}
+                      sx={{
+                        bgcolor: "white",
+                        border: "1px solid #5cb85c",
+                        borderRadius: "8px",
+                        p: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 3,
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={`https://bssrms.runasp.net/images/food/${food.image}`}
+                        sx={{ width: 120, height: 100, borderRadius: "8px" }}
+                      />
+                      <Box sx={{ flex: 1 }}>
+                        <Typography
+                          sx={{
+                            fontWeight: 800,
+                            fontSize: "18px",
+                            color: "#333",
+                          }}
+                        >
+                          {food.name}
+                        </Typography>
+                        <Typography
+                          sx={{ fontSize: "13px", color: "#666", mb: 2 }}
+                        >
+                          {food.description || food.name}
+                        </Typography>
+
+                        {food.price < food.originalPrice && (
+                          <Typography
+                            sx={{
+                              fontSize: "14px",
+                              color: "#c00",
+                              textDecoration: "line-through",
+                              lineHeight: 1,
+                            }}
+                          >
+                            Price - {food.originalPrice}৳
+                          </Typography>
+                        )}
+                        <Typography
+                          sx={{
+                            fontSize: "18px",
+                            fontWeight: 700,
+                            color: "#449d44",
+                          }}
+                        >
+                          Price - {food.price}৳!
+                        </Typography>
+                      </Box>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleAddToCart(food)}
+                        sx={{
+                          bgcolor: "#449d44",
+                          textTransform: "none",
+                          fontWeight: 700,
+                          fontSize: "12px",
+                          px: 3,
+                          "&:hover": { bgcolor: "#398439" },
+                        }}
+                      >
+                        Add To Cart
+                      </Button>
+                    </Box>
+                  ))}
+          </Stack>
+
+          {/* Floating Cart Trigger - Matches Screenshot 1 */}
+          <Box
+            onClick={() => setIsDrawerOpen(true)}
+            sx={{
+              position: "fixed",
+              right: 40,
+              top: "50%",
+              transform: "translateY(-50%)",
+              bgcolor: "white",
+              p: 1.5,
+              borderRadius: "8px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              cursor: "pointer",
+              border: "1px solid #ddd",
+              zIndex: 10,
+            }}
+          >
+            <Badge badgeContent={cart.length} color="error">
+              <ShoppingBasket size={30} color="#333" />
+            </Badge>
+          </Box>
+        </Grid>
+      </Grid>
+
+      {/* CART DRAWER - Matches Screenshot 2 */}
+      <Drawer
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        PaperProps={{ sx: { width: { xs: "100%", sm: 450 } } }}
+      >
+        <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+          <Box
+            sx={{
+              p: 2,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderBottom: "1px solid #5cb85c",
+            }}
+          >
+            <Stack direction="row" spacing={1} alignItems="center">
+              <ShoppingCart size={20} color="#5cb85c" />
+              <Typography
+                sx={{ fontWeight: 700, color: "#5cb85c", fontSize: "18px" }}
+              >
+                Order Cart
+              </Typography>
+            </Stack>
+            <IconButton onClick={() => setIsDrawerOpen(false)}>
+              <X size={24} />
+            </IconButton>
+          </Box>
+
+          <Box
+            sx={{
+              flex: 1,
+              p: 4,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {cart.length === 0 ? (
+              <Typography sx={{ fontSize: "24px", color: "#555" }}>
+                The Cart Is Empty!
+              </Typography>
+            ) : (
+              <Stack
+                spacing={2}
+                sx={{ width: "100%", alignSelf: "flex-start" }}
+              >
+                {cart.map((item) => (
+                  <Box
+                    key={item.foodId}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      p: 2,
+                      bgcolor: "#f9f9f9",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    <Box>
+                      <Typography sx={{ fontWeight: 700 }}>
+                        {item.name}
+                      </Typography>
+                      <Typography sx={{ fontSize: "12px" }}>
+                        {item.quantity} x {item.unitPrice}৳
+                      </Typography>
+                    </Box>
+                    <IconButton
+                      color="error"
+                      onClick={() => removeFromCart(item.foodId)}
+                    >
+                      <Trash2 size={18} />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Stack>
+            )}
+          </Box>
+
+          {cart.length > 0 && (
+            <Box sx={{ p: 3, borderTop: "1px solid #eee" }}>
+              <TextField
+                fullWidth
+                label="Customer Phone"
+                size="small"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                sx={{ mb: 2 }}
               />
-            </div>
-            <div className="flex justify-between items-center">
-              <p className="font-black text-slate-400 uppercase text-xs">
-                Total Payable:
-              </p>
-              <p className="font-black text-4xl text-green-600 tracking-tighter">
-                {totalAmount}৳
-              </p>
-            </div>
-            <button
-              onClick={handleSubmit}
-              disabled={cart.length === 0 || orderMutation.isLoading}
-              className="w-full bg-slate-900 hover:bg-green-600 py-5 rounded-[2rem] text-white font-black uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-3 shadow-xl disabled:bg-slate-200"
-            >
-              {orderMutation.isLoading ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                "Confirm Order"
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
+              >
+                <Typography sx={{ fontWeight: 700 }}>Total:</Typography>
+                <Typography sx={{ fontWeight: 700, color: "#449d44" }}>
+                  {totalAmount}৳
+                </Typography>
+              </Box>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleSubmit}
+                sx={{
+                  bgcolor: "#5cb85c",
+                  "&:hover": { bgcolor: "#4cae4c" },
+                  py: 1.5,
+                  fontWeight: 700,
+                }}
+              >
+                Confirm Order
+              </Button>
+            </Box>
+          )}
+        </Box>
+      </Drawer>
+    </Box>
   );
 }

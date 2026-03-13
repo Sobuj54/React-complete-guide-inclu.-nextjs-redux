@@ -1,6 +1,28 @@
-import { useState, useEffect, useMemo, useRef } from "react";
-import { Trash2, Loader2, Plus, Search, ChevronDown } from "lucide-react";
-import Modal from "./Modal";
+import React, { useState, useEffect, useMemo } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Typography,
+  Box,
+  TextField,
+  Button,
+  Autocomplete,
+  Avatar,
+  CircularProgress,
+  Stack,
+  InputAdornment,
+} from "@mui/material";
+import {
+  X,
+  Trash2,
+  Search,
+  UtensilsCrossed,
+  Smartphone,
+  Table as TableIcon,
+} from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function EditOrderModal({
@@ -13,25 +35,28 @@ export default function EditOrderModal({
   const [phoneNumber, setPhoneNumber] = useState("");
   const [items, setItems] = useState([]);
   const [foodItems, setFoodItems] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [loadingFood, setLoadingFood] = useState(false);
   const axiosSecure = useAxiosSecure();
 
+  // Fetch Food Data
   useEffect(() => {
     if (isOpen) {
       const fetchFood = async () => {
+        setLoadingFood(true);
         try {
           const { data } = await axiosSecure.get("/Food/datatable");
           setFoodItems(data.data || []);
         } catch (error) {
           console.error(error);
+        } finally {
+          setLoadingFood(false);
         }
       };
       fetchFood();
     }
   }, [isOpen, axiosSecure]);
 
+  // Sync Order Data
   useEffect(() => {
     if (order && isOpen) {
       setPhoneNumber(order.orderedBy?.phoneNumber || "");
@@ -39,26 +64,13 @@ export default function EditOrderModal({
     }
   }, [order, isOpen]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const totalAmount = useMemo(
     () => items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0),
     [items],
   );
 
-  const filteredFood = foodItems.filter((food) =>
-    food.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
   const handleAddItem = (foodToAdd) => {
+    if (!foodToAdd) return;
     const existingIndex = items.findIndex(
       (item) => (item.food?.id || item.foodId) === foodToAdd.id,
     );
@@ -85,8 +97,6 @@ export default function EditOrderModal({
         ...items,
       ]);
     }
-    setIsDropdownOpen(false);
-    setSearchTerm("");
   };
 
   const handleQtyChange = (index, val) => {
@@ -119,180 +129,363 @@ export default function EditOrderModal({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
+    <Dialog
+      open={isOpen}
       onClose={onClose}
-      title={`Edit Order: ${order?.orderNumber}`}
-      style="max-w-2xl"
+      fullWidth
+      maxWidth="sm"
+      PaperProps={{
+        sx: { borderRadius: "7px", p: 1, bgcolor: "#f8fafc" },
+      }}
     >
-      <div className="space-y-5 p-1">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-3 bg-slate-50 border-2 border-slate-100 rounded-[1.2rem]">
-            <p className="text-[9px] font-black uppercase text-slate-400 mb-0.5 px-1">
-              Table
-            </p>
-            <p className="font-black text-slate-800 text-sm px-1">
-              {order?.table?.tableNumber || "Walk-in"}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <label className="text-[9px] font-black uppercase text-slate-400 px-2">
-              Phone
-            </label>
-            <input
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-full p-2.5 bg-white border-2 border-slate-100 rounded-[1.2rem] font-bold text-sm focus:border-orange-500 outline-none transition-all"
-            />
-          </div>
-        </div>
-
-        <div className="relative" ref={dropdownRef}>
-          <label className="text-[9px] font-black uppercase text-slate-400 px-2 mb-1 block">
-            Add Food Item
-          </label>
-          <div
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center justify-between p-3 bg-white border-[3px] border-slate-100 rounded-[1.5rem] cursor-pointer hover:border-orange-200 transition-all"
+      {/* Header */}
+      <DialogTitle
+        sx={{
+          p: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box>
+          <Typography
+            sx={{ fontWeight: 900, color: "#0f172a", fontSize: "1.1rem" }}
           >
-            <div className="flex items-center gap-2 text-slate-400">
-              <Search size={16} />
-              <span className="font-bold text-sm">Search and add food...</span>
-            </div>
-            <ChevronDown
-              size={18}
-              className={`transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
-            />
-          </div>
+            Edit Order
+          </Typography>
+          <Typography
+            sx={{ color: "#64748b", fontSize: "12px", fontWeight: 700 }}
+          >
+            ORDER NUMBER:{" "}
+            <span className="text-orange-500">#{order?.orderNumber}</span>
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onClose}
+          size="small"
+          sx={{ bgcolor: "white", borderRadius: "7px" }}
+        >
+          <X size={18} />
+        </IconButton>
+      </DialogTitle>
 
-          {isDropdownOpen && (
-            <div className="absolute z-50 mt-2 w-full bg-white border-[3px] border-slate-100 rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="p-3 border-b-2 border-slate-50">
-                <input
-                  autoFocus
-                  placeholder="Type food name..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full p-2 bg-slate-50 rounded-xl outline-none font-bold text-sm px-4"
-                />
-              </div>
-              <div className="max-h-60 overflow-y-auto custom-scrollbar">
-                {filteredFood.length > 0 ? (
-                  filteredFood.map((food) => (
-                    <div
-                      key={food.id}
-                      onClick={() => handleAddItem(food)}
-                      className="flex items-center gap-3 p-3 hover:bg-orange-50 cursor-pointer transition-colors border-b border-slate-50 last:border-0"
-                    >
-                      <img
-                        src={`https://bssrms.runasp.net/images/food/${food.image}`}
-                        className="w-10 h-10 rounded-lg object-cover border border-slate-200"
-                        alt=""
-                        onError={(e) =>
-                          (e.target.src =
-                            "https://images.pexels.com/photos/247685/pexels-photo-247685.png")
-                        }
-                      />
-                      <div className="flex-1">
-                        <p className="font-black text-slate-800 text-xs uppercase">
-                          {food.name}
-                        </p>
-                        <p className="text-[10px] font-bold text-orange-500">
-                          {food.price} ৳
-                        </p>
-                      </div>
-                      <div className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
-                        <Plus size={14} strokeWidth={4} />
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="p-6 text-center text-xs font-bold text-slate-400">
-                    No food items found
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="border-[3px] border-slate-50 rounded-[2rem] overflow-hidden bg-white">
-          <div className="max-h-[280px] overflow-y-auto p-3 space-y-2 custom-scrollbar">
-            {items.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex items-center gap-3 p-3 bg-slate-50 rounded-[1.5rem] border-2 border-transparent hover:border-slate-100 transition-all"
+      <DialogContent sx={{ p: 2 }}>
+        <Stack spacing={3}>
+          {/* Quick Info Bar */}
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Box sx={{ flex: 1, p: 2, bgcolor: "white", borderRadius: "7px" }}>
+              <Typography
+                sx={{
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  color: "#94a3b8",
+                  mb: 0.5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                }}
               >
-                <img
-                  src={`https://bssrms.runasp.net/images/food/${item.food?.imageUrl || item.food?.image}`}
-                  className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
-                  alt=""
-                  onError={(e) =>
-                    (e.target.src =
-                      "https://images.pexels.com/photos/247685/pexels-photo-247685.png")
-                  }
+                <TableIcon size={12} /> Table
+              </Typography>
+              <Typography sx={{ fontWeight: 900, color: "#0f172a" }}>
+                {order?.table?.tableNumber || "Walk-in"}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                flex: 1,
+                p: 1,
+                bgcolor: "white",
+                borderRadius: "7px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  color: "#94a3b8",
+                  mb: 0.5,
+                  px: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <Smartphone size={12} /> Phone
+              </Typography>
+              <TextField
+                variant="standard"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                InputProps={{
+                  disableUnderline: true,
+                  sx: { px: 1, fontWeight: 700, fontSize: "14px" },
+                }}
+                fullWidth
+              />
+            </Box>
+          </Box>
+
+          {/* Search/Add Food */}
+          <Box>
+            <Typography
+              sx={{
+                fontSize: "13px",
+                fontWeight: 600,
+                mb: 1,
+                px: 1,
+              }}
+            >
+              Add Items To Order
+            </Typography>
+            <Autocomplete
+              options={foodItems}
+              getOptionLabel={(option) => option.name}
+              onChange={(_, newValue) => handleAddItem(newValue)}
+              loading={loadingFood}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Search for food..."
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      bgcolor: "white",
+                      borderRadius: "7px",
+                      border: "1px solid oklch(55.4% 0.046 257.417)",
+                      "& fieldset": { border: "none" },
+                    },
+                  }}
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <InputAdornment position="start" sx={{ pl: 1 }}>
+                        <Search size={18} className="text-slate-400" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <>
+                        {loadingFood ? (
+                          <CircularProgress color="inherit" size={20} />
+                        ) : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
                 />
-                <div className="flex-1 min-w-0">
-                  <p className="font-black text-slate-800 text-sm truncate uppercase">
-                    {item.food?.name}
-                  </p>
-                  <p className="text-xs font-bold text-slate-400">
-                    {item.unitPrice} ৳
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="number"
-                    value={item.quantity}
-                    onChange={(e) => handleQtyChange(idx, e.target.value)}
-                    className="w-12 p-1.5 text-center font-black bg-white border-2 border-slate-200 rounded-lg text-xs focus:border-orange-500 outline-none"
+              )}
+              renderOption={(props, option) => (
+                <Box
+                  component="li"
+                  {...props}
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    p: 1,
+                  }}
+                >
+                  <Avatar
+                    src={`https://bssrms.runasp.net/images/food/${option.image}`}
+                    variant="rounded"
+                    sx={{ width: 40, height: 40, borderRadius: "5px" }}
                   />
-                  <div className="text-right min-w-[60px]">
-                    <p className="font-black text-slate-800 text-sm">
+                  <Box>
+                    <Typography sx={{ fontWeight: 800, fontSize: "13px" }}>
+                      {option.name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: "orange",
+                        fontWeight: 900,
+                        fontSize: "11px",
+                      }}
+                    >
+                      {option.price} ৳
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+            />
+          </Box>
+
+          {/* Items List */}
+          <Box
+            sx={{
+              borderRadius: "7px",
+              p: 1,
+              maxHeight: 300,
+              overflowY: "auto",
+            }}
+          >
+            {items.length > 0 ? (
+              items.map((item, idx) => (
+                <Box
+                  key={idx}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                    p: 1.5,
+                    mb: 1,
+                    backgroundColor: "oklch(96.8% 0.007 247.896)",
+                    borderRadius: "7px",
+                  }}
+                >
+                  <Avatar
+                    src={`https://bssrms.runasp.net/images/food/${item.food?.imageUrl || item.food?.image}`}
+                    variant="rounded"
+                    sx={{ width: 45, height: 45, borderRadius: "7px" }}
+                  />
+                  <Box sx={{ flex: 1 }}>
+                    <Typography
+                      sx={{
+                        fontWeight: 900,
+                        fontSize: "13px",
+                        color: "#0f172a",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {item.food?.name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        color: "#64748b",
+                        fontSize: "11px",
+                      }}
+                    >
+                      {item.unitPrice} ৳ / unit
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <TextField
+                      type="number"
+                      size="small"
+                      value={item.quantity}
+                      onChange={(e) => handleQtyChange(idx, e.target.value)}
+                      inputProps={{
+                        style: {
+                          textAlign: "center",
+                          fontWeight: 900,
+                          fontSize: "12px",
+                        },
+                      }}
+                      sx={{
+                        width: 60,
+                        "& .MuiOutlinedInput-root": {
+                          bgcolor: "white",
+                          borderRadius: "5px",
+                          "& fieldset": { border: "none" },
+                        },
+                      }}
+                    />
+                    <Typography
+                      sx={{
+                        minWidth: 60,
+                        fontWeight: 900,
+                        fontSize: "14px",
+                        textAlign: "right",
+                      }}
+                    >
                       {item.quantity * item.unitPrice} ৳
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setItems(items.filter((_, i) => i !== idx))}
-                    className="text-red-400 hover:text-red-600 p-1 cursor-pointer"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      onClick={() =>
+                        setItems(items.filter((_, i) => i !== idx))
+                      }
+                      sx={{ color: "#fca5a5" }}
+                    >
+                      <Trash2 size={18} />
+                    </IconButton>
+                  </Box>
+                </Box>
+              ))
+            ) : (
+              <Box sx={{ textAlign: "center", py: 4, color: "#94a3b8" }}>
+                <UtensilsCrossed
+                  size={40}
+                  className="mx-auto mb-2 opacity-20"
+                />
+                <Typography sx={{ fontWeight: 700, fontSize: "13px" }}>
+                  No items in this order
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </Stack>
+      </DialogContent>
 
-        <div className="bg-slate-900 p-4 rounded-[1.8rem] flex justify-between items-center border-b-4 border-orange-500">
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-            Total
-          </span>
-          <span className="text-xl font-black text-orange-400">
+      <DialogActions sx={{ p: 2, flexDirection: "column", gap: 1.5 }}>
+        {/* Total Summary */}
+        <Box
+          sx={{
+            width: "100%",
+            bgcolor: "oklch(44.6% 0.043 257.281)",
+            p: 2,
+            borderRadius: "7px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontWeight: 600,
+              fontSize: "13px",
+              letterSpacing: 1,
+            }}
+          >
+            Total Amount
+          </Typography>
+          <Typography
+            sx={{ color: "#fb923c", fontWeight: 900, fontSize: "1.2rem" }}
+          >
             {totalAmount.toLocaleString()} ৳
-          </span>
-        </div>
+          </Typography>
+        </Box>
 
-        <div className="flex gap-3 pt-1">
-          <button
+        <Box sx={{ width: "100%", display: "flex", gap: 2 }}>
+          <Button
+            fullWidth
             onClick={onClose}
-            className="flex-1 py-3.5 font-black text-slate-400 uppercase text-[10px] hover:bg-slate-50 rounded-2xl transition-all cursor-pointer"
+            sx={{
+              py: 1.5,
+              color: "#64748b",
+              fontWeight: 900,
+              bgcolor: "white",
+              borderRadius: "7px",
+              textTransform: "none",
+            }}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            fullWidth
             onClick={handleSubmit}
             disabled={isSubmitting || items.length === 0}
-            className="flex-[2] py-3.5 bg-orange-500 text-white font-black rounded-2xl hover:bg-orange-600 active:scale-95 transition-all shadow-lg shadow-orange-100 disabled:opacity-50 flex items-center justify-center gap-2 text-xs uppercase tracking-tight cursor-pointer"
+            variant="contained"
+            sx={{
+              py: 1.5,
+              bgcolor: "#f97316",
+              borderRadius: "7px",
+              fontWeight: 900,
+              textTransform: "none",
+              boxShadow: "none",
+              "&:hover": { bgcolor: "#ea580c", boxShadow: "none" },
+            }}
           >
             {isSubmitting ? (
-              <Loader2 className="animate-spin" size={18} />
+              <CircularProgress size={20} color="inherit" />
             ) : (
               "Update Order"
             )}
-          </button>
-        </div>
-      </div>
-    </Modal>
+          </Button>
+        </Box>
+      </DialogActions>
+    </Dialog>
   );
 }

@@ -150,10 +150,10 @@ export default function Dashboard() {
                 key={food.id}
                 className="flex items-center gap-4 group  hover:bg-slate-50 transition-all border-b-[1px] border-b-slate-200 px-3 md:px-6 pb-3"
               >
-                <span className="text-sm font-black text-green-600 w-5">
+                <span className="text-base font-medium text-green-600 w-5">
                   #{index + 1}
                 </span>
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
+                <div className="w-12 h-12 rounded-md overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
                   <img
                     src={`https://bssrms.runasp.net/images/food/${food.image}`}
                     alt={food.name}
@@ -161,18 +161,18 @@ export default function Dashboard() {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-base font-medium text-slate-900 truncate  ">
+                  <h4 className="text-sm font-medium truncate  ">
                     {food.name}
                   </h4>
-                  <p className="text-sm font-medium text-slate-400 italic">
+                  <p className="text-sm font-medium text-slate-500 italic">
                     ৳ {food.price.toLocaleString()}
                   </p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-sm font-black text-green-600 uppercase">
+                  <p className="text-sm font-bold text-green-600 capitalize">
                     {food.totalQuantitySold} sold
                   </p>
-                  <p className="text-sm font-bold text-slate-400">
+                  <p className="text-sm font-bold text-slate-500">
                     ৳ {(food.totalQuantitySold * food.price).toLocaleString()}
                   </p>
                 </div>

@@ -155,7 +155,7 @@ export default function Dashboard() {
                 </span>
                 <div className="w-12 h-12 rounded-md overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
                   <img
-                    src={`https://bssrms.runasp.net/images/food/${food.image}`}
+                    src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
                     alt={food.name}
                     className="w-full h-full object-cover"
                   />

@@ -116,17 +116,17 @@ const EmployeeTable = ({
                   </TableRow>
                 ))
               : employees.map((emp) => (
-                  <TableRow key={emp.id} hover>
-                    <TableCell>
+                  <TableRow key={emp.id} hover sx={{ py: 0 }}>
+                    <TableCell sx={{ py: 0 }}>
                       <Avatar
                         src={
                           emp.user?.image
-                            ? `https://bssrms.runasp.net/images/user/${emp.user.image}`
+                            ? `https://restaurantapi.bssoln.com/images/user/${emp.user.image}`
                             : ""
                         }
                         sx={{
-                          width: 48,
-                          height: 48,
+                          width: 40,
+                          height: 40,
                           borderRadius: "5px",
                           border: "1px solid #e2e8f0",
                         }}
@@ -189,7 +189,10 @@ const EmployeeTable = ({
                           sx={{
                             borderRadius: "5px",
                             border: "1px solid #e2e8f0",
-                            "&:hover": { bgcolor: "#22c55e", color: "white" },
+                            "&:hover": {
+                              bgcolor: "oklch(70.7% 0.165 254.624)",
+                              color: "white",
+                            },
                           }}
                         >
                           <Edit2 size={14} />

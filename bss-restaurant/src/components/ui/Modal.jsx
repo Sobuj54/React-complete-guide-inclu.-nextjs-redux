@@ -35,7 +35,7 @@ export default function Modal({ isOpen, onClose, title, children, style }) {
       sx={{
         // Target the Paper component for the dialog box background
         "& .MuiPaper-root": {
-          backgroundColor: "#E2E8F0", // Your desired color
+          backgroundColor: "oklch(86.9% 0.022 252.894)", // Your desired color
         },
       }}
     >
@@ -47,7 +47,7 @@ export default function Modal({ isOpen, onClose, title, children, style }) {
           alignItems: "center",
           p: 6,
           pb: 2,
-          bgcolor: "#f8fafc",
+          bgcolor: "oklch(96.8% 0.007 247.896)",
         }}
       >
         <Box>
@@ -85,7 +85,7 @@ export default function Modal({ isOpen, onClose, title, children, style }) {
         sx={{
           p: 6,
           pt: 1,
-          bgcolor: "#f8fafc",
+          bgcolor: "oklch(96.8% 0.007 247.896)",
           // Scrollbar styling to maintain the "Heavy" look
           "&::-webkit-scrollbar": { width: "8px" },
           "&::-webkit-scrollbar-track": { background: "transparent" },

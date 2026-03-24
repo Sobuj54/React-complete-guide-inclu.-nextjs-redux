@@ -20,6 +20,7 @@ import {
   Trash2,
   RefreshCw,
   ShoppingBag,
+  ArrowRightLeft,
 } from "lucide-react";
 
 const OrderRow = ({
@@ -121,7 +122,7 @@ const OrderRow = ({
                   "&:hover": { bgcolor: "#fff7ed", borderColor: "#f97316" },
                 }}
               >
-                <RefreshCw size={16} strokeWidth={2.5} />
+                <ArrowRightLeft size={16} strokeWidth={2.5} />
               </IconButton>
             </Tooltip>
             <Tooltip title="Edit">
@@ -214,7 +215,7 @@ const OrderRow = ({
                         >
                           <Avatar
                             variant="rounded"
-                            src={`https://bssrms.runasp.net/images/food/${item.food?.image}`}
+                            src={`https://restaurantapi.bssoln.com/images/food/${item.food?.image}`}
                             sx={{
                               width: 45,
                               height: 45,

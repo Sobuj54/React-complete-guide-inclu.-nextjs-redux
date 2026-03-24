@@ -113,6 +113,7 @@ export default function DeleteConfirmationModal({
           sx={{
             bgcolor: "#ef4444",
             "&:hover": { bgcolor: "#dc2626" },
+            color: "white",
             borderRadius: "8px",
             py: 1.5,
             fontWeight: 900,
@@ -130,8 +131,8 @@ export default function DeleteConfirmationModal({
           onClick={onClose}
           disabled={isLoading}
           sx={{
-            color: "#64748b",
-            bgcolor: "background.paper",
+            color: "black",
+            bgcolor: "#d1d5dc",
             "&:hover": { bgcolor: "#d1d5dc" },
             borderRadius: "8px",
             py: 1.5,

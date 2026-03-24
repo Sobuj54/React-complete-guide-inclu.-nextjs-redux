@@ -17,7 +17,6 @@ export const useOrders = (params) => {
       const { data } = await axiosSecure.get("/Order/datatable", { params });
       return data;
     },
-    placeholderData: (prev) => prev,
   });
 };
 

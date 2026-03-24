@@ -113,6 +113,7 @@ export default function DeleteTableModal({
           sx={{
             py: 1.5,
             bgcolor: "#ef4444",
+            color: "white",
             fontWeight: 900,
             borderRadius: 1.5,
             "&:hover": { bgcolor: "#dc2626" },

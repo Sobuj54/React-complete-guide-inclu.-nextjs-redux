@@ -36,7 +36,7 @@ export default function EmployeeForm({
     if (isImageDeleted) return null;
 
     return existingImageName
-      ? `https://bssrms.runasp.net/images/user/${existingImageName}`
+      ? `https://restaurantapi.bssoln.com/images/user/${existingImageName}`
       : null;
   }, [existingImageName, isImageDeleted]);
 
@@ -85,8 +85,8 @@ export default function EmployeeForm({
         </div>
 
         {/* Image Upload with Live Preview */}
-        <div className="space-y-2">
-          <label className="text-sm font-black text-slate-700">
+        <div className="space-y-1">
+          <label className="text-sm mb-2 font-medium inline-block">
             Upload Image
           </label>
           <div className="border-2 border-dashed border-slate-200 rounded-lg h-[215px] flex flex-col items-center justify-center bg-white hover:bg-slate-100 transition-colors cursor-pointer relative overflow-hidden group">

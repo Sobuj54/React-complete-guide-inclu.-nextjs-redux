@@ -162,7 +162,7 @@ export default function EditOrderModal({
         </Box>
         <IconButton
           onClick={onClose}
-          size="small"
+          size="medium"
           sx={{ bgcolor: "white", borderRadius: "7px" }}
         >
           <X size={18} />
@@ -173,7 +173,15 @@ export default function EditOrderModal({
         <Stack spacing={3}>
           {/* Quick Info Bar */}
           <Box sx={{ display: "flex", gap: 2 }}>
-            <Box sx={{ flex: 1, p: 2, bgcolor: "white", borderRadius: "7px" }}>
+            <Box
+              sx={{
+                flex: 1,
+                p: 2,
+                bgcolor: "white",
+                borderRadius: "7px",
+                boxShadow: 1,
+              }}
+            >
               <Typography
                 sx={{
                   fontSize: "12px",
@@ -185,7 +193,7 @@ export default function EditOrderModal({
                   gap: 1,
                 }}
               >
-                <TableIcon size={12} /> Table
+                <TableIcon size={16} /> Table
               </Typography>
               <Typography sx={{ fontWeight: 900, color: "#0f172a" }}>
                 {order?.table?.tableNumber || "Walk-in"}
@@ -200,11 +208,13 @@ export default function EditOrderModal({
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
+                fontSize: "13px",
+                boxShadow: 1,
               }}
             >
               <Typography
                 sx={{
-                  fontSize: "12px",
+                  fontSize: "13px",
                   fontWeight: 600,
                   color: "#94a3b8",
                   mb: 0.5,
@@ -214,7 +224,7 @@ export default function EditOrderModal({
                   gap: 1,
                 }}
               >
-                <Smartphone size={12} /> Phone
+                <Smartphone size={16} /> Phone
               </Typography>
               <TextField
                 variant="standard"
@@ -287,7 +297,7 @@ export default function EditOrderModal({
                   }}
                 >
                   <Avatar
-                    src={`https://bssrms.runasp.net/images/food/${option.image}`}
+                    src={`https://restaurantapi.bssoln.com/images/food/${option.image}`}
                     variant="rounded"
                     sx={{ width: 40, height: 40, borderRadius: "5px" }}
                   />
@@ -334,7 +344,7 @@ export default function EditOrderModal({
                   }}
                 >
                   <Avatar
-                    src={`https://bssrms.runasp.net/images/food/${item.food?.imageUrl || item.food?.image}`}
+                    src={`https://restaurantapi.bssoln.com/images/food/${item.food?.imageUrl || item.food?.image}`}
                     variant="rounded"
                     sx={{ width: 45, height: 45, borderRadius: "7px" }}
                   />
@@ -435,7 +445,7 @@ export default function EditOrderModal({
             sx={{
               color: "white",
               fontWeight: 600,
-              fontSize: "13px",
+              fontSize: "1.2rem",
               letterSpacing: 1,
             }}
           >
@@ -459,6 +469,7 @@ export default function EditOrderModal({
               bgcolor: "white",
               borderRadius: "7px",
               textTransform: "none",
+              bgcolor: "oklch(86.9% 0.022 252.894)",
             }}
           >
             Cancel
@@ -471,6 +482,7 @@ export default function EditOrderModal({
             sx={{
               py: 1.5,
               bgcolor: "#f97316",
+              color: "white",
               borderRadius: "7px",
               fontWeight: 900,
               textTransform: "none",

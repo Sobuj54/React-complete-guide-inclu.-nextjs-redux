@@ -65,7 +65,7 @@ export default function TableFormModal({
     } else {
       setPreview(
         defaultValues?.image
-          ? `https://bssrms.runasp.net/images/table/${defaultValues.image}`
+          ? `https://restaurantapi.bssoln.com/images/table/${defaultValues.image}`
           : null,
       );
     }
@@ -107,7 +107,7 @@ export default function TableFormModal({
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ overflowX: "hidden", px: { xs: 2, sm: 3 } }}>
+      <DialogContent sx={{ overflowX: "hidden", px: { xs: 2, sm: 10 } }}>
         <Box
           component="form"
           id="table-form"
@@ -117,7 +117,7 @@ export default function TableFormModal({
           <Grid container spacing={2}>
             {/* Input Section */}
             <Grid item xs={12} sm={6}>
-              <Stack spacing={2.5}>
+              <Stack spacing={4}>
                 <TextField
                   label="Table Number"
                   variant="outlined"
@@ -230,6 +230,7 @@ export default function TableFormModal({
           sx={{
             flex: 1, // Makes buttons equal width on mobile
             bgcolor: "#f97316",
+            color: "white",
             borderRadius: "7px",
             fontWeight: 900,
             textTransform: "none",

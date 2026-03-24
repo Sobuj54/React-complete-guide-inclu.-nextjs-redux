@@ -147,7 +147,7 @@ export default function AssignStaffModal({
                         <Avatar
                           src={
                             emp.image
-                              ? `https://bssrms.runasp.net/images/employee/${emp.image}`
+                              ? `https://restaurantapi.bssoln.com/images/employee/${emp.image}`
                               : undefined
                           }
                           sx={{
@@ -240,6 +240,7 @@ export default function AssignStaffModal({
           fullWidth
           sx={{
             fontWeight: 900,
+            bgcolor: "oklch(92.9% 0.013 255.508)",
             color: "text.secondary",
             textTransform: "uppercase",
             letterSpacing: 1,
@@ -257,6 +258,7 @@ export default function AssignStaffModal({
           disableElevation
           sx={{
             py: 1.5,
+            color: "white",
             bgcolor: "#f97316",
             fontWeight: 900,
             borderRadius: 1.5,

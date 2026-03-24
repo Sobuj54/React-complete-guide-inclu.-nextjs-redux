@@ -36,7 +36,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="flex flex-col h-full">
         {/* Logo Area */}
         <div className="flex items-center gap-3 px-8 py-10">
-          <div className="p-2.5 text-white bg-linear-to-br from-orange-500 to-orange-600 rounded-md shadow-lg ">
+          <div className="p-2.5 text-white bg-orange-500 rounded-md shadow-lg ">
             <ChefHat size={26} />
           </div>
           <span className="text-2xl font-black tracking-tight text-white">
@@ -55,7 +55,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 onClick={onClose}
                 className={`flex items-center gap-3 px-4 py-3.5 text-sm font-semibold rounded-sm transition-all duration-200 ${
                   isActive
-                    ? "bg-orange-600 text-white "
+                    ? "bg-orange-500 text-white "
                     : "text-white/80 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >

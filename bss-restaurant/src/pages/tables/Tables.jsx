@@ -260,6 +260,7 @@ export default function Tables() {
             sx={{
               borderRadius: 1,
               px: 4,
+              color: "white",
               fontWeight: 700,
               whiteSpace: "nowrap",
               textTransform: "none",
@@ -314,7 +315,7 @@ export default function Tables() {
                   <TableCell sx={{ px: 4 }}>
                     <Avatar
                       variant="rounded"
-                      src={`https://bssrms.runasp.net/images/table/${table.image}`}
+                      src={`https://restaurantapi.bssoln.com/images/table/${table.image}`}
                       sx={{
                         width: 50,
                         height: 50,
@@ -386,7 +387,7 @@ export default function Tables() {
                         {table.employees?.map((emp, idx) => (
                           <Tooltip key={idx} title={emp.name}>
                             <Avatar
-                              src={`https://bssrms.runasp.net/images/employee/${emp.image}`}
+                              src={`https://restaurantapi.bssoln.com/images/employee/${emp.image}`}
                             />
                           </Tooltip>
                         ))}
@@ -394,9 +395,9 @@ export default function Tables() {
                       <IconButton
                         onClick={() => handleOpenAssign(table.id)}
                         sx={{
-                          border: "2px dashed oklch(79.2% 0.209 151.711)",
+                          border: "2px dashed oklch(87.2% 0.01 258.338)",
                           "&:hover": {
-                            bgcolor: "oklch(79.2% 0.209 151.711)",
+                            bgcolor: "oklch(87.2% 0.01 258.338)",
                             color: "white",
                           },
                         }}

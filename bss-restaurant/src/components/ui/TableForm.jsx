@@ -65,7 +65,7 @@ export default function TableFormModal({
     } else {
       setPreview(
         defaultValues?.image
-          ? `https://restaurantapi.bssoln.com/images/table/${defaultValues.image}`
+          ? `https://bssrms.runasp.net/images/table/${defaultValues.image}`
           : null,
       );
     }

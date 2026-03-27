@@ -121,7 +121,7 @@ export default function OrderCard({ order, onUpdateStatus, onDelete, onEdit }) {
             >
               <div className="w-15 h-15 rounded-lg bg-white overflow-hidden border border-slate-100 flex-shrink-0">
                 <img
-                  src={`https://restaurantapi.bssoln.com/images/food/${item.food?.image}`}
+                  src={`https://bssrms.runasp.net/images/food/${item.food?.image}`}
                   className="w-full h-full object-cover"
                   onError={(e) =>
                     (e.target.src =

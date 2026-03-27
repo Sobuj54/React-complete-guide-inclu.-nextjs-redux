@@ -1,42 +1,49 @@
 import { useState } from "react";
-import { useAuthContext } from "../context/AuthContext";
-import Sidebar from "../components/ui/Sidebar";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { Outlet } from "react-router";
+import Sidebar from "../components/ui/Sidebar";
 import Header from "../components/ui/Header";
 
 export default function DashboardLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { user } = useAuthContext();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  // Default open on desktop
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="flex min-h-screen font-sans bg-slate-200/70">
-      {/* Mobile Sidebar Overlay */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 transition-opacity bg-slate-900/60 backdrop-blur-sm lg:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
-
-      {/* Sidebar Component */}
+    <Box
+      sx={{ display: "flex", minHeight: "100vh", bgcolor: "secondary.lighter" }}
+    >
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      {/* Main Content Area */}
-      <div className="flex flex-col flex-1 min-w-0">
-        {/* Top Header */}
-        <Header
-          user={user}
-          isSidebarOpen={isSidebarOpen}
-          toggleSidebar={toggleSidebar}
-        />
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+          // Removed ml: { lg: ... } to fix the huge gap
+          transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+        }}
+      >
+        <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
 
-        {/* Dynamic Page Content */}
-        <main className="flex-1 w-full p-2 mx-auto lg:px-6 max-w-full bg-slate-200/90">
+        <Box
+          sx={{
+            p: { xs: 2, sm: 3, md: 4 },
+            flexGrow: 1,
+          }}
+          className="bg-slate-100"
+        >
           <Outlet />
-        </main>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }

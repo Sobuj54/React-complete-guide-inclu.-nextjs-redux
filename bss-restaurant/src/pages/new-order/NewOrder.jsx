@@ -105,7 +105,7 @@ export default function NewOrderPage() {
                 >
                   <div className="h-32 bg-gray-100 rounded-md overflow-hidden mb-2">
                     <img
-                      src={`https://restaurantapi.bssoln.com/images/table/${table.image}`}
+                      src={`https://bssrms.runasp.net/images/table/${table.image}`}
                       className="w-full h-full object-cover"
                       alt=""
                       onError={(e) =>
@@ -144,7 +144,7 @@ export default function NewOrderPage() {
                   className="bg-white shadow-md rounded-md p-4 flex flex-col sm:flex-row gap-8"
                 >
                   <img
-                    src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
+                    src={`https://bssrms.runasp.net/images/food/${food.image}`}
                     className="w-full sm:w-36 h-40 sm:h-28 object-cover rounded-md"
                     alt=""
                   />

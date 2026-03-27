@@ -315,7 +315,7 @@ export default function Tables() {
                   <TableCell sx={{ px: 4 }}>
                     <Avatar
                       variant="rounded"
-                      src={`https://restaurantapi.bssoln.com/images/table/${table.image}`}
+                      src={`https://bssrms.runasp.net/images/table/${table.image}`}
                       sx={{
                         width: 50,
                         height: 50,
@@ -387,7 +387,7 @@ export default function Tables() {
                         {table.employees?.map((emp, idx) => (
                           <Tooltip key={idx} title={emp.name}>
                             <Avatar
-                              src={`https://restaurantapi.bssoln.com/images/employee/${emp.image}`}
+                              src={`https://bssrms.runasp.net/images/employee/${emp.image}`}
                             />
                           </Tooltip>
                         ))}

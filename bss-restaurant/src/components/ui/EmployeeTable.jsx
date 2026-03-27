@@ -121,7 +121,7 @@ const EmployeeTable = ({
                       <Avatar
                         src={
                           emp.user?.image
-                            ? `https://restaurantapi.bssoln.com/images/user/${emp.user.image}`
+                            ? `https://bssrms.runasp.net/images/user/${emp.user.image}`
                             : ""
                         }
                         sx={{

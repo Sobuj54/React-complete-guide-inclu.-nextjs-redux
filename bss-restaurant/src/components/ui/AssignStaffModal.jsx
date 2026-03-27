@@ -147,7 +147,7 @@ export default function AssignStaffModal({
                         <Avatar
                           src={
                             emp.image
-                              ? `https://restaurantapi.bssoln.com/images/employee/${emp.image}`
+                              ? `https://bssrms.runasp.net/images/employee/${emp.image}`
                               : undefined
                           }
                           sx={{

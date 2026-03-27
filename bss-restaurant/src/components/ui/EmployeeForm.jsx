@@ -36,7 +36,7 @@ export default function EmployeeForm({
     if (isImageDeleted) return null;
 
     return existingImageName
-      ? `https://restaurantapi.bssoln.com/images/user/${existingImageName}`
+      ? `https://bssrms.runasp.net/images/user/${existingImageName}`
       : null;
   }, [existingImageName, isImageDeleted]);
 

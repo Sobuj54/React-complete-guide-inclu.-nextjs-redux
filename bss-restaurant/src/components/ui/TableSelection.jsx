@@ -29,7 +29,7 @@ export default function TableSelection({
               >
                 <div className="aspect-square bg-slate-50 rounded-[1.8rem] mb-4 flex items-center justify-center border border-slate-100 overflow-hidden">
                   <img
-                    src={`https://restaurantapi.bssoln.com/images/table/${table.image}`}
+                    src={`https://bssrms.runasp.net/images/table/${table.image}`}
                     className=" object-cover"
                     alt={table.tableNumber}
                     onError={(e) =>

@@ -215,7 +215,7 @@ const OrderRow = ({
                         >
                           <Avatar
                             variant="rounded"
-                            src={`https://restaurantapi.bssoln.com/images/food/${item.food?.image}`}
+                            src={`https://bssrms.runasp.net/images/food/${item.food?.image}`}
                             sx={{
                               width: 45,
                               height: 45,

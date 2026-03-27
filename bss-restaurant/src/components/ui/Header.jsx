@@ -1,37 +1,91 @@
-import { Menu, X, Bell } from "lucide-react";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Stack,
+  TextField,
+  InputAdornment,
+  Badge,
+  Avatar,
+  Typography,
+  Box,
+  useTheme,
+} from "@mui/material";
+import {
+  Menu,
+  X,
+  Bell,
+  Search,
+  Globe,
+  LayoutGrid,
+  Settings,
+  MessageSquare,
+} from "lucide-react";
 
-function Header({ toggleSidebar, isSidebarOpen, user }) {
+export default function Header({ toggleSidebar, isSidebarOpen, user }) {
+  const theme = useTheme();
+
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 border-b bg-white/80 backdrop-blur-md border-slate-200 lg:px-10">
-      <button
-        className="p-2 -ml-2 transition-colors rounded-md lg:hidden text-slate-600 hover:bg-slate-100 cursor-pointer"
-        onClick={toggleSidebar}
-      >
-        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+    <AppBar
+      position="sticky"
+      sx={{
+        bgcolor: "background.paper",
+        color: "text.primary",
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        boxShadow: "none",
+        zIndex: theme.zIndex.drawer + 1,
+      }}
+    >
+      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 3 } }}>
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <IconButton
+            onClick={toggleSidebar}
+            sx={{
+              bgcolor: "secondary.lighter",
+              borderRadius: 1,
+              color: "text.primary",
+            }}
+          >
+            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </IconButton>
+        </Stack>
 
-      <div className="flex items-center gap-5 ml-auto">
-        <button className="relative hidden p-2 transition-colors text-slate-400 hover:text-orange-600 sm:block cursor-pointer">
-          <Bell size={22} />
-          <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-        </button>
-
-        <div className="flex items-center gap-3.5 pl-5 border-l border-slate-200">
-          <div className="hidden text-right sm:block">
-            <p className="text-sm font-bold text-slate-900">
-              {user?.fullName || "Admin User"}
-            </p>
-            <p className="text-[11px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md inline-block">
-              {user?.role || "Admin"}
-            </p>
-          </div>
-          <div className="flex items-center justify-center font-bold text-white shadow-lg w-11 h-11 rounded-md bg-slate-700 shadow-slate-200">
-            {user?.userName?.[0].toUpperCase() || "A"}
-          </div>
-        </div>
-      </div>
-    </header>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Stack
+            direction="row"
+            spacing={1.5}
+            alignItems="center"
+            sx={{ pl: 2 }}
+          >
+            <Box
+              sx={{ textAlign: "right", display: { xs: "none", sm: "block" } }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                {user?.fullName || "Admin User"}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="primary"
+                sx={{ fontWeight: 700, textTransform: "uppercase" }}
+              >
+                {user?.role || "Admin"}
+              </Typography>
+            </Box>
+            <Avatar
+              sx={{
+                width: 40,
+                height: 40,
+                bgcolor: "primary.main",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                borderRadius: "5px", // Slightly rounded as per your preference
+              }}
+            >
+              {user?.userName?.[0].toUpperCase() || "A"}
+            </Avatar>
+          </Stack>
+        </Stack>
+      </Toolbar>
+    </AppBar>
   );
 }
-
-export default Header;

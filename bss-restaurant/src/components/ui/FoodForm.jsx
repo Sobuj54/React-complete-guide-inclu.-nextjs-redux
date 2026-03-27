@@ -57,7 +57,7 @@ export default function FoodForm({
       return URL.createObjectURL(selectedImage[0]);
     if (isImageDeleted) return null;
     return defaultValues?.image
-      ? `https://restaurantapi.bssoln.com/images/food/${defaultValues.image}`
+      ? `https://bssrms.runasp.net/images/food/${defaultValues.image}`
       : null;
   }, [selectedImage, defaultValues, isImageDeleted]);
 

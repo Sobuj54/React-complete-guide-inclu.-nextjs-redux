@@ -1,3 +1,17 @@
+import {
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Box,
+  Typography,
+  Toolbar,
+  useMediaQuery,
+  useTheme,
+  Button,
+  Tooltip,
+} from "@mui/material";
 import { Link, useLocation } from "react-router";
 import {
   LayoutDashboard,
@@ -21,62 +35,153 @@ const navItems = [
 ];
 
 export default function Sidebar({ isOpen, onClose }) {
-  const { logout } = useAuthContext();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
+  const { logout } = useAuthContext();
 
-  return (
-    <aside
-      className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-slate-700 border-r border-slate-500 
-        transform transition-transform duration-300 ease-in-out 
-        lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen 
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-      `}
+  const drawerWidth = isOpen ? 280 : 80;
+
+  const drawerContent = (
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
     >
-      <div className="flex flex-col h-full">
-        {/* Logo Area */}
-        <div className="flex items-center gap-3 px-8 py-10">
-          <div className="p-2.5 text-white bg-orange-500 rounded-md shadow-lg ">
-            <ChefHat size={26} />
-          </div>
-          <span className="text-2xl font-black tracking-tight text-white">
+      <Toolbar sx={{ px: isOpen ? 4 : 0, justifyContent: "left", mb: 2 }}>
+        <Box
+          sx={{
+            p: 1,
+            bgcolor: "primary.main",
+            color: "white",
+            borderRadius: theme.shape.borderRadius,
+            display: "flex",
+            boxShadow: "0 4px 10px rgba(22, 119, 255, 0.2)",
+          }}
+        >
+          <ChefHat size={20} />
+        </Box>
+        {isOpen && (
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 600, letterSpacing: -0.5, ml: 2 }}
+          >
             BSS Resto
-          </span>
-        </div>
+          </Typography>
+        )}
+      </Toolbar>
 
-        {/* Nav Links */}
-        <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto custom-scrollbar">
+      <Box sx={{ flex: 1, overflowX: "hidden" }}>
+        <List sx={{ pt: 0 }}>
           {navItems.map((item) => {
             const isActive = location.pathname.endsWith(item.path);
+            const Icon = item.icon;
+
             return (
-              <Link
+              <Tooltip
+                title={!isOpen ? item.name : ""}
+                placement="right"
                 key={item.name}
-                to={item.path}
-                onClick={onClose}
-                className={`flex items-center gap-3 px-4 py-3.5 text-sm font-semibold rounded-sm transition-all duration-200 ${
-                  isActive
-                    ? "bg-orange-500 text-white "
-                    : "text-white/80 hover:bg-slate-100 hover:text-slate-900"
-                }`}
               >
-                <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                {item.name}
-              </Link>
+                <ListItemButton
+                  component={Link}
+                  to={item.path}
+                  onClick={isMobile ? onClose : undefined}
+                  selected={isActive}
+                  sx={{
+                    mb: 0.8,
+                    py: 1.5,
+                    px: isOpen ? 4 : 0,
+                    justifyContent: isOpen ? "initial" : "center",
+                    "&.Mui-selected": {
+                      borderRight: isOpen ? "2px solid" : "none",
+                      bgcolor: "primary.lighter",
+                      color: "primary.main",
+                      "& .MuiListItemIcon-root": { color: "primary.main" },
+                    },
+                    "&:hover": { bgcolor: "primary.lighter" },
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: isOpen ? 38 : 0,
+                      mr: isOpen ? 0 : "auto",
+                      ml: isOpen ? 0 : "auto",
+                    }}
+                  >
+                    <Icon size={20} />
+                  </ListItemIcon>
+                  {isOpen && (
+                    <ListItemText
+                      primary={item.name}
+                      primaryTypographyProps={{
+                        variant: "body2",
+                        fontWeight: 400,
+                      }}
+                    />
+                  )}
+                </ListItemButton>
+              </Tooltip>
             );
           })}
-        </nav>
+        </List>
+      </Box>
 
-        {/* Bottom Logout */}
-        <div className="p-6 mt-auto border-t border-slate-100">
-          <button
-            onClick={logout}
-            className="flex items-center w-full gap-3 px-4 py-3.5 text-sm font-bold text-orange-600 transition-all rounded-md hover:bg-white/90 cursor-pointer bg-white"
-          >
-            <LogOut size={20} />
-            Sign Out
-          </button>
-        </div>
-      </div>
-    </aside>
+      <Box
+        sx={{
+          p: isOpen ? 3 : 1,
+          borderTop: `1px solid ${theme.palette.divider}`,
+        }}
+      >
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={logout}
+          sx={{
+            bgcolor: "primary.main",
+            minWidth: 0,
+            py: 1.5,
+            borderRadius: theme.shape.borderRadius,
+            "&:hover": { bgcolor: "primary.dark" },
+          }}
+        >
+          {isOpen ? (
+            <>
+              <LogOut size={18} style={{ marginRight: 8 }} /> Sign Out
+            </>
+          ) : (
+            <LogOut size={18} />
+          )}
+        </Button>
+      </Box>
+    </Box>
+  );
+
+  return (
+    <Drawer
+      variant={isMobile ? "temporary" : "permanent"}
+      open={isOpen}
+      onClose={onClose}
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        // Higher Z-index for mobile to cover the header
+        zIndex: isMobile ? theme.zIndex.drawer + 2 : theme.zIndex.drawer,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          boxSizing: "border-box",
+          borderRight: `1px solid ${theme.palette.divider}`,
+          transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+        },
+      }}
+    >
+      {drawerContent}
+    </Drawer>
   );
 }

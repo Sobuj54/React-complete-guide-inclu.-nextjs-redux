@@ -146,7 +146,7 @@ export default function Foods() {
                 <TableRow key={food.id} hover>
                   <TableCell sx={{ py: 0 }}>
                     <img
-                      src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
+                      src={`https://bssrms.runasp.net/images/food/${food.image}`}
                       className="w-12 h-12 object-cover border border-slate-100"
                       style={{ borderRadius: "5px" }}
                       alt={food.name}

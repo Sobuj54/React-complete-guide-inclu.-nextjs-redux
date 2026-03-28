@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Container,
   Paper,
@@ -9,7 +9,6 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  Button,
   TextField,
   Typography,
   Box,
@@ -18,24 +17,16 @@ import {
   IconButton,
   Chip,
   Tooltip,
-  CircularProgress,
   Stack,
   InputAdornment,
   Skeleton,
+  capitalize,
 } from "@mui/material";
 
-// Lucide Icons
-import {
-  Plus,
-  Search,
-  Edit2,
-  Trash2,
-  CheckCircle2,
-  XCircle,
-  UserPlus,
-} from "lucide-react";
+// Icons
+import { Plus, Search, Edit2, Trash2, UserPlus } from "lucide-react";
 
-// Hooks & Utils
+// Hooks
 import {
   useTables,
   useTable,
@@ -43,32 +34,32 @@ import {
   useUnassignedEmployees,
 } from "../../hooks/useTables";
 import { toBase64 } from "../../utils/to-base64";
+import { useEmployees } from "../../hooks/useEmployees";
 
 // Components
 import ErrorState from "../../components/ErrorState";
 import AssignStaffModal from "../../components/ui/AssignStaffModal";
 import DeleteTableModal from "../../components/ui/DeleteTableModal";
 import TableFormModal from "../../components/ui/TableForm";
+import MainButton from "../../components/MainButton";
+import ActionButton from "../../components/ActionButton";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 
 export default function Tables() {
-  // State Management
   const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  // UI Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
 
-  // Selection States
   const [selectedId, setSelectedId] = useState(null);
   const [tableToDelete, setTableToDelete] = useState(null);
   const [assigningTableId, setAssigningTableId] = useState(null);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
 
-  // Debounce Search Logic
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -77,13 +68,24 @@ export default function Tables() {
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  // Data Fetching
   const {
     data: response,
     isLoading,
     isFetching,
     isError,
   } = useTables(page + 1, perPage, debouncedSearch);
+  const { data: employeesResponse } = useEmployees(1, 100);
+
+  // The logic for your image mapping remains exactly the same
+  const employeeImageMap = useMemo(() => {
+    const map = {};
+    employeesResponse?.data?.forEach((emp) => {
+      if (emp.id && emp.user?.image) {
+        map[emp.id] = emp.user.image;
+      }
+    });
+    return map;
+  }, [employeesResponse]);
 
   const { data: tableDetails } = useTable(selectedId);
   const { data: unassignedStaff, isLoading: isLoadingStaff } =
@@ -91,14 +93,6 @@ export default function Tables() {
   const { createTable, updateTable, deleteTable, assignEmployees } =
     useTableMutations();
 
-  // Pagination Handlers
-  const handleChangePage = (event, newPage) => setPage(newPage);
-  const handleChangeRowsPerPage = (event) => {
-    setPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  // Action Handlers
   const handleEdit = (table) => {
     setSelectedId(table.id);
     setIsModalOpen(true);
@@ -155,71 +149,26 @@ export default function Tables() {
     setSelectedId(null);
   };
 
-  const headerCellStyle = {
-    py: 2,
-    px: 3,
-    whiteSpace: "nowrap",
-  };
-
-  const LoadingRows = () => (
-    <>
-      {[...Array(perPage)].map((_, index) => (
-        <TableRow key={index}>
-          <TableCell sx={{ px: 4 }}>
-            <Skeleton
-              variant="rounded"
-              width={50}
-              height={50}
-              sx={{ borderRadius: 2 }}
-            />
-          </TableCell>
-          <TableCell sx={{ px: 4 }}>
-            <Skeleton variant="text" width="60%" sx={{ mb: 1 }} />
-            <Skeleton variant="text" width="40%" />
-          </TableCell>
-          <TableCell align="center">
-            <Skeleton
-              variant="rectangular"
-              width={40}
-              height={28}
-              sx={{ mx: "auto", borderRadius: 1 }}
-            />
-          </TableCell>
-          <TableCell>
-            <Skeleton
-              variant="rounded"
-              width={100}
-              height={32}
-              sx={{ borderRadius: 1 }}
-            />
-          </TableCell>
-          <TableCell>
-            <Skeleton width={120} height={36} />
-          </TableCell>
-          <TableCell align="right">
-            <Skeleton
-              variant="rectangular"
-              width={80}
-              height={36}
-              sx={{ ml: "auto", borderRadius: 1.5 }}
-            />
-          </TableCell>
-        </TableRow>
-      ))}
-    </>
-  );
+  // Styles to minimize padding and maximize width
+  const headerCellStyle = { py: 1.5 };
+  const bodyCellStyle = { py: 0.5 };
 
   if (isError) return <ErrorState />;
 
   return (
-    <Container maxWidth="xl" sx={{ py: { xs: 2, md: 1 } }}>
-      {/* Search and Action Header */}
+    <Container
+      maxWidth={false}
+      disableGutters
+      sx={{ px: { xs: 2, md: 0 }, width: "100%" }}
+    >
       <Box
         sx={{
-          mb: 2,
+          mb: 3,
           display: "flex",
-          justifyContent: { xs: "center", md: "end" },
+          justifyContent: "end",
           alignItems: "center",
+          flexWrap: "wrap",
+          gap: 2,
         }}
       >
         <Stack
@@ -228,7 +177,6 @@ export default function Tables() {
           sx={{ width: { xs: "100%", md: "auto" } }}
         >
           <TextField
-            fullWidth
             size="small"
             placeholder="Search tables..."
             value={searchTerm}
@@ -236,58 +184,42 @@ export default function Tables() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search size={18} color="#94a3b8" />
+                  <Search size={18} color="#bfbfbf" />
                 </InputAdornment>
               ),
               sx: {
-                borderRadius: 1,
-                fontWeight: 600,
+                borderRadius: "5px",
                 bgcolor: "white",
-                fontSize: "14px",
+                minWidth: { md: "250px" },
               },
             }}
           />
-          <Button
-            variant="contained"
-            size="medium"
-            disableElevation
-            fullWidth={{ xs: true, sm: false }}
-            startIcon={<Plus size={16} strokeWidth={3} />}
+          <MainButton
+            label="Add Table"
+            startIcon={<Plus size={18} />}
             onClick={() => {
               setSelectedId(null);
               setIsModalOpen(true);
             }}
-            sx={{
-              borderRadius: 1,
-              px: 4,
-              color: "white",
-              fontWeight: 700,
-              whiteSpace: "nowrap",
-              textTransform: "none",
-              bgcolor: "primary.main",
-              "&:hover": { bgcolor: "#ea580c" },
-            }}
-          >
-            Add Table
-          </Button>
+            color="primary"
+          />
         </Stack>
       </Box>
 
-      {/* Main Table Content */}
       <TableContainer
         component={Paper}
+        elevation={0}
         sx={{
-          borderRadius: "7px",
-          // responsive overflow handling
+          borderRadius: "5px",
+          border: "1px solid #f0f0f0",
           width: "100%",
-          overflowX: "auto",
         }}
       >
-        <Table sx={{ minWidth: 900 }} size="small">
-          <TableHead sx={{ bgcolor: "background.default" }}>
+        <Table sx={{ width: "100%" }} size="small">
+          <TableHead sx={{ bgcolor: "#f8fafc" }}>
             <TableRow>
               <TableCell sx={headerCellStyle}>Preview</TableCell>
-              <TableCell sx={headerCellStyle}>Table Number</TableCell>
+              <TableCell sx={headerCellStyle}>Table No.</TableCell>
               <TableCell sx={headerCellStyle} align="center">
                 Seats
               </TableCell>
@@ -300,140 +232,86 @@ export default function Tables() {
           </TableHead>
           <TableBody>
             {isLoading || isFetching ? (
-              <LoadingRows />
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <Skeleton variant="rectangular" height={200} />
+                </TableCell>
+              </TableRow>
             ) : (
               response?.data?.map((table) => (
-                <TableRow
-                  key={table.id}
-                  hover
-                  sx={{
-                    "&:last-child td, &:last-child th": {
-                      border: 0,
-                    },
-                  }}
-                >
-                  <TableCell sx={{ px: 4 }}>
+                <TableRow key={table.id} hover>
+                  <TableCell sx={bodyCellStyle}>
                     <Avatar
                       variant="rounded"
-                      src={`https://bssrms.runasp.net/images/table/${table.image}`}
-                      sx={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 2,
-                        border: "2px solid #f1f5f9",
-                      }}
+                      src={`https://restaurantapi.bssoln.com/images/table/${table.image}`}
+                      sx={{ width: 40, height: 40, borderRadius: "5px" }}
                     />
                   </TableCell>
-                  <TableCell sx={{ px: 4 }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 500,
-                        color: "#1e293b",
-                        fontSize: "0.95rem",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {table.tableNumber}
-                    </Typography>
+                  <TableCell sx={bodyCellStyle}>
+                    <Typography variant="body2">{table.tableNumber}</Typography>
                   </TableCell>
-                  <TableCell align="center" sx={{ px: 4 }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 900,
-                        color: "#1e293b",
-                        fontSize: "0.95rem",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {table.numberOfSeats}
-                    </Typography>
+                  <TableCell sx={bodyCellStyle} align="center">
+                    <Typography>{table.numberOfSeats}</Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={bodyCellStyle}>
                     <Chip
-                      icon={
-                        table.isOccupied ? (
-                          <XCircle size={14} />
-                        ) : (
-                          <CheckCircle2 size={14} />
-                        )
-                      }
                       label={table.isOccupied ? "Occupied" : "Available"}
+                      size="small"
                       sx={{
-                        fontWeight: 900,
-                        borderRadius: 1.5,
-                        bgcolor: table.isOccupied ? "#fef2f2" : "#f0fdf4",
-                        color: table.isOccupied ? "#ef4444" : "#16a34a",
-                        border: "1px solid",
-                        borderColor: table.isOccupied ? "#fee2e2" : "#dcfce7",
+                        fontWeight: 700,
+                        borderRadius: "4px",
+                        bgcolor: table.isOccupied ? "#fff1f0" : "#f6ffed",
+                        color: table.isOccupied ? "#ff4d4f" : "#52c41a",
                       }}
                     />
                   </TableCell>
-                  <TableCell sx={{ px: 4 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <TableCell sx={bodyCellStyle}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <AvatarGroup
-                        max={3}
+                        max={4}
                         sx={{
                           "& .MuiAvatar-root": {
-                            width: 34,
-                            height: 34,
-                            border: "2px solid white",
-                            fontSize: "0.8rem",
-                            fontWeight: 900,
+                            width: 28,
+                            height: 28,
+                            fontSize: "0.6rem",
                           },
                         }}
                       >
-                        {table.employees?.map((emp, idx) => (
-                          <Tooltip key={idx} title={emp.name}>
+                        {table.employees?.map((emp) => (
+                          <Tooltip key={emp.employeeId} title={emp.name}>
                             <Avatar
-                              src={`https://bssrms.runasp.net/images/employee/${emp.image}`}
+                              src={`https://restaurantapi.bssoln.com/images/user/${employeeImageMap[emp.employeeId]}`}
                             />
                           </Tooltip>
                         ))}
                       </AvatarGroup>
                       <IconButton
+                        size="small"
                         onClick={() => handleOpenAssign(table.id)}
-                        sx={{
-                          border: "2px dashed oklch(87.2% 0.01 258.338)",
-                          "&:hover": {
-                            bgcolor: "oklch(87.2% 0.01 258.338)",
-                            color: "white",
-                          },
-                        }}
+                        sx={{ color: "#1677ff", border: "1px dotted" }}
                       >
-                        <UserPlus size={18} />
+                        <UserPlus size={16} />
                       </IconButton>
                     </Box>
                   </TableCell>
-                  <TableCell align="right" sx={{ pl: 5 }}>
+                  <TableCell sx={bodyCellStyle} align="right">
                     <Stack
                       direction="row"
                       spacing={1}
                       justifyContent="flex-end"
                     >
-                      <IconButton
+                      <ActionButton
+                        icon={Edit2}
                         onClick={() => handleEdit(table)}
-                        sx={{
-                          color: "#64748b",
-                          bgcolor: "#f8fafc",
-                          borderRadius: 1.5,
-                          "&:hover": { color: "#3b82f6", bgcolor: "#eff6ff" },
-                        }}
-                      >
-                        <Edit2 size={18} />
-                      </IconButton>
-                      <IconButton
+                        title="Edit"
+                        colorType="primary"
+                      />
+                      <ActionButton
+                        icon={Trash2}
                         onClick={() => handleDeleteClick(table)}
-                        sx={{
-                          color: "#64748b",
-                          bgcolor: "#f8fafc",
-                          borderRadius: 1.5,
-                          "&:hover": { color: "#ef4444", bgcolor: "#fef2f2" },
-                        }}
-                      >
-                        <Trash2 size={18} />
-                      </IconButton>
+                        title="Delete"
+                        colorType="error"
+                      />
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -441,27 +319,20 @@ export default function Tables() {
             )}
           </TableBody>
         </Table>
-
         <TablePagination
           component="div"
           count={response?.total || 0}
           page={page}
-          onPageChange={handleChangePage}
+          onPageChange={(e, p) => setPage(p)}
           rowsPerPage={perPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[10, 20, 30]}
-          sx={{
-            borderTop: "2px solid #f1f5f9",
-            fontWeight: 900,
-            "& .MuiTablePagination-toolbar": {
-              flexWrap: "wrap",
-              justifyContent: "end",
-            },
+          onRowsPerPageChange={(e) => {
+            setPerPage(parseInt(e.target.value, 10));
+            setPage(0);
           }}
         />
       </TableContainer>
 
-      {/* Modals remain the same */}
+      {/* Modals */}
       <TableFormModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -481,13 +352,14 @@ export default function Tables() {
         onToggle={toggleEmployeeSelection}
         onConfirm={handleConfirmAssignment}
         isSubmitting={assignEmployees.isPending}
+        imageMap={employeeImageMap}
       />
-      <DeleteTableModal
+      <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
+        isLoading={deleteTable.isPending}
         onConfirm={onConfirmDelete}
-        tableName={tableToDelete?.tableNumber}
-        isDeleting={deleteTable.isPending}
+        itemName={tableToDelete?.tableNumber || "this table"}
       />
     </Container>
   );

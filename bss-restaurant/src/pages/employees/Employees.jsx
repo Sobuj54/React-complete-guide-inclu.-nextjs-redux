@@ -13,6 +13,7 @@ import Modal from "../../components/ui/Modal";
 import EmployeeForm from "../../components/ui/EmployeeForm";
 import EmployeeTable from "../../components/ui/EmployeeTable";
 import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
+import MainButton from "../../components/MainButton"; // Imported your component
 
 export default function Employees() {
   const [page, setPage] = useState(1);
@@ -133,23 +134,18 @@ export default function Employees() {
     return <ErrorState message="Failed to load staff" refetch={refetch} />;
 
   return (
-    <div className="space-y-3 duration-500 animate-in fade-in pt-2">
+    <div className="space-y-3 duration-500 animate-in fade-in ">
       <title>BSS Resto | Employees</title>
 
-      {/* Persistent Header */}
-      <div
-        className="flex items-center justify-end"
-        style={{ borderRadius: "1px" }}
-      >
-        <button
+      <div className="flex items-center justify-end">
+        {/* Replaced with your MainButton component */}
+        <MainButton
+          label="Add Employee"
+          startIcon={<Plus size={16} strokeWidth={3} />}
           onClick={handleOpenAdd}
-          className="flex items-center gap-2 bg-orange-500 text-white px-3 py-2 rounded-md font-semibold hover:bg-orange-600 transition-all active:scale-95 cursor-pointer text-sm"
-        >
-          <Plus size={16} strokeWidth={3} /> Add Employee
-        </button>
+        />
       </div>
 
-      {/* Table handles its own loading skeleton now */}
       <EmployeeTable
         employees={employees}
         handleOpenEdit={handleOpenEdit}

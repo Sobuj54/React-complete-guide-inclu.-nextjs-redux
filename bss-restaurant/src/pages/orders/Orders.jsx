@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Search,
-  AlertCircle,
-  Loader2,
-  X,
-  ChevronDown,
-  ListChecks,
-} from "lucide-react";
+import { Search, AlertCircle, Loader2, X } from "lucide-react";
 import {
   Paper,
   Table,
@@ -27,6 +20,8 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 
 // Hooks
@@ -94,28 +89,33 @@ export default function Orders() {
   };
 
   return (
-    <div className="p-2 lg:p-4 space-y-3 min-h-screen ">
+    <div className=" space-y-3 min-h-screen ">
       <header className="flex items-center justify-end">
-        <div className="relative flex-1 max-w-xs">
-          <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-            size={18}
-          />
-          <input
-            type="text"
-            placeholder="Search orders..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full pl-11 pr-2 py-2 bg-white rounded-sm font-medium outline-none shadow-sm transition-all focus:ring-2 focus:ring-orange-500/10"
-          />
-        </div>
+        <TextField
+          size="small"
+          placeholder="Search tables..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search size={18} color="#bfbfbf" />
+              </InputAdornment>
+            ),
+            sx: {
+              borderRadius: "5px",
+              bgcolor: "white",
+              minWidth: { md: "250px" },
+            },
+          }}
+        />
       </header>
 
       <TableContainer
         component={Paper}
         elevation={0}
         sx={{
-          borderRadius: "7px",
+          borderRadius: "5px",
           overflow: "hidden",
           boxShadow: "0 4px 20px -10px rgba(0,0,0,0.1)",
           overflowX: "auto",
@@ -124,7 +124,7 @@ export default function Orders() {
         <Table sx={{ minWidth: "900px" }}>
           <TableHead sx={{ bgcolor: "#f8fafc" }}>
             <TableRow>
-              <TableCell />
+              <TableCell sx={{ py: 0 }} />
               {[
                 "Order",
                 "Date Time",
@@ -134,7 +134,11 @@ export default function Orders() {
                 "Amount",
                 "Actions",
               ].map((h) => (
-                <TableCell key={h} align={h == "Actions" ? "center" : ""}>
+                <TableCell
+                  key={h}
+                  align={h == "Actions" ? "right" : ""}
+                  sx={{ pr: 5, py: 1.5 }}
+                >
                   {h}
                 </TableCell>
               ))}
@@ -169,7 +173,14 @@ export default function Orders() {
           onPageChange={(_, p) =>
             setFilters((prev) => ({ ...prev, Page: p + 1 }))
           }
-          sx={{ borderTop: "1px solid #f1f5f9" }}
+          // ADD THIS LINE BELOW
+          onRowsPerPageChange={(e) => {
+            setFilters((prev) => ({
+              ...prev,
+              Per_Page: parseInt(e.target.value, 10),
+              Page: 1, // Reset to first page when changing limit
+            }));
+          }}
         />
       </TableContainer>
 

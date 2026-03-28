@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { X } from "lucide-react";
 
-export default function Modal({ isOpen, onClose, title, children, style }) {
+export default function Modal({ isOpen, onClose, title, children }) {
   return (
     <Dialog
       open={isOpen}
@@ -23,75 +23,54 @@ export default function Modal({ isOpen, onClose, title, children, style }) {
           },
         },
       }}
-      PaperProps={{
-        sx: {
-          borderRadius: "10px",
-          // backgroundColor: "gray.500",
-          overflow: "hidden",
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-          ...style,
-        },
-      }}
       sx={{
-        // Target the Paper component for the dialog box background
         "& .MuiPaper-root": {
-          backgroundColor: "oklch(86.9% 0.022 252.894)", // Your desired color
+          backgroundColor: "oklch(86.9% 0.022 252.894)",
+          borderRadius: "5px", // Slightly smoother corners
         },
       }}
     >
-      {/* Header Section */}
       <DialogTitle
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          p: 6,
-          pb: 2,
           bgcolor: "oklch(96.8% 0.007 247.896)",
+
+          pb: 2,
+          pt: 3,
         }}
       >
-        <Box>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 900, // font-black
-              color: "#0f172a", // slate-900
-              letterSpacing: "-0.025em",
-            }}
-          >
-            {title}
-          </Typography>
-        </Box>
+        <Typography
+          variant="h6"
+          sx={{
+            color: "#0f172a",
+            letterSpacing: "-0.025em",
+          }}
+        >
+          {title}
+        </Typography>
 
         <IconButton
           onClick={onClose}
           sx={{
-            p: 2,
-            // bgcolor: "#f1f5f9", // slate-100
-            borderRadius: "1.25rem",
-            color: "#64748b",
-            "&:hover": {
-              bgcolor: "#fef2f2",
-              color: "#ef4444",
-            },
+            position: "absolute",
+            right: 12,
+            top: 12,
           }}
         >
-          <X size={24} strokeWidth={3} />
+          <X size={20} />
         </IconButton>
       </DialogTitle>
 
-      {/* Content Section */}
       <DialogContent
         sx={{
-          p: 6,
-          pt: 1,
           bgcolor: "oklch(96.8% 0.007 247.896)",
-          // Scrollbar styling to maintain the "Heavy" look
           "&::-webkit-scrollbar": { width: "8px" },
           "&::-webkit-scrollbar-track": { background: "transparent" },
           "&::-webkit-scrollbar-thumb": {
             background: "#cbd5e1",
-            borderRadius: "10px",
+            borderRadius: "5px",
           },
         }}
       >

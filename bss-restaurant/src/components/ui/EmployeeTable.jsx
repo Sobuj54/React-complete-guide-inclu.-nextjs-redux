@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,8 +14,17 @@ import {
   TablePagination,
   Box,
   Skeleton,
+  TableFooter,
 } from "@mui/material";
-import { Edit2, Trash2, Star, User } from "lucide-react";
+import {
+  Edit2,
+  Trash2,
+  Star,
+  User,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import ActionButton from "../ActionButton";
 
 const EmployeeTable = ({
   employees,
@@ -27,6 +37,14 @@ const EmployeeTable = ({
   onPerPageChange,
   isLoading,
 }) => {
+  const [favorites, setFavorites] = useState([]);
+
+  const toggleFavorite = (id) => {
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
+  };
+
   const skeletonRows = Array.from(new Array(perPage || 5));
 
   return (
@@ -35,22 +53,22 @@ const EmployeeTable = ({
       sx={{
         width: "100%",
         overflow: "hidden",
-        borderRadius: "7px",
+        borderRadius: "5px",
         border: "1px solid #e2e8f0",
       }}
     >
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table sx={{ minWidth: 800 }} aria-label="employee table">
           <TableHead>
-            <TableRow sx={{ bgcolor: "#f8fafc" }}>
-              <TableCell sx={{ width: 80 }} />
-              <TableCell>Name</TableCell>
-              <TableCell align="center" sx={{ width: 50 }} />
-              <TableCell>Email</TableCell>
-              <TableCell>Designation</TableCell>
-              <TableCell>Join Date</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell align="right" sx={{ pr: 4 }}>
+            <TableRow sx={{ bgcolor: "#f8fafc", py: 0 }}>
+              <TableCell sx={{ width: 80, py: 0.5 }} />
+              <TableCell sx={{ py: 0.5 }}>Name</TableCell>
+              <TableCell align="center" sx={{ width: 50, py: 0.5 }} />
+              <TableCell sx={{ py: 0.5 }}>Email</TableCell>
+              <TableCell sx={{ py: 0.5 }}>Designation</TableCell>
+              <TableCell sx={{ py: 0.5 }}>Join Date</TableCell>
+              <TableCell sx={{ py: 1.5 }}>Phone</TableCell>
+              <TableCell align="right" sx={{ pr: 4, py: 1.5 }}>
                 Action
               </TableCell>
             </TableRow>
@@ -60,16 +78,11 @@ const EmployeeTable = ({
             {isLoading
               ? skeletonRows.map((_, index) => (
                   <TableRow key={`skeleton-${index}`}>
-                    <TableCell>
-                      <Skeleton
-                        variant="rectangular"
-                        width={48}
-                        height={30}
-                        sx={{ borderRadius: "1px" }}
-                      />
+                    <TableCell sx={{ py: 0.5 }}>
+                      <Skeleton variant="rectangular" width={48} height={30} />
                     </TableCell>
                     <TableCell>
-                      <Skeleton variant="text" width="120px" height={20} />
+                      <Skeleton variant="text" width="120px" />
                     </TableCell>
                     <TableCell align="center">
                       <Skeleton
@@ -80,16 +93,16 @@ const EmployeeTable = ({
                       />
                     </TableCell>
                     <TableCell>
-                      <Skeleton variant="text" width="150px" height={20} />
+                      <Skeleton variant="text" width="150px" />
                     </TableCell>
                     <TableCell>
                       <Skeleton variant="rectangular" width={80} height={24} />
                     </TableCell>
                     <TableCell>
-                      <Skeleton variant="text" width={100} height={20} />
+                      <Skeleton variant="text" width={100} />
                     </TableCell>
                     <TableCell>
-                      <Skeleton variant="text" width={120} height={20} />
+                      <Skeleton variant="text" width={120} />
                     </TableCell>
                     <TableCell align="right">
                       <Box
@@ -103,138 +116,141 @@ const EmployeeTable = ({
                           variant="rectangular"
                           width={32}
                           height={32}
-                          sx={{ borderRadius: "1px" }}
                         />
                         <Skeleton
                           variant="rectangular"
                           width={32}
                           height={32}
-                          sx={{ borderRadius: "1px" }}
                         />
                       </Box>
                     </TableCell>
                   </TableRow>
                 ))
-              : employees.map((emp) => (
-                  <TableRow key={emp.id} hover sx={{ py: 0 }}>
-                    <TableCell sx={{ py: 0 }}>
-                      <Avatar
-                        src={
-                          emp.user?.image
-                            ? `https://bssrms.runasp.net/images/user/${emp.user.image}`
-                            : ""
-                        }
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: "5px",
-                          border: "1px solid #e2e8f0",
-                        }}
-                      >
-                        <User size={20} />
-                      </Avatar>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">
-                        {emp.user?.fullName}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="left">
-                      <Star
-                        size={16}
-                        className="text-orange-400 fill-orange-400"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">{emp.user?.email}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={emp.designation}
-                        size="small"
-                        sx={{
-                          bgcolor: "oklch(93.5% 0.084 155.995)",
-                          color: "oklch(44.8% 0.119 151.328)",
-                          borderRadius: "3px",
-                          fontSize: "13px",
-                          fontWeight: 500,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
-                        {new Date(emp.joinDate).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
-                        {emp.user?.phoneNumber}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          gap: 1,
-                        }}
-                      >
-                        <IconButton
-                          size="medium"
-                          onClick={() => handleOpenEdit(emp.id)}
+              : employees.map((emp) => {
+                  const isFav = favorites.includes(emp.id);
+                  return (
+                    <TableRow
+                      key={emp.id}
+                      hover
+                      sx={{ "& .MuiTableCell-root": { py: 0.5 } }}
+                    >
+                      <TableCell>
+                        <Avatar
+                          src={
+                            emp.user?.image
+                              ? `https://restaurantapi.bssoln.com/images/user/${emp.user.image}`
+                              : ""
+                          }
                           sx={{
+                            width: 40,
+                            height: 40,
                             borderRadius: "5px",
                             border: "1px solid #e2e8f0",
-                            "&:hover": {
-                              bgcolor: "oklch(70.7% 0.165 254.624)",
-                              color: "white",
-                            },
                           }}
                         >
-                          <Edit2 size={14} />
-                        </IconButton>
+                          <User size={20} />
+                        </Avatar>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {emp.user?.fullName}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="left">
                         <IconButton
-                          size="medium"
-                          onClick={() => handleDelete(emp)}
+                          onClick={() => toggleFavorite(emp.id)}
+                          size="small"
+                        >
+                          <Star
+                            size={16}
+                            className={`${isFav ? "text-yellow-500 fill-yellow-500" : "text-yellow-600"}`}
+                          />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {emp.user?.email}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={emp.designation}
+                          size="small"
                           sx={{
-                            borderRadius: "5px",
-                            border: "1px solid #e2e8f0",
-                            "&:hover": { bgcolor: "#ef4444", color: "white" },
+                            bgcolor: "oklch(93.5% 0.084 155.995)",
+                            color: "oklch(44.8% 0.119 151.328)",
+                            borderRadius: "3px",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography
+                          variant="body2"
+                          sx={{ whiteSpace: "nowrap" }}
+                        >
+                          {new Date(emp.joinDate).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {emp.user?.phoneNumber}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            gap: 1,
                           }}
                         >
-                          <Trash2 size={14} />
-                        </IconButton>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          <ActionButton
+                            icon={Edit2}
+                            title="Update"
+                            colorType="primary"
+                            onClick={() => handleOpenEdit(emp.id)}
+                          />
+                          <ActionButton
+                            icon={Trash2}
+                            title="Delete"
+                            colorType="error"
+                            onClick={() => handleDelete(emp)}
+                          />
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
           </TableBody>
+
+          <TableFooter sx={{ borderTop: "1px solid #e2e8f0" }}>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 20, 50]}
+                colSpan={8}
+                count={totalEntries || 0}
+                rowsPerPage={perPage}
+                page={page - 1}
+                onPageChange={(e, newPage) => onPageChange(newPage + 1)}
+                onRowsPerPageChange={(e) =>
+                  onPerPageChange(parseInt(e.target.value, 10))
+                }
+                // Using slotProps to replace default MUI icons with Lucide
+                slotProps={{
+                  actions: {
+                    nextButton: { children: <ChevronRight size={20} /> },
+                    previousButton: { children: <ChevronLeft size={20} /> },
+                  },
+                }}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
-
-      <TablePagination
-        component="div"
-        count={totalEntries || 0}
-        page={page - 1}
-        onPageChange={(e, newPage) => onPageChange(newPage + 1)}
-        rowsPerPage={perPage}
-        onRowsPerPageChange={(e) =>
-          onPerPageChange(parseInt(e.target.value, 10))
-        }
-        rowsPerPageOptions={[5, 10, 20, 50]}
-        sx={{
-          borderTop: "1px solid #e2e8f0",
-          ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows":
-            {
-              textTransform: "capitalize",
-              fontSize: "14px",
-            },
-        }}
-      />
     </Paper>
   );
 };

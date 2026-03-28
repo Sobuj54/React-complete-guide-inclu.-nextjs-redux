@@ -297,7 +297,7 @@ export default function EditOrderModal({
                   }}
                 >
                   <Avatar
-                    src={`https://bssrms.runasp.net/images/food/${option.image}`}
+                    src={`https://restaurantapi.bssoln.com/images/food/${option.image}`}
                     variant="rounded"
                     sx={{ width: 40, height: 40, borderRadius: "5px" }}
                   />
@@ -344,7 +344,7 @@ export default function EditOrderModal({
                   }}
                 >
                   <Avatar
-                    src={`https://bssrms.runasp.net/images/food/${item.food?.imageUrl || item.food?.image}`}
+                    src={`https://restaurantapi.bssoln.com/images/food/${item.food?.imageUrl || item.food?.image}`}
                     variant="rounded"
                     sx={{ width: 45, height: 45, borderRadius: "7px" }}
                   />

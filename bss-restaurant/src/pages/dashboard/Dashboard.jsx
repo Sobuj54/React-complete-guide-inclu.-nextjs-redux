@@ -67,7 +67,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <Box className="space-y-10 animate-in fade-in duration-700 py-5">
+    <Box className="space-y-10 animate-in fade-in duration-700">
       {/* Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
@@ -91,7 +91,7 @@ export default function Dashboard() {
         <Box className="xl:col-span-2 overflow-hidden shadow-md bg-white/90 rounded-md">
           <Box className="p-6 border-b-[1px] border-slate-200 flex items-center justify-between">
             <h2 className="text-md md:text-lg font-bold">Recent Orders</h2>
-            <span className="text-xs font-medium px-3 py-1 bg-blue-400/90 rounded-xs hover:bg-blue-50 text-white/90">
+            <span className="text-xs font-medium px-3 py-1 bg-blue-400/90 rounded-xs text-white/90">
               TODAY : {data.todaysOrders}
             </span>
           </Box>
@@ -102,11 +102,11 @@ export default function Dashboard() {
                 className="bg-slate-100/80"
               >
                 <TableRow>
-                  <TableCell>Order ID</TableCell>
-                  <TableCell>Table</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Time</TableCell>
+                  <TableCell sx={{ py: 1.5 }}>Order ID</TableCell>
+                  <TableCell sx={{ py: 1.5 }}>Table</TableCell>
+                  <TableCell sx={{ py: 1.5 }}>Amount</TableCell>
+                  <TableCell sx={{ py: 1.5 }}>Status</TableCell>
+                  <TableCell sx={{ py: 1.5 }}>Time</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -114,14 +114,21 @@ export default function Dashboard() {
                   <TableRow
                     key={order.id}
                     hover
-                    sx={{ "&:last-child td": { border: 0 } }}
+                    sx={{ "&:last-child td": { border: 0 }, py: 0 }}
                   >
-                    <TableCell># {order.orderNumber}</TableCell>
-                    <TableCell>{order.tableNumber || "Walk-in"}</TableCell>
-                    <TableCell sx={{ color: "success.dark" }}>
+                    <TableCell
+                      className="truncate max-w-20 md:max-w-full"
+                      sx={{ py: 1.5 }}
+                    >
+                      # {order.orderNumber}
+                    </TableCell>
+                    <TableCell sx={{ py: 1.5 }}>
+                      {order.tableNumber || "Walk-in"}
+                    </TableCell>
+                    <TableCell sx={{ color: "success.dark", py: 1.5 }}>
                       ৳ {order.amount.toLocaleString()}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ py: 1.5 }}>
                       <Chip
                         label={order.orderStatus}
                         size="small"
@@ -144,7 +151,7 @@ export default function Dashboard() {
                         }}
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ py: 1.5 }}>
                       {new Date(order.orderTime).toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -160,7 +167,7 @@ export default function Dashboard() {
 
         {/* Top Selling Foods */}
         <Box className="bg-white rounded-md shadow-md">
-          <Box className="flex items-center justify-between mb-0 bg-slate-50 p-3 md:p-6 border-b[1px] border-b-slate-200">
+          <Box className="flex items-center justify-between mb-0 bg-slate-50 p-3 md:p-6 border-b-[1px] border-b-slate-200">
             <Box className="flex items-center gap-2">
               <TrendingUp className="text-green-500" size={20} />
               <h2 className="text-lg font-bold">Top Sellers</h2>
@@ -184,7 +191,7 @@ export default function Dashboard() {
                     <TableCell sx={{ width: 60 }}>
                       <Avatar
                         variant="rounded"
-                        src={`https://bssrms.runasp.net/images/food/${food.image}`}
+                        src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
                         sx={{ width: 45, height: 45, borderRadius: "5px" }}
                       />
                     </TableCell>

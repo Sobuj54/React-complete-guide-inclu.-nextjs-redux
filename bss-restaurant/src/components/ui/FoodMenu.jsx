@@ -37,7 +37,7 @@ export default function FoodMenu({
                 >
                   <div className="w-28 h-28 rounded-[2.2rem] overflow-hidden border-2 border-slate-50 flex-shrink-0">
                     <img
-                      src={`https://bssrms.runasp.net/images/food/${food.image}`}
+                      src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       alt={food.name}
                     />

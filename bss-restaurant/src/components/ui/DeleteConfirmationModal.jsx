@@ -4,11 +4,11 @@ import {
   DialogContent,
   DialogActions,
   Typography,
-  Button,
   Box,
   IconButton,
 } from "@mui/material";
 import { AlertTriangle, X } from "lucide-react";
+import MainButton from "../MainButton"; // Imported your custom component
 
 export default function DeleteConfirmationModal({
   isOpen,
@@ -25,14 +25,9 @@ export default function DeleteConfirmationModal({
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: "10px", // Capped at 10px per instructions
+          borderRadius: "5px", // Theme-aligned
           p: 1,
-        },
-      }}
-      sx={{
-        // Target the Paper component for the dialog box background
-        "& .MuiPaper-root": {
-          backgroundColor: "background.default", // Your desired color
+          backgroundColor: "#ffffff",
         },
       }}
     >
@@ -44,7 +39,7 @@ export default function DeleteConfirmationModal({
           position: "absolute",
           right: 12,
           top: 12,
-          color: (theme) => theme.palette.grey[400],
+          color: "#bfbfbf", // secondary.400
         }}
       >
         <X size={20} />
@@ -59,14 +54,14 @@ export default function DeleteConfirmationModal({
             textAlign: "center",
           }}
         >
-          {/* Warning Icon */}
+          {/* Warning Icon Container */}
           <Box
             sx={{
               width: 64,
               height: 64,
-              bgcolor: "#fef2f2", // red-50
-              color: "#ef4444", // red-500
-              borderRadius: "10px",
+              bgcolor: "#fff1f0", // error.lighter
+              color: "#ff4d4f", // error.main
+              borderRadius: "5px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -78,17 +73,17 @@ export default function DeleteConfirmationModal({
 
           <Typography
             variant="h6"
-            sx={{ fontWeight: 900, color: "#0f172a", mb: 1 }}
+            sx={{ fontWeight: 800, color: "#262626", mb: 1 }}
           >
             Are you absolutely sure?
           </Typography>
 
           <Typography
             variant="body2"
-            sx={{ color: "#64748b", fontWeight: 500, lineHeight: 1.6 }}
+            sx={{ color: "#8c8c8c", fontWeight: 500, lineHeight: 1.6 }}
           >
             You are about to remove{" "}
-            <Box component="span" sx={{ color: "#0f172a", fontWeight: 900 }}>
+            <Box component="span" sx={{ color: "#000000", fontWeight: 800 }}>
               "{itemName}"
             </Box>
             . This action cannot be undone.
@@ -105,45 +100,34 @@ export default function DeleteConfirmationModal({
           pt: 1,
         }}
       >
-        <Button
+        {/* Using MainButton for Delete Action */}
+        <MainButton
           fullWidth
-          variant="contained"
+          label={isLoading ? "Deleting..." : "Delete"}
           onClick={onConfirm}
           disabled={isLoading}
           sx={{
-            bgcolor: "#ef4444",
-            "&:hover": { bgcolor: "#dc2626" },
+            bgcolor: "error.main",
             color: "white",
-            borderRadius: "8px",
             py: 1.5,
-            fontWeight: 900,
-            textTransform: "none",
-            fontSize: "1rem",
-            boxShadow: "none",
           }}
-        >
-          {isLoading ? "Deleting..." : "Yes, Delete Member"}
-        </Button>
+        />
 
-        <Button
+        {/* Using MainButton for Cancel Action */}
+        <MainButton
           fullWidth
-          variant="text"
+          label="Cancel"
           onClick={onClose}
           disabled={isLoading}
           sx={{
-            color: "black",
-            bgcolor: "#d1d5dc",
-            "&:hover": { bgcolor: "#d1d5dc" },
-            borderRadius: "8px",
+            color: "secondary.600", // secondary.600
+            bgcolor: "secondary.100", // secondary.100
+            "&:hover": { bgcolor: "#f0f0f0" },
             py: 1.5,
-            fontWeight: 900,
-            textTransform: "none",
-            fontSize: "1rem",
-            m: "0 !important", // MUI override for column gap
+            fontSize: "0.95rem",
+            m: "0 !important", // Force remove MUI DialogActions margin
           }}
-        >
-          Cancel
-        </Button>
+        />
       </DialogActions>
     </Dialog>
   );

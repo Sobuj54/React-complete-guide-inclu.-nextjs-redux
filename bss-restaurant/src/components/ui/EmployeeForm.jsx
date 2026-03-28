@@ -2,8 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload, X } from "lucide-react";
+import {
+  TextField,
+  MenuItem,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { employeeSchema } from "../../validation/form-validation";
-import { Input } from "../Input";
+import MainButton from "../MainButton";
 
 export default function EmployeeForm({
   defaultValues,
@@ -24,7 +30,34 @@ export default function EmployeeForm({
     resolver: zodResolver(employeeSchema),
     defaultValues: defaultValues || {},
   });
+
   const selectedImage = watch("image");
+
+  // Input styling based on your new Primary Blue (#1677ff) palette
+  const inputStyle = {
+    backgroundColor: "#ffffff",
+    borderRadius: "5px", // Matching theme.shape.borderRadius
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#d9d9d9", // secondary.light
+        borderWidth: "1px",
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfbfbf", // secondary.400
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#1677ff", // primary.main
+        borderWidth: "2px",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "#8c8c8c", // secondary.main
+      "&.Mui-focused": {
+        color: "#1677ff", // primary.main
+      },
+    },
+    boxShadow: "none",
+  };
 
   useEffect(() => {
     setIsImageDeleted(false);
@@ -34,9 +67,8 @@ export default function EmployeeForm({
 
   const existingImageUrl = useMemo(() => {
     if (isImageDeleted) return null;
-
     return existingImageName
-      ? `https://bssrms.runasp.net/images/user/${existingImageName}`
+      ? `https://restaurantapi.bssoln.com/images/user/${existingImageName}`
       : null;
   }, [existingImageName, isImageDeleted]);
 
@@ -60,36 +92,41 @@ export default function EmployeeForm({
   }, [defaultValues, reset]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form
+      id="table-modal-form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-6 pt-3"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-5">
-          <Input
-            errors={errors}
-            register={register}
+        <div className="flex flex-col gap-5">
+          <TextField
+            fullWidth
             label="First Name"
-            name="firstName"
+            {...register("firstName")}
+            error={!!errors.firstName}
+            helperText={errors.firstName?.message}
+            sx={inputStyle}
           />
-          <Input
-            errors={errors}
-            register={register}
+          <TextField
+            fullWidth
             label="Middle Name"
-            name="middleName"
-            required={false}
+            {...register("middleName")}
+            error={!!errors.middleName}
+            helperText={errors.middleName?.message}
+            sx={inputStyle}
           />
-          <Input
-            errors={errors}
-            register={register}
+          <TextField
+            fullWidth
             label="Last Name"
-            name="lastName"
+            {...register("lastName")}
+            error={!!errors.lastName}
+            helperText={errors.lastName?.message}
+            sx={inputStyle}
           />
         </div>
 
-        {/* Image Upload with Live Preview */}
-        <div className="space-y-1">
-          <label className="text-sm mb-2 font-medium inline-block">
-            Upload Image
-          </label>
-          <div className="border-2 border-dashed border-slate-200 rounded-lg h-[215px] flex flex-col items-center justify-center bg-white hover:bg-slate-100 transition-colors cursor-pointer relative overflow-hidden group">
+        <div className="flex flex-col">
+          <div className="border border-dashed border-gray-300 rounded-[5px] h-[200px] max-h-[210px] md:h-full flex flex-col items-center justify-center bg-white hover:bg-blue-50/30 transition-all cursor-pointer relative overflow-hidden group">
             {preview ? (
               <div className="relative w-full h-full">
                 <img
@@ -97,137 +134,155 @@ export default function EmployeeForm({
                   alt="Preview"
                   className="w-full h-full object-cover"
                 />
-                {/* Remove button */}
                 <button
                   type="button"
                   onClick={(e) => {
                     e.preventDefault();
-                    e.stopPropagation();
                     setValue("image", null);
                     setIsImageDeleted(true);
                   }}
-                  className="absolute top-3 right-3 p-2 bg-red-500 text-white rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-30"
+                  className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <X size={16} strokeWidth={3} />
+                  <X size={16} />
                 </button>
               </div>
             ) : (
-              <>
-                <div className="p-4 bg-slate-400 rounded-lg shadow-sm mb-2 text-white">
-                  <Upload size={24} />
-                </div>
-                <p className="text-sm font-mediuma">+ Select File</p>
-              </>
+              <div className="flex flex-col items-center text-gray-700">
+                <Upload size={24} className="mb-2" />
+                <Typography variant="body2">+ Upload Image</Typography>
+              </div>
             )}
             <input
               type="file"
               accept="image/*"
-              className="absolute inset-0 opacity-0 cursor-pointer z-10"
+              className="absolute inset-0 opacity-0 cursor-pointer"
               {...register("image")}
             />
           </div>
         </div>
       </div>
 
+      {/* Grid: Secondary Details */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <Input
-          errors={errors}
-          register={register}
+        <TextField
+          fullWidth
           label="Spouse Name"
-          name="spouseName"
+          {...register("spouseName")}
+          error={!!errors.spouseName}
+          sx={inputStyle}
         />
-        <Input
-          errors={errors}
-          register={register}
+        <TextField
+          fullWidth
           label="Father's Name"
-          name="fatherName"
+          {...register("fatherName")}
+          error={!!errors.fatherName}
+          sx={inputStyle}
         />
-        <Input
-          errors={errors}
-          register={register}
+        <TextField
+          fullWidth
           label="Mother's Name"
-          name="motherName"
+          {...register("motherName")}
+          error={!!errors.motherName}
+          sx={inputStyle}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <Input
-          errors={errors}
-          register={register}
+        <TextField
+          fullWidth
           label="Designation"
-          name="designation"
+          {...register("designation")}
+          error={!!errors.designation}
+          sx={inputStyle}
         />
-        <Input
-          errors={errors}
-          register={register}
+        <TextField
+          fullWidth
           label="Email Address"
-          name="email"
-          type="email"
+          {...register("email")}
+          error={!!errors.email}
+          sx={inputStyle}
         />
-        <Input
-          errors={errors}
-          register={register}
-          label="Phone Number"
-          name="phone"
+        <TextField
+          fullWidth
+          label="Phone"
+          {...register("phone")}
+          error={!!errors.phone}
+          sx={inputStyle}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-        <div className="space-y-1.5">
-          <label className="text-sm font-black text-slate-700">
-            <span className="text-red-500">*</span> Gender
-          </label>
-          <select
-            {...register("gender")}
-            className="w-full px-4 py-3 rounded-md border border-black outline-none transition-all text-sm font-medium bg-white"
-          >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-          {errors.gender && (
-            <p className="text-[10px] font-black text-red-500 uppercase">
-              {errors.gender.message}
-            </p>
-          )}
-        </div>
-        <Input
-          errors={errors}
-          register={register}
+        <TextField
+          select
+          fullWidth
+          label="Gender"
+          defaultValue=""
+          {...register("gender")}
+          error={!!errors.gender}
+          sx={inputStyle}
+        >
+          <MenuItem value="">Select Gender</MenuItem>
+          <MenuItem value="Male">Male</MenuItem>
+          <MenuItem value="Female">Female</MenuItem>
+        </TextField>
+        <TextField
+          fullWidth
+          type="date"
           label="Date of Birth"
-          name="dob"
-          type="date"
+          InputLabelProps={{ shrink: true }}
+          {...register("dob")}
+          sx={inputStyle}
         />
-        <Input
-          errors={errors}
-          register={register}
-          label="Date of Join"
-          name="joinDate"
+        <TextField
+          fullWidth
           type="date"
+          label="Join Date"
+          InputLabelProps={{ shrink: true }}
+          {...register("joinDate")}
+          sx={inputStyle}
         />
-        <Input
-          errors={errors}
-          register={register}
-          label="NID Card Number"
-          name="nid"
+        <TextField
+          fullWidth
+          label="NID Card"
+          {...register("nid")}
+          sx={inputStyle}
         />
       </div>
 
-      <div className="flex flex-col lg:flex-row justify-end gap-3 pt-6 border-t border-slate-100">
-        <button
-          type="button"
+      {/* Footer Buttons using MainButton */}
+      <div className="flex justify-end gap-3 pt-4 pb-2 border-gray-100">
+        <MainButton
+          label="Cancel"
           onClick={onCancel}
-          className="px-8 py-3.5 rounded-md font-black  transition-all text-center bg-slate-200  cursor-pointer hover:bg-slate-300"
-        >
-          Cancel
-        </button>
-        <button
+          sx={{
+            bgcolor: "secondary.main", // secondary.200
+            px: 4,
+            fontWeight: 600,
+            boxShadow: "none",
+            borderRadius: "5px",
+            "&:hover": { bgcolor: "secondary.600", boxShadow: "none" },
+          }}
+        />
+        <MainButton
           type="submit"
           disabled={isLoading}
-          className={`bg-orange-600 hover:bg-orange-700 text-white px-10 py-3.5 rounded-md font-black transition-all active:scale-95 text-center cursor-pointer ${isLoading && "cursor-not-allowed"}`}
-        >
-          {isLoading ? "Saving..." : "Save Changes"}
-        </button>
+          label={
+            isLoading ? (
+              <CircularProgress size={22} color="inherit" />
+            ) : (
+              "Save Changes"
+            )
+          }
+          sx={{
+            bgcolor: "#1677ff", // primary.main
+            color: "#ffffff",
+            px: 5,
+            fontWeight: 600,
+            boxShadow: "none",
+            borderRadius: "5px",
+            "&:hover": { bgcolor: "#0958d9", boxShadow: "none" },
+          }}
+        />
       </div>
     </form>
   );

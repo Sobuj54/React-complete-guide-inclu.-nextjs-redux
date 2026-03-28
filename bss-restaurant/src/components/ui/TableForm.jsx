@@ -1,35 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Upload, X, LayoutGrid } from "lucide-react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  Button,
   TextField,
   Typography,
-  Box,
-  IconButton,
-  Grid,
   CircularProgress,
-  Stack,
+  IconButton,
+  Box,
 } from "@mui/material";
-import { X, LayoutGrid, Upload } from "lucide-react";
 import { tableSchema } from "../../validation/form-validation";
-
-const cleanInputStyle = {
-  "& .MuiOutlinedInput-root": {
-    borderRadius: "10px",
-    backgroundColor: "#ffffff",
-    "& fieldset": { borderColor: "#e2e8f0" },
-    "&.Mui-focused fieldset": { borderColor: "#f97316" },
-  },
-  "& .MuiInputLabel-root": {
-    fontWeight: "700",
-  },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#f97316" },
-};
+import MainButton from "../MainButton";
 
 export default function TableFormModal({
   isOpen,
@@ -38,208 +22,211 @@ export default function TableFormModal({
   onSubmit,
   isLoading,
 }) {
-  const [preview, setPreview] = useState(null);
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
 
   const {
     register,
     handleSubmit,
-    watch,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(tableSchema),
     defaultValues: defaultValues || { tableNumber: "", numberOfSeats: 1 },
   });
 
-  const imageWatcher = watch("image");
+  const selectedImage = watch("image");
+
+  // EXACT input style from your Employee Form
+  const inputStyle = {
+    backgroundColor: "#ffffff",
+    borderRadius: "5px",
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#d9d9d9",
+        borderWidth: "1px",
+      },
+      "&:hover fieldset": {
+        borderColor: "#bfbfbf",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#1677ff",
+        borderWidth: "2px",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "#8c8c8c",
+      "&.Mui-focused": {
+        color: "#1677ff",
+      },
+    },
+    boxShadow: "none",
+  };
 
   useEffect(() => {
-    if (isOpen) reset(defaultValues || { tableNumber: "", numberOfSeats: 1 });
+    setIsImageDeleted(false);
+    if (isOpen) {
+      reset(defaultValues || { tableNumber: "", numberOfSeats: 1 });
+    }
   }, [isOpen, defaultValues, reset]);
 
-  useEffect(() => {
-    if (imageWatcher && imageWatcher[0] instanceof File) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(imageWatcher[0]);
-    } else {
-      setPreview(
-        defaultValues?.image
-          ? `https://bssrms.runasp.net/images/table/${defaultValues.image}`
-          : null,
-      );
+  const existingImageUrl = useMemo(() => {
+    if (isImageDeleted || !defaultValues?.image) return null;
+    return `https://restaurantapi.bssoln.com/images/table/${defaultValues.image}`;
+  }, [defaultValues?.image, isImageDeleted]);
+
+  const preview = useMemo(() => {
+    if (selectedImage && selectedImage[0] instanceof File) {
+      return URL.createObjectURL(selectedImage[0]);
     }
-  }, [imageWatcher, defaultValues]);
+    return existingImageUrl;
+  }, [selectedImage, existingImageUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (preview && preview.startsWith("blob:")) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   return (
     <Dialog
       open={isOpen}
       onClose={onClose}
       fullWidth
-      maxWidth="md" // Changed from xs to sm to allow proper expansion
+      maxWidth="sm"
       PaperProps={{
         sx: {
-          borderRadius: "10px", // Consistent with your UI design
-          margin: { xs: 2, sm: "auto" }, // Adds margin on very small devices
-          width: { xs: "calc(100% - 32px)", sm: "auto" }, // Forces full width on mobile
+          borderRadius: "5px",
+          p: 0, // Reduced padding to match the clean look
+          backgroundImage: "none",
         },
       }}
     >
       <DialogTitle
-        sx={{ display: "flex", alignItems: "center", gap: 2, pb: 3 }}
+        sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 2.5 }}
       >
         <Box
           sx={{
             p: 1,
-            bgcolor: "#f97316",
-            borderRadius: "0.5rem",
+            bgcolor: "#1677ff",
+            borderRadius: "5px",
             color: "white",
             display: "flex",
           }}
         >
           <LayoutGrid size={20} />
         </Box>
-        <Typography variant="h6" sx={{ fontWeight: 900, fontStyle: "black" }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, color: "#1e293b" }}>
           {defaultValues?.id ? "Edit Table" : "Create New Table"}
         </Typography>
-        <IconButton onClick={onClose} sx={{ ml: "auto" }}>
+        <IconButton onClick={onClose} size="small" sx={{ ml: "auto" }}>
           <X size={20} />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ overflowX: "hidden", px: { xs: 2, sm: 10 } }}>
-        <Box
-          component="form"
-          id="table-form"
+      <DialogContent sx={{ pb: 4 }}>
+        <form
+          id="table-modal-form"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{ pt: 2 }}
+          className="space-y-6 pt-2"
         >
-          <Grid container spacing={2}>
-            {/* Input Section */}
-            <Grid item xs={12} sm={6}>
-              <Stack spacing={4}>
-                <TextField
-                  label="Table Number"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="e.g. T-101"
-                  defaultValue={defaultValues?.tableNumber}
-                  {...register("tableNumber")}
-                  error={!!errors.tableNumber}
-                  helperText={errors.tableNumber?.message}
-                  sx={cleanInputStyle}
-                  InputLabelProps={{ shrink: true }}
-                />
-                <TextField
-                  label="Seating Capacity"
-                  variant="outlined"
-                  type="number"
-                  fullWidth
-                  {...register("numberOfSeats")}
-                  error={!!errors.numberOfSeats}
-                  helperText={errors.numberOfSeats?.message}
-                  sx={cleanInputStyle}
-                />
-              </Stack>
-            </Grid>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-5">
+              <TextField
+                fullWidth
+                label="Table Number"
+                {...register("tableNumber")}
+                error={!!errors.tableNumber}
+                helperText={errors.tableNumber?.message}
+                sx={inputStyle}
+              />
+              <TextField
+                fullWidth
+                label="Seating Capacity"
+                {...register("numberOfSeats")}
+                error={!!errors.numberOfSeats}
+                helperText={errors.numberOfSeats?.message}
+                sx={inputStyle}
+              />
+            </div>
 
-            {/* Image Section */}
-            <Grid item xs={12} sm={6}>
-              <Box
-                sx={{
-                  width: "100%",
-                  height: { xs: "100%", sm: "100%" },
-                  minHeight: "full",
-                  borderRadius: "1rem",
-                  border: "2px dashed #cbd5e1",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "relative",
-                  bgcolor: "#f8fafc",
-                  overflow: "hidden",
-                }}
-              >
+            <div className="flex flex-col h-full">
+              <div className="border border-dashed border-gray-300 rounded-[5px] h-[135px] flex flex-col items-center justify-center bg-white hover:bg-blue-50/30 transition-all cursor-pointer relative overflow-hidden group">
                 {preview ? (
-                  <Box
-                    component="img"
-                    src={preview}
-                    sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                ) : (
-                  <Box sx={{ textAlign: "center", p: 2 }}>
-                    <Upload
-                      size={24}
-                      color="#94a3b8"
-                      style={{ margin: "0 auto" }}
+                  <div className="relative w-full h-full">
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
                     />
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: "#94a3b8",
-                        display: "block",
-                        mt: 1,
-                        fontWeight: 900,
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setValue("image", null);
+                        setIsImageDeleted(true);
                       }}
+                      className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      UPLOAD IMAGE
+                      <X size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center  p-4">
+                    <Upload size={24} className="mb-2" />
+                    <Typography variant="body2">
+                      + Upload Table Image
                     </Typography>
-                  </Box>
+                  </div>
                 )}
                 <input
                   type="file"
                   accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
                   {...register("image")}
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    opacity: 0,
-                    cursor: "pointer",
-                    width: "100%",
-                    height: "100%",
-                  }}
                 />
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
-      </DialogContent>
+              </div>
+            </div>
+          </div>
 
-      <DialogActions sx={{ p: 3, gap: 1 }}>
-        <Button
-          onClick={onClose}
-          sx={{
-            flex: 1, // Makes buttons equal width on mobile
-            bgcolor: "#f1f5f9",
-            borderRadius: "7px",
-            color: "#64748b",
-            fontWeight: 900,
-            textTransform: "none",
-            "&:hover": { bgcolor: "#e2e8f0" },
-          }}
-        >
-          Discard
-        </Button>
-        <Button
-          form="table-form"
-          type="submit"
-          variant="contained"
-          disabled={isLoading}
-          disableElevation
-          sx={{
-            flex: 1, // Makes buttons equal width on mobile
-            bgcolor: "#f97316",
-            color: "white",
-            borderRadius: "7px",
-            fontWeight: 900,
-            textTransform: "none",
-            "&:hover": { bgcolor: "#ea580c" },
-          }}
-        >
-          {isLoading ? <CircularProgress size={22} color="inherit" /> : "Save"}
-        </Button>
-      </DialogActions>
+          <div className="flex justify-end gap-3 pt-4">
+            <MainButton
+              label="CANCEL"
+              onClick={onClose}
+              sx={{
+                bgcolor: "#f1f5f9", // Matches the gray in your screenshot
+                color: "#475569",
+                px: 4,
+                fontWeight: 700,
+                boxShadow: "none",
+                borderRadius: "5px",
+                "&:hover": { bgcolor: "#e2e8f0", boxShadow: "none" },
+              }}
+            />
+            <MainButton
+              type="submit"
+              disabled={isLoading}
+              label={
+                isLoading ? (
+                  <CircularProgress size={22} color="inherit" />
+                ) : (
+                  "SAVE TABLE"
+                )
+              }
+              sx={{
+                bgcolor: "#1677ff",
+                color: "#ffffff",
+                px: 5,
+                fontWeight: 700,
+                boxShadow: "none",
+                borderRadius: "5px",
+                "&:hover": { bgcolor: "#0958d9", boxShadow: "none" },
+              }}
+            />
+          </div>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }

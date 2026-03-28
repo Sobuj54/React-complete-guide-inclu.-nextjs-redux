@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Edit3, Trash2, Search } from "lucide-react";
+import { Plus, Trash2, Search, Edit2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -10,6 +10,12 @@ import {
   Paper,
   TablePagination,
   CircularProgress,
+  Box,
+  Typography,
+  useTheme,
+  TextField,
+  InputAdornment,
+  Stack,
 } from "@mui/material";
 
 import { useFoods, useFood, useFoodMutations } from "../../hooks/useFoods";
@@ -19,9 +25,12 @@ import { toBase64 } from "../../utils/to-base64";
 import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import Modal from "../../components/ui/Modal";
 import FoodForm from "../../components/ui/FoodForm";
+import ActionButton from "../../components/ActionButton";
+import MainButton from "../../components/MainButton";
 
 export default function Foods() {
-  const [page, setPage] = useState(0); // MUI uses 0-based indexing for pagination
+  const theme = useTheme();
+  const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,45 +38,40 @@ export default function Foods() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [foodToDelete, setFoodToDelete] = useState(null);
 
-  // API Hooks (Adjusting page + 1 for your backend if it's 1-based)
+  // API Hooks
   const {
     data: response,
     isPending,
     refetch,
   } = useFoods(page + 1, perPage, search);
+
   const { data: fullFoodData, isFetching: isFetchingSingle } =
     useFood(selectedFoodId);
+
   const { createFood, updateFood, deleteFood } =
     useFoodMutations(selectedFoodId);
 
   const onFormSubmit = async (data) => {
     try {
-      // Check if a new file is actually selected in the file input
       const hasNewFile = data.image && data.image[0] instanceof File;
 
-      // 1. Initialize payload with all fields matching Swagger format
-      // Ensure numbers are Numbers and strings are Strings
       let payload = {
         name: data.name,
         description: data.description,
         price: Number(data.price) || 0,
         discountType: data.discountType || "None",
         discount: Number(data.discount) || 0,
-        image: "", // Swagger expects a string
-        base64: "", // Swagger expects a string
+        image: "",
+        base64: "",
       };
 
-      // 2. Handle Image/Base64 logic
       if (hasNewFile) {
         const file = data.image[0];
         payload.image = file.name;
         payload.base64 = await toBase64(file);
       } else if (typeof data.image === "string") {
-        // Logic for Edit mode: keep existing image name if no new file uploaded
         payload.image = data.image;
       }
-
-      console.log(payload);
 
       const options = {
         onSuccess: () => {
@@ -77,7 +81,6 @@ export default function Foods() {
         },
       };
 
-      // 3. Mutation Execution
       if (selectedFoodId) {
         updateFood.mutate(payload, options);
       } else {
@@ -88,57 +91,95 @@ export default function Foods() {
     }
   };
 
+  const tableStyle = {
+    py: 1.5,
+  };
+
   return (
-    <div className="space-y-4 pt-2">
+    <div className="space-y-4">
       <title>BSS Resto | Foods</title>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-end gap-4">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-              size={16}
-            />
-            <input
-              type="text"
-              placeholder="Search food..."
-              className="pl-10 pr-4 py-2 bg-white outline-none rounded-[5px] font-bold text-sm transition-all"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <button
+      <Box
+        sx={{
+          mb: 3,
+          display: "flex",
+          justifyContent: "end",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={2}
+          sx={{ width: { xs: "100%", md: "auto" } }}
+        >
+          <TextField
+            size="small"
+            placeholder="Search Foods..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search size={18} color="#bfbfbf" />
+                </InputAdornment>
+              ),
+              sx: {
+                borderRadius: "5px",
+                bgcolor: "white",
+                minWidth: { md: "250px" },
+              },
+            }}
+          />
+          <MainButton
+            label="Add Food"
+            startIcon={<Plus size={18} />}
             onClick={() => {
               setSelectedFoodId(null);
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-[5px] font-bold hover:bg-orange-600 transition-all active:scale-95"
-          >
-            <Plus size={18} strokeWidth={3} /> Add Food
-          </button>
-        </div>
-      </div>
+            color="primary"
+          />
+        </Stack>
+      </Box>
 
       <TableContainer
         component={Paper}
         variant="outlined"
-        sx={{ borderRadius: "5px", border: "1px solid #e2e8f0" }}
+        sx={{
+          borderRadius: `${theme.shape.borderRadius}px`,
+          borderColor: theme.palette.secondary.light,
+          boxShadow: "none",
+        }}
       >
-        <Table>
-          <TableHead sx={{ backgroundColor: "#f8fafc" }}>
+        <Table size="small">
+          <TableHead
+            sx={{
+              bgcolor: "#f8fafc",
+            }}
+          >
             <TableRow>
-              <TableCell>Image</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell align="center">Discount</TableCell>
-              <TableCell>Base Price</TableCell>
-              <TableCell>Final Price</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell sx={tableStyle}>Image</TableCell>
+              <TableCell sx={tableStyle}>Name</TableCell>
+              <TableCell align="center" asx={tableStyle}>
+                Discount
+              </TableCell>
+              <TableCell sx={tableStyle}>Base Price</TableCell>
+              <TableCell sx={tableStyle}>Final Price</TableCell>
+              <TableCell align="right" sx={tableStyle}>
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {isPending ? (
               <TableRow>
                 <TableCell colSpan={6} align="center" sx={{ py: 10 }}>
-                  <CircularProgress size={30} sx={{ color: "#ea580c" }} />
+                  <CircularProgress
+                    size={30}
+                    sx={{ color: theme.palette.primary.main }}
+                  />
                 </TableCell>
               </TableRow>
             ) : (
@@ -146,55 +187,94 @@ export default function Foods() {
                 <TableRow key={food.id} hover>
                   <TableCell sx={{ py: 0 }}>
                     <img
-                      src={`https://bssrms.runasp.net/images/food/${food.image}`}
-                      className="w-12 h-12 object-cover border border-slate-100"
-                      style={{ borderRadius: "5px" }}
+                      src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
+                      className="w-10 h-10 object-cover border border-slate-100"
+                      style={{ borderRadius: "4px" }}
                       alt={food.name}
                     />
                   </TableCell>
-                  <TableCell>
-                    <p className="font-medium m-0">{food.name}</p>
-                    <p className="text-[11px] text-slate-400 line-clamp-1 m-0">
+                  <TableCell sx={{ py: 0 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, m: 0 }}>
+                      {food.name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "11px",
+                        color: theme.palette.secondary.main,
+                      }}
+                      className="line-clamp-1 m-0"
+                    >
                       {food.description}
-                    </p>
+                    </Typography>
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ py: 0 }}>
                     {food.discountType !== "None" ? (
-                      <span className="px-2 py-0.5 bg-red-50 text-red-600 rounded-[3px] text-xs  border border-red-100 uppercase">
+                      <Box
+                        sx={{
+                          bgcolor: theme.palette.error.lighter,
+                          color: theme.palette.error.main,
+                          border: `1px solid ${theme.palette.error.light}`,
+                          px: 1,
+                          py: 0.2,
+                          borderRadius: "3px",
+                          display: "inline-block",
+                          fontSize: "10px",
+                          fontWeight: 800,
+                        }}
+                      >
                         {food.discount}
                         {food.discountType === "Percentage" ? "%" : "৳"} OFF
-                      </span>
+                      </Box>
                     ) : (
-                      <span className=" text-xs">N/A</span>
+                      <span className="text-slate-400 text-xs">N/A</span>
                     )}
                   </TableCell>
-                  <TableCell className="text-slate-500 font-bold text-sm">
+                  <TableCell
+                    sx={{
+                      py: 0,
+                      fontWeight: 600,
+                      fontSize: "13px",
+                    }}
+                  >
                     {food.price}৳
                   </TableCell>
-                  <TableCell className="text-emerald-600 font-black text-base">
+                  <TableCell
+                    sx={{
+                      py: 0,
+                      fontWeight: 600,
+                      color: theme.palette.success.main,
+                      fontSize: "15px",
+                    }}
+                  >
                     {food.discountPrice}৳
                   </TableCell>
-                  <TableCell align="right">
-                    <div className="flex justify-end gap-2">
-                      <button
+                  <TableCell align="right" sx={{ py: 1 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        gap: 1,
+                      }}
+                    >
+                      <ActionButton
+                        icon={Edit2}
+                        title="Edit Item"
+                        colorType="primary"
                         onClick={() => {
                           setSelectedFoodId(food.id);
                           setIsModalOpen(true);
                         }}
-                        className="p-1.5  hover:bg-blue-100 hover:text-blue-500 rounded-[5px] border-[1px]"
-                      >
-                        <Edit3 size={16} />
-                      </button>
-                      <button
+                      />
+                      <ActionButton
+                        icon={Trash2}
+                        title="Delete Item"
+                        colorType="error"
                         onClick={() => {
                           setFoodToDelete(food);
                           setIsDeleteModalOpen(true);
                         }}
-                        className="p-1.5 text-red-600 border-[1px] hover:bg-red-100 rounded-[5px]"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+                      />
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))
@@ -211,7 +291,6 @@ export default function Foods() {
             setPerPage(parseInt(e.target.value, 10));
             setPage(0);
           }}
-          sx={{ borderTop: "1px solid #e2e8f0" }}
         />
       </TableContainer>
 
@@ -236,12 +315,31 @@ export default function Foods() {
         style="max-w-4xl"
       >
         {selectedFoodId && isFetchingSingle ? (
-          <div className="flex flex-col items-center py-20 gap-2">
-            <CircularProgress size={24} sx={{ color: "#ea580c" }} />
-            <p className="text-[10px] font-black text-slate-400 uppercase">
-              Loading Item...
-            </p>
-          </div>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              py: 10,
+              gap: 2,
+            }}
+          >
+            <CircularProgress
+              size={24}
+              sx={{ color: theme.palette.primary.main }}
+            />
+            <Typography
+              sx={{
+                fontSize: "10px",
+                fontWeight: 900,
+                color: "text.secondary",
+                textTransform: "uppercase",
+                letterSpacing: 1,
+              }}
+            >
+              Loading Item Details...
+            </Typography>
+          </Box>
         ) : (
           <FoodForm
             defaultValues={fullFoodData}

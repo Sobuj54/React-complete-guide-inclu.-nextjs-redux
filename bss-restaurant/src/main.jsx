@@ -6,8 +6,8 @@ import router from "./routes.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme/theme.js";
+import { ThemeProvider } from "@mui/material/styles";
 
 export const queryClient = new QueryClient();
 

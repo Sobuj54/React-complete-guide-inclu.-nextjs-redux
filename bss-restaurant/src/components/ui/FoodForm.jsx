@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Upload, X } from "lucide-react";
+import {
+  TextField,
+  MenuItem,
+  Typography,
+  CircularProgress,
+  Box,
+  InputAdornment,
+  useTheme,
+} from "@mui/material";
+import MainButton from "../MainButton";
 
 export default function FoodForm({
   defaultValues,
@@ -8,6 +18,7 @@ export default function FoodForm({
   onCancel,
   isLoading,
 }) {
+  const theme = useTheme();
   const [isImageDeleted, setIsImageDeleted] = useState(false);
 
   const {
@@ -18,8 +29,11 @@ export default function FoodForm({
     setValue,
     formState: { errors },
   } = useForm({
+    // Logic: If editing, use values from API, otherwise use defaults
     defaultValues: defaultValues || {
-      discountType: "Percentage",
+      name: "",
+      description: "",
+      discountType: "None",
       discount: 0,
       price: 0,
     },
@@ -30,25 +44,47 @@ export default function FoodForm({
   const discountType = watch("discountType");
   const discount = watch("discount") || 0;
 
-  // Sync form when defaultValues (edit mode) change
+  const inputStyle = {
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadius,
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: theme.palette.secondary.light,
+      },
+      "&:hover fieldset": {
+        borderColor: theme.palette.secondary[400],
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: theme.palette.primary.main,
+        borderWidth: "2px",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: theme.palette.secondary.main,
+      "&.Mui-focused": {
+        color: theme.palette.primary.main,
+      },
+    },
+  };
+
+  // CRITICAL FIX: Ensure form resets when defaultValues (API data) arrives
   useEffect(() => {
-    setIsImageDeleted(false);
     if (defaultValues) {
-      reset(defaultValues);
+      // We explicitly reset with a fallback to "None" if discountType is missing
+      reset({
+        ...defaultValues,
+        discountType: defaultValues.discountType || "None",
+      });
     }
+    setIsImageDeleted(false);
   }, [defaultValues, reset]);
 
-  // Calculate Discounted Price dynamically
   const discountedPrice = useMemo(() => {
     const basePrice = Number(price);
     const discVal = Number(discount);
-
-    if (discountType === "Percentage") {
+    if (discountType === "Percentage")
       return basePrice - basePrice * (discVal / 100);
-    }
-    if (discountType === "Flat") {
-      return Math.max(0, basePrice - discVal);
-    }
+    if (discountType === "Flat") return Math.max(0, basePrice - discVal);
     return basePrice;
   }, [price, discountType, discount]);
 
@@ -57,50 +93,65 @@ export default function FoodForm({
       return URL.createObjectURL(selectedImage[0]);
     if (isImageDeleted) return null;
     return defaultValues?.image
-      ? `https://bssrms.runasp.net/images/food/${defaultValues.image}`
+      ? `https://restaurantapi.bssoln.com/images/food/${defaultValues.image}`
       : null;
   }, [selectedImage, defaultValues, isImageDeleted]);
 
-  const labelStyle = "text-sm font-bold  mb-1.5 inline-block";
-  const inputStyle =
-    "w-full px-4 py-2.5 rounded-[5px] border border-slate-700 bg-white  outline-none transition-all text-sm font-medium";
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <div>
-            <label className={labelStyle}>
-              <span className="text-red-500 mr-1">*</span>Food Name
-            </label>
-            <input
-              {...register("name", { required: true })}
-              className={inputStyle}
-              placeholder="Enter food name"
-            />
-          </div>
-
-          <div>
-            <label className={labelStyle}>
-              <span className="text-red-500 mr-1">*</span>Description
-            </label>
-            <textarea
-              {...register("description", { required: true })}
-              className={`${inputStyle} min-h-[150px] resize-none`}
-              placeholder="Describe the dish..."
-            />
-          </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="flex flex-col gap-5">
+          <TextField
+            fullWidth
+            label="Food Name"
+            {...register("name", { required: "Name is required" })}
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            sx={inputStyle}
+            InputLabelProps={{ shrink: true }} // Force label to stay up for default values
+          />
+          <TextField
+            fullWidth
+            multiline
+            rows={5}
+            label="Description"
+            {...register("description")}
+            sx={inputStyle}
+            InputLabelProps={{ shrink: true }}
+          />
         </div>
 
-        <div>
-          <label className={labelStyle}>Food Image</label>
-          <div className="border-2 border-dashed border-slate-200 rounded-[5px] h-[225px] flex flex-col items-center justify-center bg-white relative overflow-hidden group">
+        <div className="flex flex-col max-h-[225px]">
+          <Box
+            sx={{
+              border: `1px dashed ${theme.palette.secondary.light}`,
+              borderRadius: `${theme.shape.borderRadius}px`,
+              height: "100%",
+              minHeight: "200px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: theme.palette.background.paper,
+              position: "relative",
+              overflow: "hidden",
+              "&:hover": { bgcolor: theme.palette.primary.lighter },
+              transition: "all 0.3s",
+            }}
+          >
             {preview ? (
-              <div className="relative w-full h-full flex items-center justify-center p-4">
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                  p: 1,
+                }}
+              >
                 <img
                   src={preview}
                   alt="Preview"
-                  className="max-w-full max-h-full object-contain shadow-sm border border-slate-200 bg-white"
+                  className="w-full h-full object-cover"
                 />
                 <button
                   type="button"
@@ -108,18 +159,21 @@ export default function FoodForm({
                     setValue("image", null);
                     setIsImageDeleted(true);
                   }}
-                  className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-[5px] opacity-0 group-hover:opacity-100 transition-opacity z-30"
+                  className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full z-20"
                 >
-                  <X size={14} />
+                  <X size={16} />
                 </button>
-              </div>
+              </Box>
             ) : (
-              <div className="text-center p-6 cursor-pointer">
-                <Upload size={32} className="mx-auto text-slate-300 mb-2" />
-                <p className="text-xs font-bold text-slate-400">
-                  Click or drag to upload image
-                </p>
-              </div>
+              <Box
+                sx={{
+                  textAlign: "center",
+                  color: theme.palette.secondary.main,
+                }}
+              >
+                <Upload size={24} className="mb-2 mx-auto" />
+                <Typography variant="body2">+ Upload Image</Typography>
+              </Box>
             )}
             <input
               type="file"
@@ -127,75 +181,81 @@ export default function FoodForm({
               className="absolute inset-0 opacity-0 cursor-pointer z-10"
               {...register("image")}
             />
-          </div>
+          </Box>
         </div>
       </div>
 
-      {/* Bottom Section: Pricing Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div>
-          <label className={labelStyle}>
-            <span className="text-red-500 mr-1">*</span>Price
-          </label>
-          <input
-            type="number"
-            {...register("price", { required: true })}
-            className={inputStyle}
-          />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <TextField
+          fullWidth
+          label="Price"
+          type="number"
+          {...register("price")}
+          sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">৳</InputAdornment>,
+          }}
+        />
 
-        <div>
-          <label className={labelStyle}>Select Discount Type</label>
-          <select {...register("discountType")} className={inputStyle}>
-            <option value="None">None</option>
-            <option value="Percentage">Percentage</option>
-            <option value="Flat">Flat</option>
-          </select>
-        </div>
-
-        <div>
-          <label className={labelStyle}>
-            Discount In {discountType === "Percentage" ? "%" : "৳"}
-          </label>
-          <input
-            type="number"
-            {...register("discount")}
-            className={inputStyle}
-            disabled={discountType === "None"}
-          />
-        </div>
-
-        <div>
-          <label className={labelStyle}>Discounted Price</label>
-          <input
-            type="text"
-            readOnly
-            value={discountedPrice}
-            className={`${inputStyle} bg-slate-50 border-slate-100 text-slate-500 cursor-not-allowed`}
-          />
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex justify-end items-center gap-3 pt-6 border-t border-slate-100">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-6 py-2.5 rounded-[5px] font-bold text-slate-600 border bg-white border-slate-200 hover:bg-slate-50 transition-colors text-sm cursor pointer"
+        {/* Force Select to use the watched value for visual sync */}
+        <TextField
+          select
+          fullWidth
+          label="Discount Type"
+          value={discountType || "None"}
+          {...register("discountType")}
+          onChange={(e) => setValue("discountType", e.target.value)}
+          sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         >
-          Cancel Operation
-        </button>
-        <button
+          <MenuItem value="None">None</MenuItem>
+          <MenuItem value="Percentage">Percentage</MenuItem>
+          <MenuItem value="Flat">Flat</MenuItem>
+        </TextField>
+
+        <TextField
+          fullWidth
+          label="Discount"
+          type="number"
+          disabled={discountType === "None"}
+          {...register("discount")}
+          sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
+        />
+
+        <TextField
+          fullWidth
+          label="Final Price"
+          value={discountedPrice}
+          InputProps={{ readOnly: true }}
+          sx={{
+            ...inputStyle,
+            "& .MuiOutlinedInput-root": {
+              bgcolor: theme.palette.secondary.lighter,
+            },
+          }}
+          InputLabelProps={{ shrink: true }}
+        />
+      </div>
+
+      <div
+        className="flex justify-end gap-3 pt-4 border-t"
+        style={{ borderColor: theme.palette.divider }}
+      >
+        <MainButton label="Cancel" onClick={onCancel} color="secondary" />
+        <MainButton
           type="submit"
           disabled={isLoading}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2.5 rounded-[5px] font-bold transition-all active:scale-95 disabled:opacity-50 text-sm shadow-sm cursor-pointer"
-        >
-          {isLoading
-            ? "Processing..."
-            : defaultValues
-              ? "Update Food Item"
-              : "Add Food Item"}
-        </button>
+          label={
+            isLoading ? (
+              <CircularProgress size={22} color="inherit" />
+            ) : (
+              "Save Changes"
+            )
+          }
+          color="primary"
+        />
       </div>
     </form>
   );

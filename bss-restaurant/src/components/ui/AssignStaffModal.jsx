@@ -4,7 +4,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   List,
   ListItem,
   ListItemAvatar,
@@ -15,9 +14,9 @@ import {
   Box,
   CircularProgress,
   IconButton,
-  Divider,
 } from "@mui/material";
 import { Check, X, Users, User } from "lucide-react";
+import MainButton from "../MainButton";
 
 export default function AssignStaffModal({
   isOpen,
@@ -28,6 +27,7 @@ export default function AssignStaffModal({
   onToggle,
   onConfirm,
   isSubmitting,
+  imageMap = {},
 }) {
   return (
     <Dialog
@@ -36,18 +36,9 @@ export default function AssignStaffModal({
       fullWidth
       maxWidth="sm"
       PaperProps={{
-        sx: {
-          borderRadius: 2,
-          padding: 1,
-        },
-      }}
-      sx={{
-        "& .MuiPaper-root": {
-          backgroundColor: "grey.100", // Change to your desired color
-        },
+        sx: { borderRadius: "12px", padding: 1, bgcolor: "#ffffff" },
       }}
     >
-      {/* Header */}
       <DialogTitle
         sx={{
           display: "flex",
@@ -56,15 +47,9 @@ export default function AssignStaffModal({
           pb: 1,
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1.5,
-          }}
-        >
-          <Users size={24} className="text-orange-500" />
-          <Typography variant="h6" sx={{ fontWeight: 900, color: "#1e293b" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Users size={24} color="#1677ff" />
+          <Typography variant="h6" sx={{ fontWeight: 800, color: "#262626" }}>
             Assign Staff
           </Typography>
         </Box>
@@ -73,15 +58,14 @@ export default function AssignStaffModal({
         </IconButton>
       </DialogTitle>
 
-      <DialogContent dividers sx={{ py: 2 }}>
+      <DialogContent dividers sx={{ py: 2, borderTop: "1px solid #f0f0f0" }}>
         <Typography
           variant="body2"
-          sx={{ mb: 2, fontWeight: 700, color: "text.secondary" }}
+          sx={{ mb: 2, fontWeight: 600, color: "#595959" }}
         >
           Select staff members to assign to this table:
         </Typography>
 
-        {/* Staff List Area */}
         <Box sx={{ minHeight: 200, maxHeight: 400, overflowY: "auto" }}>
           {isLoading ? (
             <Box
@@ -96,38 +80,41 @@ export default function AssignStaffModal({
               <CircularProgress
                 size={32}
                 thickness={5}
-                sx={{ color: "#f97316" }}
+                sx={{ color: "#1677ff" }}
               />
               <Typography
                 variant="caption"
-                sx={{
-                  fontWeight: 900,
-                  letterSpacing: 1,
-                  color: "text.disabled",
-                }}
+                sx={{ fontWeight: 700, color: "#bfbfbf", letterSpacing: 1 }}
               >
                 FETCHING STAFF...
               </Typography>
             </Box>
           ) : staff?.length > 0 ? (
-            <List sx={{ width: "100%", bgcolor: "gery.200" }}>
+            <List sx={{ width: "100%", p: 0 }}>
               {staff.map((emp) => {
-                const currentId = emp.employeeId || emp.id;
+                // IMPORTANT: Match the employeeId from this list to the id in your map
+                const currentId = emp.employeeId;
                 const isSelected = selectedEmployees.includes(currentId);
+
+                // Look up image filename using the ID
+                const imageFileName = imageMap[currentId];
 
                 return (
                   <ListItem
                     key={currentId}
                     disablePadding
                     sx={{
-                      mb: 2,
+                      mb: 1.5,
                       border: "1px solid",
-                      borderColor: isSelected ? "orange.200" : "grey.100",
-                      bgcolor: isSelected ? "orange.200" : "white",
-                      borderRadius: 1,
+                      borderColor: isSelected ? "primary.light" : "#f0f0f0",
+                      bgcolor: isSelected
+                        ? "primary.lighter"
+                        : "secondary.lighter",
+                      borderRadius: "5px",
                       transition: "all 0.2s",
                       "&:hover": {
-                        bgcolor: isSelected ? "orange.100" : "grey.100",
+                        bgcolor: isSelected ? "#bae0ff" : "#f5f5f5",
+                        borderColor: isSelected ? "#69b1ff" : "#d9d9d9",
                       },
                       boxShadow: 1,
                     }}
@@ -140,30 +127,32 @@ export default function AssignStaffModal({
                         alignItems: "center",
                         p: 1.5,
                         cursor: "pointer",
-                        gap: "5px",
+                        gap: 1,
                       }}
                     >
                       <ListItemAvatar>
                         <Avatar
                           src={
-                            emp.image
-                              ? `https://bssrms.runasp.net/images/employee/${emp.image}`
+                            imageFileName
+                              ? `https://restaurantapi.bssoln.com/images/user/${imageFileName}`
                               : undefined
                           }
                           sx={{
-                            bgcolor: isSelected ? "orange.500" : "grey.500",
-                            fontWeight: 900,
+                            width: 40,
+                            height: 40,
+                            bgcolor: isSelected ? "#1677ff" : "#d9d9d9",
+                            fontWeight: 700,
                           }}
                         >
-                          {!emp.image &&
-                            (emp.name?.charAt(0) || <User size={18} />)}
+                          {!imageFileName &&
+                            (emp.name?.charAt(0) || <User size={20} />)}
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
                         primary={
                           <Typography
                             variant="subtitle2"
-                            sx={{ fontWeight: 900, color: "#0f172a" }}
+                            sx={{ fontWeight: 700, color: "#262626" }}
                           >
                             {emp.name}
                           </Typography>
@@ -172,46 +161,42 @@ export default function AssignStaffModal({
                           <Typography
                             variant="caption"
                             sx={{
-                              fontWeight: 700,
+                              fontWeight: 600,
+                              color: "#8c8c8c",
                               textTransform: "uppercase",
-                              color: "text.disabled",
                             }}
                           >
-                            {emp.role || "Server"}
+                            {emp.designation || "Staff Member"}
                           </Typography>
                         }
                       />
                       <Checkbox
                         edge="end"
                         checked={isSelected}
-                        sx={{
-                          color: "grey.500",
-                          "&.Mui-checked": { color: "#f97316" },
-                        }}
+                        sx={{ "&.Mui-checked": { color: "#1677ff" } }}
                         icon={
                           <Box
                             sx={{
-                              width: 24,
-                              height: 24,
-                              border: "2px solid #9E9E9E",
-                              borderRadius: 0.5,
-                              color: "white",
+                              width: 22,
+                              height: 22,
+                              border: "2px solid #434343",
+                              borderRadius: "5px",
                             }}
                           />
                         }
                         checkedIcon={
                           <Box
                             sx={{
-                              width: 24,
-                              height: 24,
-                              bgcolor: "#f97316",
-                              borderRadius: 0.5,
+                              width: 22,
+                              height: 22,
+                              bgcolor: "#1677ff",
+                              borderRadius: "4px",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                             }}
                           >
-                            <Check size={16} color="white" strokeWidth={4} />
+                            <Check size={14} color="white" strokeWidth={4} />
                           </Box>
                         }
                       />
@@ -224,7 +209,7 @@ export default function AssignStaffModal({
             <Box sx={{ py: 10, textAlign: "center" }}>
               <Typography
                 variant="body2"
-                sx={{ fontStyle: "italic", color: "text.disabled" }}
+                sx={{ fontStyle: "italic", color: "#bfbfbf" }}
               >
                 No available staff found.
               </Typography>
@@ -233,45 +218,28 @@ export default function AssignStaffModal({
         </Box>
       </DialogContent>
 
-      {/* Actions */}
-      <DialogActions sx={{ p: 3, gap: 1 }}>
-        <Button
+      <DialogActions sx={{ p: 3, gap: 2 }}>
+        <MainButton
+          label="Cancel"
           onClick={onClose}
-          fullWidth
           sx={{
-            fontWeight: 900,
-            bgcolor: "oklch(92.9% 0.013 255.508)",
-            color: "text.secondary",
-            textTransform: "uppercase",
-            letterSpacing: 1,
-            fontSize: "0.75rem",
-            py: 1.5,
+            bgcolor: "#f5f5f5",
+            color: "#595959",
+            flex: 1,
+            "&:hover": { bgcolor: "#e8e8e8" },
           }}
-        >
-          Cancel
-        </Button>
-        <Button
+        />
+        <MainButton
+          label={
+            isSubmitting
+              ? "Assigning..."
+              : `Assign ${selectedEmployees.length} Members`
+          }
           onClick={onConfirm}
           disabled={selectedEmployees.length === 0 || isSubmitting}
-          variant="contained"
-          fullWidth
-          disableElevation
-          sx={{
-            py: 1.5,
-            color: "white",
-            bgcolor: "#f97316",
-            fontWeight: 900,
-            borderRadius: 1.5,
-            "&:hover": { bgcolor: "#ea580c" },
-            "&:disabled": { bgcolor: "grey.200" },
-          }}
-        >
-          {isSubmitting ? (
-            <CircularProgress size={20} sx={{ color: "white" }} />
-          ) : (
-            `Assign ${selectedEmployees.length} Members`
-          )}
-        </Button>
+          loading={isSubmitting}
+          sx={{ bgcolor: "#1677ff", flex: 1.5 }}
+        />
       </DialogActions>
     </Dialog>
   );

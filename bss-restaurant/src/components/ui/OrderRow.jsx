@@ -9,29 +9,78 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Chip,
   Avatar,
-  Tooltip,
+  Chip,
 } from "@mui/material";
 import {
   ChevronDown,
   ChevronUp,
   Edit3,
   Trash2,
-  RefreshCw,
   ShoppingBag,
   ArrowRightLeft,
 } from "lucide-react";
+import ActionButton from "../ActionButton";
+import MainButton from "../MainButton";
 
-const OrderRow = ({
-  order,
-  onEdit,
-  onDelete,
-  onStatusUpdate,
-  statusConfig,
-}) => {
+const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
   const [open, setOpen] = useState(false);
-  const config = statusConfig[order.orderStatus] || statusConfig?.Pending;
+
+  // Status Styles using your specific STATUS_CONFIG background colors
+  const getStatusStyles = (status) => {
+    switch (status) {
+      case "Pending":
+        return {
+          bgcolor: "#fffbeb",
+          color: "#9a3412",
+          border: "1px solid #fef3c7",
+        };
+      case "Confirmed":
+        return {
+          bgcolor: "#eff6ff",
+          color: "#1d4ed8",
+          border: "1px solid #dbeafe",
+        };
+      case "Preparing":
+        return {
+          bgcolor: "#f5f3ff",
+          color: "#6d28d9",
+          border: "1px solid #ede9fe",
+        };
+      case "PreparedToServe":
+        return {
+          bgcolor: "#faf5ff",
+          color: "#7e22ce",
+          border: "1px solid #f3e8ff",
+        };
+      case "Served":
+        return {
+          bgcolor: "#f0fdfa",
+          color: "#0f766e",
+          border: "1px solid #ccfbf1",
+        };
+      case "Paid":
+        return {
+          bgcolor: "#f0fdf4",
+          color: "#15803d",
+          border: "1px solid #dcfce7",
+        };
+      case "Cancelled":
+        return {
+          bgcolor: "#fef2f2",
+          color: "#b91c1c",
+          border: "1px solid #fee2e2",
+        };
+      default:
+        return {
+          bgcolor: "#f8fafc",
+          color: "#64748b",
+          border: "1px solid #e2e8f0",
+        };
+    }
+  };
+
+  const statusStyle = getStatusStyles(order.orderStatus);
 
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     month: "short",
@@ -43,8 +92,9 @@ const OrderRow = ({
 
   const cellStyle = {
     color: "#1e293b",
-    py: 2.5,
+    py: 1,
     borderBottom: "1px solid #f1f5f9",
+    fontSize: "14px",
   };
 
   return (
@@ -57,14 +107,15 @@ const OrderRow = ({
           "&:hover": { bgcolor: "#f1f5f9" },
         }}
       >
-        <TableCell sx={{ width: 50 }}>
+        <TableCell sx={{ width: 50, py: 0 }}>
           <IconButton
             size="small"
             onClick={() => setOpen(!open)}
             sx={{
-              bgcolor: open ? "#ea580c" : "#f1f5f9",
+              bgcolor: open ? "#1677ff" : "#f1f5f9",
               color: open ? "white" : "#64748b",
-              "&:hover": { bgcolor: open ? "#c2410c" : "#e2e8f0" },
+              borderRadius: "5px",
+              "&:hover": { bgcolor: open ? "#0958d9" : "#e2e8f0" },
             }}
           >
             {open ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -72,164 +123,191 @@ const OrderRow = ({
         </TableCell>
 
         <TableCell sx={cellStyle}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {order.orderNumber}
-          </Box>
-        </TableCell>
-
-        <TableCell sx={cellStyle}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="body2" sx={{ fontSize: "13px" }}>
-              {formattedDate}
-            </Typography>
-          </Box>
-        </TableCell>
-
-        <TableCell sx={cellStyle}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="body2">
-              {order.orderedBy?.fullName !== "Unknown"
-                ? order.orderedBy?.fullName
-                : "Guest"}
-            </Typography>
-          </Box>
-        </TableCell>
-
-        <TableCell sx={cellStyle}>
-          <Typography variant="body2">
-            {order.table?.tableNumber || "N/A"}
+          <Typography sx={{ fontWeight: 500, fontSize: "13px" }}>
+            #{order.orderNumber}
           </Typography>
         </TableCell>
 
         <TableCell sx={cellStyle}>
-          <Typography variant="body2">{order.orderStatus}</Typography>
+          <Typography
+            variant="body2"
+            sx={{ fontSize: "12px", color: "#64748b" }}
+          >
+            {formattedDate}
+          </Typography>
         </TableCell>
 
-        <TableCell sx={{ ...cellStyle, color: "#0f172a" }}>
+        <TableCell sx={cellStyle}>
+          <Typography variant="body2" sx={{ color: "#334155" }}>
+            {order.orderedBy?.fullName !== "Unknown"
+              ? order.orderedBy?.fullName
+              : "Guest User"}
+          </Typography>
+        </TableCell>
+
+        <TableCell sx={cellStyle}>
+          <Chip
+            label={order.table?.tableNumber || "No Table"}
+            size="small"
+            sx={{
+              borderRadius: "4px",
+              bgcolor: "#f1f5f9",
+              fontWeight: 700,
+              fontSize: "11px",
+              color: "#475569",
+            }}
+          />
+        </TableCell>
+
+        <TableCell sx={cellStyle}>
+          <Box
+            sx={{
+              display: "inline-flex",
+              px: 1.2,
+              py: 0.4,
+              borderRadius: "4px",
+              fontSize: "11px",
+              fontWeight: 800,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+              ...statusStyle,
+            }}
+          >
+            {order.orderStatus}
+          </Box>
+        </TableCell>
+
+        <TableCell sx={{ ...cellStyle, color: "#0f172a", fontWeight: 500 }}>
           {order.amount?.toLocaleString()} ৳
         </TableCell>
 
         <TableCell sx={cellStyle}>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-            <Tooltip title="Change Status">
-              <IconButton
-                onClick={onStatusUpdate}
-                size="small"
-                sx={{
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "7px",
-                  color: "#f97316",
-                  "&:hover": { bgcolor: "#fff7ed", borderColor: "#f97316" },
-                }}
-              >
-                <ArrowRightLeft size={16} strokeWidth={2.5} />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Edit">
-              <IconButton
-                onClick={onEdit}
-                size="small"
-                sx={{
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "7px",
-                  color: "#64748b",
-                  "&:hover": { bgcolor: "#f8fafc", borderColor: "#64748b" },
-                }}
-              >
-                <Edit3 size={16} strokeWidth={2.5} />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete">
-              <IconButton
-                onClick={onDelete}
-                size="small"
-                sx={{
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "7px",
-                  color: "#ef4444",
-                  "&:hover": { bgcolor: "#fef2f2", borderColor: "#ef4444" },
-                }}
-              >
-                <Trash2 size={16} strokeWidth={2.5} />
-              </IconButton>
-            </Tooltip>
+            <ActionButton
+              icon={ArrowRightLeft}
+              title="Update Status"
+              colorType="warning"
+              onClick={onStatusUpdate}
+            />
+
+            <ActionButton
+              icon={Edit3}
+              title="Edit Order"
+              colorType="primary"
+              onClick={onEdit}
+            />
+
+            <ActionButton
+              icon={Trash2}
+              title="Delete Order"
+              colorType="error"
+              onClick={onDelete}
+            />
           </Box>
         </TableCell>
       </TableRow>
 
-      {/* Collapsible Content */}
       <TableRow>
-        <TableCell
-          style={{ paddingBottom: 0, paddingTop: 0, border: "none" }}
-          colSpan={8}
-        >
+        <TableCell style={{ padding: 0, border: "none" }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box
               sx={{
                 margin: 2,
-                bgcolor: "oklch(98.4% 0.003 247.858)",
+                bgcolor: "#ffffff",
                 p: 3,
-                borderRadius: "7px",
-                boxShadow: "10px 10px 5px -5px rgba(0,0,0,0.05)",
+                borderRadius: "8px",
+                border: "1px solid #e2e8f0",
+                boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.05)",
               }}
             >
-              <Typography
-                variant="subtitle2"
+              <Box
                 sx={{
                   display: "flex",
+                  justifyContent: "space-between",
                   alignItems: "center",
-                  gap: 1.5,
-                  mb: 2,
-                  letterSpacing: "1px",
+                  mb: 2.5,
                 }}
               >
-                <ShoppingBag size={18} className="text-orange-500" /> Items
-                Summary ({order.orderItems?.length})
-              </Typography>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.2,
+                    fontWeight: 800,
+                    color: "#1e293b",
+                    textTransform: "uppercase",
+                    fontSize: "12px",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  <ShoppingBag size={18} style={{ color: "#1677ff" }} />
+                  Items Summary ({order.orderItems?.length})
+                </Typography>
+              </Box>
+
               <Table size="small">
                 <TableHead>
-                  <TableRow>
-                    <TableCell>Food Item</TableCell>
+                  <TableRow sx={{ bgcolor: "#f8fafc" }}>
                     <TableCell
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: "13px",
-                      }}
+                      sx={{ fontWeight: 700, color: "#64748b", py: 1.5 }}
                     >
+                      Food Item
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: "#64748b" }}>
                       Quantity
                     </TableCell>
-                    <TableCell>Unit Price</TableCell>
-                    <TableCell align="right">Subtotal</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: "#64748b" }}>
+                      Unit Price
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      sx={{ fontWeight: 700, color: "#64748b" }}
+                    >
+                      Subtotal
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {order.orderItems?.map((item, idx) => (
-                    <TableRow key={item.id || idx}>
-                      <TableCell
-                        sx={{
-                          py: 1.5,
-                        }}
-                      >
+                    <TableRow
+                      key={item.id || idx}
+                      sx={{ "&:last-child td": { border: 0 } }}
+                    >
+                      <TableCell sx={{ py: 1.5 }}>
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 2 }}
                         >
                           <Avatar
                             variant="rounded"
-                            src={`https://bssrms.runasp.net/images/food/${item.food?.image}`}
+                            src={`https://restaurantapi.bssoln.com/images/food/${item.food?.image}`}
                             sx={{
-                              width: 45,
-                              height: 45,
-                              borderRadius: "12px",
+                              width: 42,
+                              height: 42,
+                              borderRadius: "6px",
+                              border: "1px solid #f1f5f9",
                             }}
                           />
-                          <Typography variant="body2">
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, color: "#334155" }}
+                          >
                             {item.food?.name}
                           </Typography>
                         </Box>
                       </TableCell>
-                      <TableCell>x{item.quantity}</TableCell>
-                      <TableCell>{item.unitPrice} ৳</TableCell>
-                      <TableCell align="right">{item.totalPrice} ৳</TableCell>
+                      <TableCell sx={{ fontWeight: 700, color: "#64748b" }}>
+                        x{item.quantity}
+                      </TableCell>
+                      <TableCell sx={{ color: "#64748b" }}>
+                        {item.unitPrice} ৳
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{ fontWeight: 800, color: "#1e293b" }}
+                      >
+                        {item.totalPrice} ৳
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

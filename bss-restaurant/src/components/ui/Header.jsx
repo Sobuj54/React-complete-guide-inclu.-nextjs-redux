@@ -3,24 +3,12 @@ import {
   Toolbar,
   IconButton,
   Stack,
-  TextField,
-  InputAdornment,
-  Badge,
   Avatar,
   Typography,
   Box,
   useTheme,
 } from "@mui/material";
-import {
-  Menu,
-  X,
-  Bell,
-  Search,
-  Globe,
-  LayoutGrid,
-  Settings,
-  MessageSquare,
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export default function Header({ toggleSidebar, isSidebarOpen, user }) {
   const theme = useTheme();
@@ -33,7 +21,7 @@ export default function Header({ toggleSidebar, isSidebarOpen, user }) {
         color: "text.primary",
         borderBottom: `1px solid ${theme.palette.divider}`,
         boxShadow: "none",
-        zIndex: theme.zIndex.drawer + 1,
+        zIndex: 1,
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 3 } }}>

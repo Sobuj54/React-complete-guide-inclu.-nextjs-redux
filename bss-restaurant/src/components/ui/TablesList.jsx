@@ -36,7 +36,7 @@ const TableList = ({ data, onEdit, onDelete, onAddEmployee }) => {
               <td className="px-8 py-5">
                 <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-slate-100 bg-slate-50 flex-shrink-0">
                   <img
-                    src={`https://bssrms.runasp.net/images/table/${table.image}`}
+                    src={`https://restaurantapi.bssoln.com/images/table/${table.image}`}
                     alt={table.tableNumber}
                     className="w-full h-full object-cover transition-transform group-hover:scale-110"
                     onError={(e) => {
@@ -91,7 +91,7 @@ const TableList = ({ data, onEdit, onDelete, onAddEmployee }) => {
                       >
                         {emp.image ? (
                           <img
-                            src={`https://bssrms.runasp.net/images/employee/${emp.image}`}
+                            src={`https://restaurantapi.bssoln.com/images/employee/${emp.image}`}
                             className="w-full h-full object-cover"
                             alt={emp.name}
                           />

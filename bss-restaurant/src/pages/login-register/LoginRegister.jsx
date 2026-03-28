@@ -27,7 +27,7 @@ export default function AuthPage() {
           />
           <div className="relative z-20 flex flex-col justify-between w-full p-12 text-white">
             <div className="flex items-center gap-2 text-2xl font-bold tracking-tight">
-              <div className="p-2 text-orange-600 bg-white rounded-xl">
+              <div className="p-2 text-white bg-blue-500 rounded-[5px]">
                 <ChefHat size={28} />
               </div>
               <span>BSS Restaurant</span>
@@ -66,7 +66,7 @@ export default function AuthPage() {
                     {...register("userName")}
                     placeholder="Username"
                     disabled={isLoading}
-                    className={`w-full py-3 pl-10 pr-4 bg-white border rounded-xl outline-none focus:ring-2 transition-all ${
+                    className={`w-full py-3 pl-10 pr-4 bg-white border rounded-[5px] outline-none  transition-all ${
                       errors.userName
                         ? "border-red-500 focus:ring-red-200"
                         : "border-slate-200 focus:ring-orange-200"
@@ -92,7 +92,7 @@ export default function AuthPage() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
                     disabled={isLoading}
-                    className={`w-full py-3 pl-10 pr-12 bg-white border rounded-xl outline-none focus:ring-2 transition-all ${
+                    className={`w-full py-3 pl-10 pr-12 bg-white border rounded-[5px] outline-none  transition-all ${
                       errors.password
                         ? "border-red-500 focus:ring-red-200"
                         : "border-slate-200 focus:ring-orange-200"
@@ -101,7 +101,7 @@ export default function AuthPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400 hover:text-orange-600"
+                    className="absolute -translate-y-1/2 right-3 top-1/2 p-2 cursor-pointer text-slate-400 hover:text-blue-500"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -116,7 +116,7 @@ export default function AuthPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex items-center justify-center w-full gap-2 py-3 font-bold text-white transition-all bg-orange-600 shadow-lg hover:bg-orange-700 rounded-xl disabled:opacity-70 shadow-orange-600/20 group cursor-pointer"
+                className="flex items-center justify-center w-full gap-2 py-3 font-bold text-white transition-all bg-blue-500 shadow-lg hover:bg-blue-600 rounded-[5px] disabled:opacity-70 shadow-orange-600/20 group cursor-pointer"
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white rounded-full border-t-transparent animate-spin" />

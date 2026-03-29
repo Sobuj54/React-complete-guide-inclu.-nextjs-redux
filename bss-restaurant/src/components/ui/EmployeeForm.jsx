@@ -7,6 +7,7 @@ import {
   MenuItem,
   Typography,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import { employeeSchema } from "../../validation/form-validation";
 import MainButton from "../MainButton";
@@ -33,35 +34,43 @@ export default function EmployeeForm({
 
   const selectedImage = watch("image");
 
-  // Input styling based on your new Primary Blue (#1677ff) palette
+  // Input styling with absolute error positioning to prevent layout shift
   const inputStyle = {
     backgroundColor: "#ffffff",
-    borderRadius: "5px", // Matching theme.shape.borderRadius
+    borderRadius: "5px",
+    "& .MuiFormHelperText-root": {
+      position: "absolute",
+      bottom: "-20px",
+      fontSize: "0.75rem",
+      margin: 0,
+    },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "#d9d9d9", // secondary.light
+        borderColor: "secondary.300",
         borderWidth: "1px",
       },
       "&:hover fieldset": {
-        borderColor: "#bfbfbf", // secondary.400
+        borderColor: "#bfbfbf",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#1677ff", // primary.main
+        borderColor: "primary.main",
         borderWidth: "2px",
       },
     },
     "& .MuiInputLabel-root": {
-      color: "#8c8c8c", // secondary.main
+      color: "secondary.dark",
       "&.Mui-focused": {
-        color: "#1677ff", // primary.main
+        color: "#1677ff",
       },
     },
-    boxShadow: "none",
   };
 
   useEffect(() => {
     setIsImageDeleted(false);
-  }, [defaultValues]);
+    if (defaultValues) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
 
   const existingImageName = defaultValues?.image;
 
@@ -85,50 +94,70 @@ export default function EmployeeForm({
     };
   }, [preview]);
 
-  useEffect(() => {
-    if (defaultValues) {
-      reset(defaultValues);
-    }
-  }, [defaultValues, reset]);
-
   return (
     <form
       id="table-modal-form"
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 pt-3"
+      className="space-y-8 pt-3"
     >
+      {/* Top Section: Names & Image */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-8">
           <TextField
             fullWidth
-            label="First Name"
+            label="First Name *"
             {...register("firstName")}
             error={!!errors.firstName}
             helperText={errors.firstName?.message}
             sx={inputStyle}
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             fullWidth
-            label="Middle Name"
+            label="Middle Name (Optional)"
             {...register("middleName")}
             error={!!errors.middleName}
             helperText={errors.middleName?.message}
             sx={inputStyle}
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             fullWidth
-            label="Last Name"
+            label="Last Name *"
             {...register("lastName")}
             error={!!errors.lastName}
             helperText={errors.lastName?.message}
             sx={inputStyle}
+            InputLabelProps={{ shrink: true }}
           />
         </div>
 
         <div className="flex flex-col">
-          <div className="border border-dashed border-gray-300 rounded-[5px] h-[200px] max-h-[210px] md:h-full flex flex-col items-center justify-center bg-white hover:bg-blue-50/30 transition-all cursor-pointer relative overflow-hidden group">
+          <Box
+            sx={{
+              border: "1px dashed #d9d9d9",
+              borderRadius: "5px",
+              height: "235px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "#ffffff",
+              position: "relative",
+              overflow: "hidden",
+              "&:hover": { bgcolor: "#f0f7ff" },
+              transition: "all 0.3s",
+            }}
+          >
             {preview ? (
-              <div className="relative w-full h-full">
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                  p: 1,
+                }}
+              >
                 <img
                   src={preview}
                   alt="Preview"
@@ -141,85 +170,101 @@ export default function EmployeeForm({
                     setValue("image", null);
                     setIsImageDeleted(true);
                   }}
-                  className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full z-20"
                 >
                   <X size={16} />
                 </button>
-              </div>
+              </Box>
             ) : (
-              <div className="flex flex-col items-center text-gray-700">
-                <Upload size={24} className="mb-2" />
+              <Box sx={{ textAlign: "center" }}>
+                <Upload size={24} className="mb-2 mx-auto" />
                 <Typography variant="body2">+ Upload Image</Typography>
-              </div>
+              </Box>
             )}
             <input
               type="file"
               accept="image/*"
-              className="absolute inset-0 opacity-0 cursor-pointer"
+              className="absolute inset-0 opacity-0 cursor-pointer z-10"
               {...register("image")}
             />
-          </div>
+          </Box>
         </div>
       </div>
 
-      {/* Grid: Secondary Details */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {/* Grid: Family Details */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
         <TextField
           fullWidth
-          label="Spouse Name"
+          label="Spouse Name *"
           {...register("spouseName")}
           error={!!errors.spouseName}
+          helperText={errors.spouseName?.message}
           sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           fullWidth
-          label="Father's Name"
+          label="Father's Name *"
           {...register("fatherName")}
           error={!!errors.fatherName}
+          helperText={errors.fatherName?.message}
           sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           fullWidth
-          label="Mother's Name"
+          label="Mother's Name *"
           {...register("motherName")}
           error={!!errors.motherName}
+          helperText={errors.motherName?.message}
           sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {/* Grid: Professional Details */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
         <TextField
           fullWidth
-          label="Designation"
+          label="Designation *"
           {...register("designation")}
           error={!!errors.designation}
+          helperText={errors.designation?.message}
           sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           fullWidth
-          label="Email Address"
+          label="Email Address *"
           {...register("email")}
           error={!!errors.email}
+          helperText={errors.email?.message}
           sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           fullWidth
-          label="Phone"
+          label="Phone *"
           {...register("phone")}
           error={!!errors.phone}
+          helperText={errors.phone?.message}
           sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      {/* Grid: Identity & Dates */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-5 gap-y-8">
         <TextField
           select
           fullWidth
-          label="Gender"
+          label="Gender *"
           defaultValue=""
           {...register("gender")}
           error={!!errors.gender}
+          helperText={errors.gender?.message}
           sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         >
           <MenuItem value="">Select Gender</MenuItem>
           <MenuItem value="Male">Male</MenuItem>
@@ -228,41 +273,37 @@ export default function EmployeeForm({
         <TextField
           fullWidth
           type="date"
-          label="Date of Birth"
+          label="Date of Birth *"
           InputLabelProps={{ shrink: true }}
           {...register("dob")}
+          error={!!errors.dob}
+          helperText={errors.dob?.message}
           sx={inputStyle}
         />
         <TextField
           fullWidth
           type="date"
-          label="Join Date"
+          label="Join Date *"
           InputLabelProps={{ shrink: true }}
           {...register("joinDate")}
+          error={!!errors.joinDate}
+          helperText={errors.joinDate?.message}
           sx={inputStyle}
         />
         <TextField
           fullWidth
-          label="NID Card"
+          label="NID Card *"
           {...register("nid")}
+          error={!!errors.nid}
+          helperText={errors.nid?.message}
           sx={inputStyle}
+          InputLabelProps={{ shrink: true }}
         />
       </div>
 
-      {/* Footer Buttons using MainButton */}
-      <div className="flex justify-end gap-3 pt-4 pb-2 border-gray-100">
-        <MainButton
-          label="Cancel"
-          onClick={onCancel}
-          sx={{
-            bgcolor: "secondary.main", // secondary.200
-            px: 4,
-            fontWeight: 600,
-            boxShadow: "none",
-            borderRadius: "5px",
-            "&:hover": { bgcolor: "secondary.600", boxShadow: "none" },
-          }}
-        />
+      {/* Footer Buttons */}
+      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+        <MainButton label="Cancel" onClick={onCancel} color="secondary" />
         <MainButton
           type="submit"
           disabled={isLoading}
@@ -273,15 +314,7 @@ export default function EmployeeForm({
               "Save Changes"
             )
           }
-          sx={{
-            bgcolor: "#1677ff", // primary.main
-            color: "#ffffff",
-            px: 5,
-            fontWeight: 600,
-            boxShadow: "none",
-            borderRadius: "5px",
-            "&:hover": { bgcolor: "#0958d9", boxShadow: "none" },
-          }}
+          color="primary"
         />
       </div>
     </form>

@@ -13,9 +13,7 @@ const useCreateEmployee = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Employee created successfully!", {
-        style: { borderRadius: "1rem", fontWeight: "800" },
-      });
+      toast.success("Employee created successfully!");
     },
     onError: (error) => {
       const message =

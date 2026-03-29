@@ -1,170 +1,121 @@
-import {
-  Clock,
-  Hash,
-  Trash2,
-  Edit3,
-  ChevronRight,
-  Loader2,
-  ShoppingBag,
-  User,
-  Coffee,
-} from "lucide-react";
-import { useOrderMutations } from "../../hooks/useOrders";
+import React from "react";
+import { Avatar } from "@mui/material";
+import { Edit3, Trash2, ArrowRightLeft } from "lucide-react";
+import ActionButton from "../ActionButton";
 
-export const STATUS_CONFIG = {
-  Pending: {
-    color: "bg-amber-100 text-amber-600 border-amber-200",
-    icon: "⏳",
-  },
-  Confirmed: { color: "bg-blue-100 text-blue-600 border-blue-200", icon: "✅" },
-  Preparing: {
-    color: "bg-indigo-100 text-indigo-600 border-indigo-200",
-    icon: "👨‍🍳",
-  },
-  PreparedToServe: {
-    color: "bg-purple-100 text-purple-600 border-purple-200",
-    icon: "🔔",
-  },
-  Served: { color: "bg-teal-100 text-teal-600 border-teal-200", icon: "🍽️" },
-  Paid: {
-    color: "bg-emerald-100 text-emerald-600 border-emerald-200",
-    icon: "💰",
-  },
-  Cancelled: { color: "bg-red-100 text-red-600 border-red-200", icon: "❌" },
-};
+const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
+  const getStatusInfo = (status) => {
+    const map = {
+      Pending: { text: "pending", color: "text-orange-400" },
+      Paid: { text: "paid", color: "text-green-500" },
+      PreparedToServe: { text: "p.t.s", color: "text-teal-500" },
+      Cancelled: { text: "cancelled", color: "text-red-500" },
+    };
+    return (
+      map[status] || { text: status.toLowerCase(), color: "text-slate-400" }
+    );
+  };
 
-export default function OrderCard({ order, onUpdateStatus, onDelete, onEdit }) {
-  const config = STATUS_CONFIG[order.orderStatus] || STATUS_CONFIG.Pending;
-  const { updateStatus } = useOrderMutations();
+  const status = getStatusInfo(order.orderStatus);
 
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
   }).format(new Date(order.orderTime));
 
   return (
-    <div className="group bg-white/80 border-slate-100 rounded-md p-3 md:p-6 transition-all shadow-xl flex flex-col h-full">
-      <div className="flex justify-between items-start mb-5">
-        <div
-          className={`flex items-center gap-2 px-4 py-1.5 rounded-full border-2 font-black text-[10px] uppercase tracking-tighter ${config.color}`}
-        >
-          {updateStatus.isPending ? (
-            <Loader2 size={12} className="animate-spin" />
-          ) : (
-            config.icon
-          )}
-          {order.orderStatus}
-        </div>
-        <button
-          onClick={onDelete}
-          className="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-        >
-          <Trash2 size={20} />
-        </button>
-      </div>
-
-      <div className="mb-6 flex  items-center justify-between">
-        <div className="flex items-center gap-2 text-slate-400 font-bold text-sm uppercase tracking-widest">
-          <Hash size={12} /> {order.orderNumber}
-        </div>
-        <div className="flex items-center gap-2 text-slate-400 font-black text-sm tracking-wide bg-slate-50 px-3 py-1 rounded-lg border border-slate-100">
-          <Clock size={12} /> {formattedDate}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border-2 border-transparent group-hover:bg-white group-hover:border-slate-100 transition-all">
-          <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
-            <Coffee size={18} />
-          </div>
-          <div>
-            <p className="text-[9px] font-black text-slate-400 uppercase">
-              Table
-            </p>
-            <p className="font-black text-slate-900 leading-none">
-              {order.table?.tableNumber || "N/A"}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border-2 border-transparent group-hover:bg-white group-hover:border-slate-100 transition-all">
-          <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
-            <User size={18} />
-          </div>
-          <div>
-            <p className="text-[9px] font-black text-slate-400 uppercase">
-              Customer
-            </p>
-            <p className="font-black text-slate-900 leading-none truncate w-20">
-              {order.orderedBy?.fullName !== "Unknown"
-                ? order.orderedBy?.fullName
-                : "Guest"}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex-1 space-y-3 mb-8">
-        <div className="flex items-center gap-2 px-1">
-          <ShoppingBag size={18} className="text-orange-500" />
-          <span className="text-base font-black uppercase text-slate-400 tracking-widest">
-            Items ({order.orderItems?.length})
+    /* added h-[400px] to fix the card height */
+    <div className="bg-white rounded-[5px] shadow-md flex flex-col h-[400px]">
+      {/* 1. header: id & actions */}
+      <div className="p-4 flex justify-between items-start flex-shrink-0">
+        <div className="flex flex-col">
+          <span className="text-[15px] font-bold text-slate-700 tracking-tight">
+            {order.orderNumber}
+          </span>
+          <span className="text-[12px] text-slate-400 font-medium">
+            {formattedDate}
           </span>
         </div>
-        <div className="space-y-2 max-h-[180px] overflow-y-auto pr-2 no-scrollbar">
-          {order.orderItems?.map((item, idx) => (
-            <div
-              key={item.id || idx}
-              className="flex items-center gap-3 p-2 bg-slate-50 rounded-2xl border border-slate-100 hover:border-orange-200 transition-colors"
-            >
-              <div className="w-15 h-15 rounded-lg bg-white overflow-hidden border border-slate-100 flex-shrink-0">
-                <img
-                  src={`https://restaurantapi.bssoln.com/images/food/${item.food?.image}`}
-                  className="w-full h-full object-cover"
-                  onError={(e) =>
-                    (e.target.src =
-                      "https://images.pexels.com/photos/247685/pexels-photo-247685.png")
-                  }
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-base font-black text-slate-800 truncate leading-tight">
-                  {item.food?.name}
-                </p>
-                <p className="text-base font-bold text-slate-400">
-                  {item.quantity} x {item.unitPrice} ৳
-                </p>
-              </div>
-              <div className="text-right font-black text-slate-900">
-                {item.totalPrice} ৳
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="pt-4 border-t-2 border-slate-50 border-dashed">
-          <h3 className="font-black flex justify-between text-slate-900 text-xl tracking-tighter">
-            <span>Total Amount:</span>{" "}
-            <span>{order.amount?.toLocaleString()} ৳</span>
-          </h3>
+
+        <div className="flex gap-1 p-1 rounded-md ">
+          <ActionButton
+            icon={ArrowRightLeft}
+            title="status"
+            colorType="warning"
+            onClick={onStatusUpdate}
+          />
+          <ActionButton
+            icon={Edit3}
+            title="edit"
+            colorType="primary"
+            onClick={onEdit}
+          />
+          <ActionButton
+            icon={Trash2}
+            title="delete"
+            colorType="error"
+            onClick={onDelete}
+          />
         </div>
       </div>
 
-      <div className="mt-auto grid grid-cols-2 gap-3">
-        <button
-          onClick={onEdit}
-          className="flex items-center justify-center gap-2 py-4 font-black text-[11px] uppercase tracking-widest text-slate-600 bg-white border-2 border-slate-100 rounded-2xl hover:bg-slate-50 transition-all active:scale-95"
-        >
-          <Edit3 size={16} /> Edit
-        </button>
-        <button
-          onClick={onUpdateStatus}
-          className="flex items-center justify-center gap-2 py-4 font-black text-[11px] uppercase tracking-widest text-white bg-orange-500 rounded-2xl hover:bg-orange-600 shadow-lg shadow-orange-100 transition-all active:scale-95"
-        >
-          Status <ChevronRight size={16} strokeWidth={3} />
-        </button>
+      <div className="border-b border-slate-400 mx-4 flex-shrink-0" />
+
+      {/* 2. body: items list - added overflow-y-auto to allow scrolling */}
+      <div className="p-4 flex-grow space-y-5 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
+        {order.orderItems?.map((item, idx) => (
+          <div key={idx} className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Avatar
+                variant="rounded"
+                src={`https://restaurantapi.bssoln.com/images/food/${item.food?.image}`}
+                sx={{ width: 50, height: 50 }}
+                className=" rounded-[5px] border border-slate-100"
+              />
+              <div className="flex flex-col">
+                <span className=" font-semibold ">{item.food?.name}</span>
+                <span className="text-sm ">{item.unitPrice} ৳</span>
+              </div>
+            </div>
+            <span className=" text-sm">qty. {item.quantity}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* 3. footer: totals and table - flex-shrink-0 ensures it stays at the bottom */}
+      <div className="p-4 bg-white mt-auto border-t border-slate-300 flex-shrink-0">
+        <div className="flex justify-between items-end">
+          <div className="flex flex-col gap-1">
+            <p className=" font-semibold ">
+              total quantity:{" "}
+              <span className="text-slate-700 font-extrabold">
+                {order.orderItems?.reduce((a, b) => a + b.quantity, 0)}
+              </span>
+            </p>
+            <p className="font-bold ">
+              total amount (৳):{" "}
+              <span className="text-[#1677ff] font-extrabold border-b-2 border-blue-100 pb-0.5">
+                {order.amount}৳
+              </span>
+            </p>
+          </div>
+
+          <div className="flex flex-col items-end">
+            <span className={` mb-1 font-bold ${status.color}`}>
+              {status.text}
+            </span>
+            <span className="text-[20px] font-medium leading-none text-slate-500">
+              {order.table?.tableNumber || "n/a"}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default OrderCard;

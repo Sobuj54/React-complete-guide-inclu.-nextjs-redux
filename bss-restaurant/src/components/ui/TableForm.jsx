@@ -38,25 +38,31 @@ export default function TableFormModal({
 
   const selectedImage = watch("image");
 
-  // EXACT input style from your Employee Form
+  // EXACT input style with absolute error positioning
   const inputStyle = {
     backgroundColor: "#ffffff",
     borderRadius: "5px",
+    "& .MuiFormHelperText-root": {
+      position: "absolute",
+      bottom: "-20px",
+      fontSize: "0.75rem",
+      margin: 0,
+    },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "#d9d9d9",
+        borderColor: "secondary.300",
         borderWidth: "1px",
       },
       "&:hover fieldset": {
         borderColor: "#bfbfbf",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#1677ff",
+        borderColor: "primary.main",
         borderWidth: "2px",
       },
     },
     "& .MuiInputLabel-root": {
-      color: "#8c8c8c",
+      color: "secondary.dark",
       "&.Mui-focused": {
         color: "#1677ff",
       },
@@ -98,7 +104,7 @@ export default function TableFormModal({
       PaperProps={{
         sx: {
           borderRadius: "5px",
-          p: 0, // Reduced padding to match the clean look
+          p: 0,
           backgroundImage: "none",
         },
       }}
@@ -129,32 +135,56 @@ export default function TableFormModal({
         <form
           id="table-modal-form"
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6 pt-2"
+          className="space-y-8 pt-4"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10">
+            <div className="flex flex-col gap-8">
               <TextField
                 fullWidth
-                label="Table Number"
+                label="Table Number *"
                 {...register("tableNumber")}
                 error={!!errors.tableNumber}
                 helperText={errors.tableNumber?.message}
                 sx={inputStyle}
+                InputLabelProps={{ shrink: true }}
               />
               <TextField
                 fullWidth
-                label="Seating Capacity"
+                label="Seating Capacity *"
                 {...register("numberOfSeats")}
                 error={!!errors.numberOfSeats}
                 helperText={errors.numberOfSeats?.message}
                 sx={inputStyle}
+                InputLabelProps={{ shrink: true }}
               />
             </div>
 
-            <div className="flex flex-col h-full">
-              <div className="border border-dashed border-gray-300 rounded-[5px] h-[135px] flex flex-col items-center justify-center bg-white hover:bg-blue-50/30 transition-all cursor-pointer relative overflow-hidden group">
+            <div className="flex flex-col">
+              <Box
+                sx={{
+                  border: "1px dashed #d9d9d9",
+                  borderRadius: "5px",
+                  height: "145px", // Adjusted to match the row height of two text fields
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  bgcolor: "#ffffff",
+                  position: "relative",
+                  overflow: "hidden",
+                  "&:hover": { bgcolor: "#f0f7ff" },
+                  transition: "all 0.3s",
+                }}
+              >
                 {preview ? (
-                  <div className="relative w-full h-full">
+                  <Box
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      height: "100%",
+                      p: 1,
+                    }}
+                  >
                     <img
                       src={preview}
                       alt="Preview"
@@ -167,43 +197,31 @@ export default function TableFormModal({
                         setValue("image", null);
                         setIsImageDeleted(true);
                       }}
-                      className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full z-20"
                     >
                       <X size={14} />
                     </button>
-                  </div>
+                  </Box>
                 ) : (
-                  <div className="flex flex-col items-center  p-4">
-                    <Upload size={24} className="mb-2" />
+                  <Box sx={{ textAlign: "center", color: "#8c8c8c", p: 4 }}>
+                    <Upload size={24} className="mb-2 mx-auto" />
                     <Typography variant="body2">
                       + Upload Table Image
                     </Typography>
-                  </div>
+                  </Box>
                 )}
                 <input
                   type="file"
                   accept="image/*"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
                   {...register("image")}
                 />
-              </div>
+              </Box>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <MainButton
-              label="CANCEL"
-              onClick={onClose}
-              sx={{
-                bgcolor: "#f1f5f9", // Matches the gray in your screenshot
-                color: "#475569",
-                px: 4,
-                fontWeight: 700,
-                boxShadow: "none",
-                borderRadius: "5px",
-                "&:hover": { bgcolor: "#e2e8f0", boxShadow: "none" },
-              }}
-            />
+          <div className="flex justify-end gap-3">
+            <MainButton label="Cancel" onClick={onClose} color="secondary" />
             <MainButton
               type="submit"
               disabled={isLoading}
@@ -211,18 +229,10 @@ export default function TableFormModal({
                 isLoading ? (
                   <CircularProgress size={22} color="inherit" />
                 ) : (
-                  "SAVE TABLE"
+                  "Save Table"
                 )
               }
-              sx={{
-                bgcolor: "#1677ff",
-                color: "#ffffff",
-                px: 5,
-                fontWeight: 700,
-                boxShadow: "none",
-                borderRadius: "5px",
-                "&:hover": { bgcolor: "#0958d9", boxShadow: "none" },
-              }}
+              color="primary"
             />
           </div>
         </form>

@@ -3,13 +3,6 @@ import toast from "react-hot-toast";
 import useAxiosSecure from "./useAxiosSecure";
 import { queryClient } from "../main";
 
-const toastStyle = {
-  borderRadius: "1.5rem",
-  fontWeight: "900",
-  border: "3px solid #f1f5f9",
-  padding: "16px",
-};
-
 export const useFoods = (page = 1, perPage = 10, search = "") => {
   const axiosSecure = useAxiosSecure();
   return useQuery({
@@ -44,7 +37,7 @@ export const useFoodMutations = (id) => {
     mutationFn: (payload) => axiosSecure.post("/Food/create", payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["foods"] });
-      toast.success("Food added successfully!", { style: toastStyle });
+      toast.success("Food added successfully!");
     },
   });
 
@@ -53,7 +46,7 @@ export const useFoodMutations = (id) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["foods"] });
       queryClient.invalidateQueries({ queryKey: ["food", id] });
-      toast.success("Food updated successfully!", { style: toastStyle });
+      toast.success("Food updated successfully!");
     },
   });
 
@@ -61,7 +54,7 @@ export const useFoodMutations = (id) => {
     mutationFn: (id) => axiosSecure.delete(`/Food/delete/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["foods"] });
-      toast.success("Food removed!", { style: toastStyle });
+      toast.success("Food removed!");
     },
   });
 

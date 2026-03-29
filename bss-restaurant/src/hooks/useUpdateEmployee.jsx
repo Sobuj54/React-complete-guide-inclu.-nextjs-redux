@@ -16,9 +16,7 @@ export const useUpdateEmployee = (id) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employee", id] });
-      toast.success("Employee information updated successfully!", {
-        style: { borderRadius: "1rem", fontWeight: "800" },
-      });
+      toast.success("Employee information updated successfully!");
     },
     onError: (error) => {
       const message =

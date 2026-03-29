@@ -29,7 +29,6 @@ export default function FoodForm({
     setValue,
     formState: { errors },
   } = useForm({
-    // Logic: If editing, use values from API, otherwise use defaults
     defaultValues: defaultValues || {
       name: "",
       description: "",
@@ -44,12 +43,25 @@ export default function FoodForm({
   const discountType = watch("discountType");
   const discount = watch("discount") || 0;
 
+  const getDiscountLabel = () => {
+    if (discountType === "Percentage") return "Discount (%)";
+    if (discountType === "Flat") return "Discount (৳)";
+    return "Discount";
+  };
+
   const inputStyle = {
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius,
+    // FIX: Absolute positioning prevents the error from pushing other elements
+    "& .MuiFormHelperText-root": {
+      position: "absolute",
+      bottom: "-20px",
+      fontSize: "0.75rem",
+      margin: 0,
+    },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: theme.palette.secondary.light,
+        borderColor: theme.palette.secondary.main,
       },
       "&:hover fieldset": {
         borderColor: theme.palette.secondary[400],
@@ -60,17 +72,15 @@ export default function FoodForm({
       },
     },
     "& .MuiInputLabel-root": {
-      color: theme.palette.secondary.main,
+      color: theme.palette.secondary.dark,
       "&.Mui-focused": {
         color: theme.palette.primary.main,
       },
     },
   };
 
-  // CRITICAL FIX: Ensure form resets when defaultValues (API data) arrives
   useEffect(() => {
     if (defaultValues) {
-      // We explicitly reset with a fallback to "None" if discountType is missing
       reset({
         ...defaultValues,
         discountType: defaultValues.discountType || "None",
@@ -98,36 +108,39 @@ export default function FoodForm({
   }, [selectedImage, defaultValues, isImageDeleted]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-3">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 pt-3">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-8">
           <TextField
             fullWidth
-            label="Food Name"
+            label="Food Name *"
             {...register("name", { required: "Name is required" })}
             error={!!errors.name}
             helperText={errors.name?.message}
             sx={inputStyle}
-            InputLabelProps={{ shrink: true }} // Force label to stay up for default values
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             fullWidth
             multiline
             rows={5}
-            label="Description"
-            {...register("description")}
+            label="Description *"
+            {...register("description", {
+              required: "Description is required",
+            })}
+            error={!!errors.description}
+            helperText={errors.description?.message}
             sx={inputStyle}
             InputLabelProps={{ shrink: true }}
           />
         </div>
 
-        <div className="flex flex-col max-h-[225px]">
+        <div className="flex flex-col">
           <Box
             sx={{
               border: `1px dashed ${theme.palette.secondary.light}`,
               borderRadius: `${theme.shape.borderRadius}px`,
-              height: "100%",
-              minHeight: "200px",
+              height: "235px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -156,7 +169,7 @@ export default function FoodForm({
                 <button
                   type="button"
                   onClick={() => {
-                    setValue("image", null);
+                    setValue("image", null, { shouldValidate: true });
                     setIsImageDeleted(true);
                   }}
                   className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full z-20"
@@ -185,12 +198,17 @@ export default function FoodForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-5 gap-y-8">
         <TextField
           fullWidth
-          label="Price"
+          label="Price *"
           type="number"
-          {...register("price")}
+          {...register("price", {
+            required: "Price is required.",
+            min: { value: 0.01, message: "Must be > 0" },
+          })}
+          error={!!errors.price}
+          helperText={errors.price?.message}
           sx={inputStyle}
           InputLabelProps={{ shrink: true }}
           InputProps={{
@@ -198,7 +216,6 @@ export default function FoodForm({
           }}
         />
 
-        {/* Force Select to use the watched value for visual sync */}
         <TextField
           select
           fullWidth
@@ -216,7 +233,7 @@ export default function FoodForm({
 
         <TextField
           fullWidth
-          label="Discount"
+          label={getDiscountLabel()}
           type="number"
           disabled={discountType === "None"}
           {...register("discount")}
@@ -233,6 +250,11 @@ export default function FoodForm({
             ...inputStyle,
             "& .MuiOutlinedInput-root": {
               bgcolor: theme.palette.secondary.lighter,
+            },
+          }}
+          slotProps={{
+            input: {
+              readOnly: true,
             },
           }}
           InputLabelProps={{ shrink: true }}

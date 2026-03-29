@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, AlertCircle, Loader2, X } from "lucide-react";
+import { Search, List, LayoutGrid, Filter, Check } from "lucide-react";
 import {
   Paper,
   Table,
@@ -11,50 +11,47 @@ import {
   Skeleton,
   Box,
   TablePagination,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  IconButton,
   Typography,
-  Button,
   Menu,
   MenuItem,
-  ListItemIcon,
   TextField,
   InputAdornment,
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 
-// Hooks
 import { useOrders, useOrderMutations } from "../../hooks/useOrders";
-
-// Components
 import EditOrderModal from "../../components/ui/EditOrderModal";
 import OrderRow from "../../components/ui/OrderRow";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
+import OrderCard from "../../components/ui/OrderCard";
 
-export const STATUS_CONFIG = {
-  Pending: { bg: "#fffbeb" },
-  Confirmed: { bg: "#eff6ff" },
-  Preparing: { bg: "#f5f3ff" },
-  PreparedToServe: { bg: "#faf5ff" },
-  Served: { bg: "#f0fdfa" },
-  Paid: { bg: "#f0fdf4" },
-  Cancelled: { bg: "#fef2f2" },
+// numeric status mapping for the api
+const STATUS_MAP = {
+  pending: 0,
+  confirmed: 1,
+  preparing: 2,
+  "p.t.s": 3,
+  served: 4,
+  paid: 5,
 };
 
 export default function Orders() {
+  const [viewMode, setViewMode] = useState("table");
   const [filters, setFilters] = useState({
     Page: 1,
     Per_Page: 10,
     Search: "",
     Sort: "-createdat",
+    Status: "", // holds the number for api
   });
+
   const [searchInput, setSearchInput] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [modals, setModals] = useState({ edit: false, delete: false });
-
-  // Status Menu State
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openStatusMenu = Boolean(anchorEl);
+  const [statusAnchorEl, setStatusAnchorEl] = useState(null);
+  const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
   const { data: response, isLoading } = useOrders(filters);
   const { deleteOrder, updateOrder, updateStatus } = useOrderMutations();
@@ -71,272 +68,251 @@ export default function Orders() {
     setModals((prev) => ({ ...prev, [type]: !prev[type] }));
   };
 
-  // --- Status Menu Handlers ---
-  const handleStatusClick = (event, order) => {
-    setSelectedOrder(order);
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleStatusClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleStatusUpdate = (newStatus) => {
-    updateStatus.mutate(
-      { id: selectedOrder.id, status: newStatus },
-      { onSuccess: handleStatusClose },
+  const getActiveFilterLabel = () => {
+    if (filters.Status === "") return "filter orders";
+    const key = Object.keys(STATUS_MAP).find(
+      (k) => STATUS_MAP[k] === filters.Status,
     );
+    return `filter: ${key}`;
   };
 
   return (
-    <div className=" space-y-3 min-h-screen ">
-      <header className="flex items-center justify-end">
-        <TextField
-          size="small"
-          placeholder="Search tables..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search size={18} color="#bfbfbf" />
-              </InputAdornment>
-            ),
-            sx: {
-              borderRadius: "5px",
+    <div className="space-y-4 min-h-screen">
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <ToggleButtonGroup
+            value={viewMode}
+            exclusive
+            onChange={(e, v) => v && setViewMode(v)}
+            size="small"
+            className="bg-white"
+          >
+            <ToggleButton
+              value="table"
+              className="border-none px-4 py-1.5 rounded-md font-bold"
+            >
+              <List size={18} className="mr-2" /> list
+            </ToggleButton>
+            <ToggleButton
+              value="grid"
+              className="border-none px-4 py-1.5 rounded-md font-bold"
+            >
+              <LayoutGrid size={18} className="mr-2" /> grid
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+
+        <div className="flex  items-center gap-3 ">
+          <TextField
+            size="small"
+            placeholder="Search tables..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search size={18} color="#bfbfbf" />
+                </InputAdornment>
+              ),
+              sx: {
+                borderRadius: "5px",
+                bgcolor: "white",
+                minWidth: { md: "250px" },
+                width: { xs: "200px" },
+              },
+            }}
+          />
+
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<Filter size={18} />}
+            onClick={(e) => setFilterAnchorEl(e.currentTarget)}
+            className={`bg-white text-slate-600 border rounded-[5px] px-4 font-bold ${filters.Status !== "" ? "border-blue-500 ring-1 ring-blue-500" : "border-slate-200"}`}
+            sx={{
+              textTransform: "none",
+              color: "secondary.darker",
               bgcolor: "white",
-              minWidth: { md: "250px" },
-            },
-          }}
-        />
+              "&:hover": { bgcolor: "#f8fafc" },
+              py: 1,
+            }}
+          >
+            {getActiveFilterLabel()}
+          </Button>
+
+          <Menu
+            anchorEl={filterAnchorEl}
+            open={Boolean(filterAnchorEl)}
+            onClose={() => setFilterAnchorEl(null)}
+            slotProps={{
+              paper: { sx: { borderRadius: "5px", mt: 1, minWidth: "180px" } },
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                setFilters((p) => ({ ...p, Status: "", Page: 1 }));
+                setFilterAnchorEl(null);
+              }}
+              className="font-bold  text-[13px]"
+            >
+              show all{" "}
+              {filters.Status === "" && (
+                <Check size={14} className="ml-auto text-blue-500" />
+              )}
+            </MenuItem>
+            <div className="border-t border-slate-100 my-1" />
+            {Object.entries(STATUS_MAP).map(([name, value]) => (
+              <MenuItem
+                key={value}
+                onClick={() => {
+                  setFilters((p) => ({ ...p, Status: value, Page: 1 }));
+                  setFilterAnchorEl(null);
+                }}
+                className="font-medium text-slate-700 text-[13px] py-2"
+              >
+                {name}
+                {filters.Status === value && (
+                  <Check size={14} className="ml-auto text-blue-500" />
+                )}
+              </MenuItem>
+            ))}
+          </Menu>
+        </div>
       </header>
 
-      <TableContainer
-        component={Paper}
-        elevation={0}
-        sx={{
-          borderRadius: "5px",
-          overflow: "hidden",
-          boxShadow: "0 4px 20px -10px rgba(0,0,0,0.1)",
-          overflowX: "auto",
+      {/* cards or table grid */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton
+              key={i}
+              variant="rectangular"
+              height={350}
+              className="rounded-xl"
+            />
+          ))}
+        </div>
+      ) : viewMode === "table" ? (
+        <TableContainer
+          component={Paper}
+          elevation={0}
+          className="border border-slate-200 rounded-[5px] overflow-hidden shadow-sm"
+        >
+          <Table sx={{ minWidth: "900px" }}>
+            <TableHead sx={{ bgcolor: "#f8fafc" }}>
+              <TableRow>
+                <TableCell sx={{ py: 0 }} />
+                {[
+                  "order",
+                  "date time",
+                  "customer",
+                  "table",
+                  "status",
+                  "amount",
+                  "actions",
+                ].map((h) => (
+                  <TableCell
+                    key={h}
+                    sx={{
+                      py: 1.5,
+                    }}
+                    align={h == "actions" ? "right" : ""}
+                  >
+                    {h}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {response?.data?.map((order) => (
+                <OrderRow
+                  key={order.id}
+                  order={order}
+                  onEdit={() => toggleModal("edit", order)}
+                  onDelete={() => toggleModal("delete", order)}
+                  onStatusUpdate={(e) => {
+                    setSelectedOrder(order);
+                    setStatusAnchorEl(e.currentTarget);
+                  }}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {response?.data?.map((order) => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              onEdit={() => toggleModal("edit", order)}
+              onDelete={() => toggleModal("delete", order)}
+              onStatusUpdate={(e) => {
+                setSelectedOrder(order);
+                setStatusAnchorEl(e.currentTarget);
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      <TablePagination
+        component="div"
+        count={response?.total || 0}
+        rowsPerPage={filters.Per_Page || 10}
+        page={filters.Page - 1}
+        onPageChange={(_, p) =>
+          setFilters((prev) => ({ ...prev, Page: p + 1 }))
+        }
+        onRowsPerPageChange={(e) =>
+          setFilters((prev) => ({
+            ...prev,
+            Per_Page: parseInt(e.target.value, 10),
+            Page: 1,
+          }))
+        }
+        sx={{ bgcolor: "background.paper", borderRadius: "5px" }}
+      />
+
+      {/* update status menu */}
+      <Menu
+        anchorEl={statusAnchorEl}
+        open={Boolean(statusAnchorEl)}
+        onClose={() => setStatusAnchorEl(null)}
+        slotProps={{
+          paper: { sx: { borderRadius: "12px", minWidth: "180px", mt: 1 } },
         }}
       >
-        <Table sx={{ minWidth: "900px" }}>
-          <TableHead sx={{ bgcolor: "#f8fafc" }}>
-            <TableRow>
-              <TableCell sx={{ py: 0 }} />
-              {[
-                "Order",
-                "Date Time",
-                "Customer",
-                "Table",
-                "Status",
-                "Amount",
-                "Actions",
-              ].map((h) => (
-                <TableCell
-                  key={h}
-                  align={h == "Actions" ? "right" : ""}
-                  sx={{ pr: 5, py: 1.5 }}
-                >
-                  {h}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading
-              ? [...Array(5)].map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell colSpan={8}>
-                      <Skeleton height={50} sx={{ borderRadius: "7px" }} />
-                    </TableCell>
-                  </TableRow>
-                ))
-              : response?.data?.map((order) => (
-                  <OrderRow
-                    key={order.id}
-                    order={order}
-                    statusConfig={STATUS_CONFIG} // Add this back!
-                    onEdit={() => toggleModal("edit", order)}
-                    onDelete={() => toggleModal("delete", order)}
-                    onStatusUpdate={(e) => handleStatusClick(e, order)} // Pass the event for the Menu anchor
-                  />
-                ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          component="div"
-          count={response?.total || 0}
-          rowsPerPage={filters.Per_Page || 10}
-          page={filters.Page - 1}
-          onPageChange={(_, p) =>
-            setFilters((prev) => ({ ...prev, Page: p + 1 }))
-          }
-          // ADD THIS LINE BELOW
-          onRowsPerPageChange={(e) => {
-            setFilters((prev) => ({
-              ...prev,
-              Per_Page: parseInt(e.target.value, 10),
-              Page: 1, // Reset to first page when changing limit
-            }));
-          }}
-        />
-      </TableContainer>
-
-      {/* --- STATUS UPDATE HOVER/CLICK MENU --- */}
-      <Menu
-        anchorEl={anchorEl}
-        open={openStatusMenu}
-        onClose={handleStatusClose}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      >
-        <Box sx={{ px: 2, py: 1 }}>
-          <Typography
-            sx={{
-              fontWeight: 900,
-              fontSize: "10px",
-              color: "#94a3b8",
-              textTransform: "uppercase",
-            }}
-          >
-            Select Status
-          </Typography>
-        </Box>
-        {Object.entries(STATUS_CONFIG).map(([key, config]) => (
+        <div className="px-4 py-2 border-b border-slate-100">
+          <p className="text-[10px] font-black text-slate-400">update status</p>
+        </div>
+        {Object.entries(STATUS_MAP).map(([name, value]) => (
           <MenuItem
-            key={key}
-            onClick={() => handleStatusUpdate(key)}
-            sx={{
-              py: 1.5,
-              mx: 1,
-              borderRadius: "5px",
-              gap: 1.5,
-            }}
+            key={value}
+            onClick={() =>
+              updateStatus.mutate(
+                { id: selectedOrder.id, status: value },
+                { onSuccess: () => setStatusAnchorEl(null) },
+              )
+            }
+            className="font-bold text-slate-700 text-[13px] py-2"
           >
-            <Typography sx={{ fontWeight: 700, fontSize: "13px" }}>
-              {key}
-            </Typography>
+            {name}
           </MenuItem>
         ))}
       </Menu>
 
-      {/* --- BEAUTIFIED DELETE MODAL --- */}
-      <Dialog
-        open={modals.delete}
+      <DeleteConfirmationModal
+        isOpen={modals.delete}
         onClose={() => !deleteOrder.isPending && toggleModal("delete")}
-        maxWidth="xs"
-        fullWidth
-        PaperProps={{ sx: { borderRadius: "7px", p: 1 } }}
-      >
-        <IconButton
-          onClick={() => toggleModal("delete")}
-          disabled={deleteOrder.isPending}
-          sx={{ position: "absolute", right: 12, top: 12, color: "#94a3b8" }}
-        >
-          <X size={18} />
-        </IconButton>
-
-        <DialogContent
-          sx={{
-            mt: 3,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            sx={{
-              width: 70,
-              height: 70,
-              bgcolor: "#fef2f2",
-              color: "#ef4444",
-              borderRadius: "7px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mb: 3,
-            }}
-          >
-            <AlertCircle size={36} strokeWidth={2.5} />
-          </Box>
-
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 900,
-              color: "#0f172a",
-              mb: 1,
-              textAlign: "center",
-            }}
-          >
-            Are you absolutely sure?
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: "#64748b",
-              fontWeight: 500,
-              textAlign: "center",
-              px: 2,
-            }}
-          >
-            You are about to delete{" "}
-            <span className="text-slate-900 font-black">
-              Order #{selectedOrder?.orderNumber}
-            </span>
-            . This action cannot be undone.
-          </Typography>
-        </DialogContent>
-
-        <DialogActions
-          sx={{ flexDirection: "column", gap: 1.5, px: 3, pb: 4, pt: 1 }}
-        >
-          <Button
-            fullWidth
-            onClick={() =>
-              deleteOrder.mutate(selectedOrder.id, {
-                onSuccess: () => toggleModal("delete"),
-              })
-            }
-            disabled={deleteOrder.isPending}
-            sx={{
-              bgcolor: "#ef4444",
-              color: "white",
-              borderRadius: "7px",
-              py: 1.5,
-              fontWeight: 900,
-              textTransform: "none",
-              "&:hover": { bgcolor: "#dc2626" },
-              boxShadow: "none",
-            }}
-          >
-            {deleteOrder.isPending ? (
-              <Loader2 className="animate-spin" size={20} />
-            ) : (
-              "Yes, Delete Order"
-            )}
-          </Button>
-          <Button
-            fullWidth
-            onClick={() => toggleModal("delete")}
-            disabled={deleteOrder.isPending}
-            sx={{
-              color: "#64748b",
-              bgcolor: "#f1f5f9",
-              borderRadius: "7px",
-              py: 1.5,
-              fontWeight: 900,
-              textTransform: "none",
-              m: "0 !important",
-            }}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-
+        onConfirm={() =>
+          deleteOrder.mutate(selectedOrder.id, {
+            onSuccess: () => toggleModal("delete"),
+          })
+        }
+        itemName={selectedOrder?.orderNumber}
+        isLoading={deleteOrder.isPending}
+      />
       <EditOrderModal
         isOpen={modals.edit}
         onClose={() => toggleModal("edit")}

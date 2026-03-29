@@ -7,13 +7,6 @@ import {
 import useAxiosSecure from "./useAxiosSecure";
 import toast from "react-hot-toast";
 
-const toastStyle = {
-  borderRadius: "1.5rem",
-  fontWeight: "900",
-  border: "3px solid #f1f5f9",
-  padding: "16px",
-};
-
 export const useTables = (page = 1, perPage = 10, search = "") => {
   const axiosSecure = useAxiosSecure();
   return useQuery({
@@ -66,7 +59,7 @@ export const useTableMutations = () => {
     mutationFn: (payload) => axiosSecure.post("/Table/create", payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tables"] });
-      toast.success("Table added to floor plan!", { style: toastStyle });
+      toast.success("Table added to floor plan!");
     },
   });
 
@@ -76,7 +69,7 @@ export const useTableMutations = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tables"] });
       queryClient.invalidateQueries({ queryKey: ["table", variables.id] });
-      toast.success("Table updated!", { style: toastStyle });
+      toast.success("Table updated!");
     },
   });
 
@@ -84,7 +77,7 @@ export const useTableMutations = () => {
     mutationFn: (id) => axiosSecure.delete(`/Table/delete/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tables"] });
-      toast.success("Table removed!", { style: toastStyle });
+      toast.success("Table removed!");
     },
   });
 
@@ -93,7 +86,7 @@ export const useTableMutations = () => {
       axiosSecure.post("/EmployeeTable/create-range", payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tables"] });
-      toast.success("Staff assigned!", { style: toastStyle });
+      toast.success("Staff assigned!");
     },
   });
 

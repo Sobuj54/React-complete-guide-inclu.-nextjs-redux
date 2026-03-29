@@ -34,7 +34,7 @@ export default function AuthPage() {
             </div>
             <h1 className="text-5xl font-extrabold leading-tight">
               Savor the flavor of <br />
-              <span className="text-orange-400">effortless ordering.</span>
+              <span className="text-blue-400">effortless ordering.</span>
             </h1>
             <p className="text-sm text-slate-300">
               © 2026 BSS Restaurant Group
@@ -66,7 +66,7 @@ export default function AuthPage() {
                     {...register("userName")}
                     placeholder="Username"
                     disabled={isLoading}
-                    className={`w-full py-3 pl-10 pr-4 bg-white border rounded-[5px] outline-none  transition-all ${
+                    className={`w-full py-3 pl-10 pr-4 bg-white border rounded-[5px] outline-none focus:border-blue-500   transition-all ${
                       errors.userName
                         ? "border-red-500 focus:ring-red-200"
                         : "border-slate-200 focus:ring-orange-200"
@@ -92,7 +92,7 @@ export default function AuthPage() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
                     disabled={isLoading}
-                    className={`w-full py-3 pl-10 pr-12 bg-white border rounded-[5px] outline-none  transition-all ${
+                    className={`w-full py-3 pl-10 pr-12 bg-white border rounded-[5px] outline-none focus:border-blue-500  transition-all ${
                       errors.password
                         ? "border-red-500 focus:ring-red-200"
                         : "border-slate-200 focus:ring-orange-200"

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useOrderData, useOrderMutation } from "../../hooks/useNewOrder";
 import ActionButton from "../../components/ActionButton";
+import image from "../../assets/select_table.svg";
 
 export default function NewOrderPage() {
   const [selectedTable, setSelectedTable] = useState(null);
@@ -137,11 +138,7 @@ export default function NewOrderPage() {
             pb: { xs: 0, md: 4 },
           }}
         >
-          <Typography
-            sx={{
-              mb: 2,
-            }}
-          >
+          <Typography sx={{ mb: 2 }}>
             Select Table ({tablesQuery.data?.length || 0})
           </Typography>
 
@@ -235,7 +232,7 @@ export default function NewOrderPage() {
           </Box>
         </Box>
 
-        {/* RIGHT: FOOD MENU */}
+        {/* RIGHT: FOOD MENU OR ILLUSTRATION */}
         <Box
           sx={{
             flex: 1,
@@ -244,155 +241,170 @@ export default function NewOrderPage() {
             height: "100%",
           }}
         >
-          <Typography sx={{ mb: 2 }}>
-            Food Menu ({foodsQuery.data?.length || 0})
-          </Typography>
-          {/* <Box
-            sx={{
-              display: "flex",
-              justifyContent: "end",
-              alignItems: "center",
-              mb: 2,
-            }}
-          >
-            <TextField
-              size="small"
-              placeholder="Search food menu..."
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search size={18} />
-                  </InputAdornment>
-                ),
-              }}
+          {!selectedTable ? (
+            /* --- EMPTY STATE ILLUSTRATION --- */
+            <Box
               sx={{
-                bgcolor: "background.paper",
-                width: { xs: "180px", md: "300px" },
-                "& .MuiOutlinedInput-root": { borderRadius: "8px" },
-              }}
-            />
-          </Box> */}
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
 
-          <Box
-            sx={{
-              flex: 1,
-              overflowY: "auto",
-              pr: 1,
-              "&::-webkit-scrollbar": { width: "6px" },
-              "&::-webkit-scrollbar-thumb": {
-                bgcolor: "secondary.200",
-                borderRadius: "10px",
-              },
-              width: "full",
-            }}
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
-              {foodsQuery.data
-                ?.filter((f) =>
-                  f.name.toLowerCase().includes(searchTerm.toLowerCase()),
-                )
-                .map((food) => (
-                  <Card
-                    key={food.id}
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      border: "1px solid",
-                      borderColor: "secondary.200",
-                      borderRadius: "5px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 2,
-                      "&:hover": {
-                        boxShadow: "0 8px 24px -12px rgba(0,0,0,0.2)",
-                      },
-                    }}
-                  >
-                    <img
-                      src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
-                      className="w-full h-40 object-cover rounded-lg"
-                      alt={food.name}
-                    />
-                    <Box sx={{ flex: 1 }}>
-                      <Typography
+                m: { md: 2 },
+                p: 4,
+              }}
+            >
+              <img
+                src={image}
+                alt="Select Table"
+                style={{ width: "280px", marginBottom: "24px" }}
+                onError={(e) => {
+                  e.target.src =
+                    "https://illustrations.popsy.co/gray/opening-times.svg";
+                }}
+              />
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 800, color: "secondary.dark", mb: 1 }}
+              >
+                No Table Selected
+              </Typography>
+              <Typography sx={{ color: "secondary.main", maxWidth: "300px" }}>
+                Please select a table from the left panel to browse the food
+                menu and start an order.
+              </Typography>
+            </Box>
+          ) : (
+            <>
+              <Typography sx={{ mb: 2 }}>
+                Food Menu ({foodsQuery.data?.length || 0}) for Table{" "}
+                {selectedTable.tableNumber}
+              </Typography>
+
+              <Box
+                sx={{
+                  flex: 1,
+                  overflowY: "auto",
+                  pr: 1,
+                  "&::-webkit-scrollbar": { width: "6px" },
+                  "&::-webkit-scrollbar-thumb": {
+                    bgcolor: "secondary.200",
+                    borderRadius: "10px",
+                  },
+                  width: "full",
+                }}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
+                  {foodsQuery.data
+                    ?.filter((f) =>
+                      f.name.toLowerCase().includes(searchTerm.toLowerCase()),
+                    )
+                    .map((food) => (
+                      <Card
+                        key={food.id}
+                        elevation={0}
                         sx={{
-                          fontWeight: 800,
-                          fontSize: "16px",
-                          color: "secondary.A200",
-                          mb: 0.5,
+                          p: 2,
+                          border: "1px solid",
+                          borderColor: "secondary.200",
+                          borderRadius: "5px",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 2,
+                          "&:hover": {
+                            boxShadow: "0 8px 24px -12px rgba(0,0,0,0.2)",
+                          },
                         }}
                       >
-                        {food.name}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "12px",
-                          color: "secondary.main",
-                          height: "36px",
-                          overflow: "hidden",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                        }}
-                      >
-                        {food.description || "Freshly prepared ingredients..."}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-end",
-                        mt: "auto",
-                      }}
-                    >
-                      <Box>
-                        {food.discountPrice < food.price && (
+                        <img
+                          src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
+                          className="w-full h-40 object-cover rounded-lg"
+                          alt={food.name}
+                        />
+                        <Box sx={{ flex: 1 }}>
                           <Typography
                             sx={{
-                              textDecoration: "line-through",
-                              color: "error.light",
-                              fontSize: "12px",
-                              fontWeight: 600,
+                              fontWeight: 800,
+                              fontSize: "16px",
+                              color: "secondary.A200",
+                              mb: 0.5,
                             }}
                           >
-                            {food.price}৳
+                            {food.name}
                           </Typography>
-                        )}
-                        <Typography
+                          <Typography
+                            sx={{
+                              fontSize: "12px",
+                              color: "secondary.main",
+                              height: "36px",
+                              overflow: "hidden",
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                            }}
+                          >
+                            {food.description ||
+                              "Freshly prepared ingredients..."}
+                          </Typography>
+                        </Box>
+                        <Box
                           sx={{
-                            color: "success.main",
-                            fontSize: "18px",
-                            fontWeight: 900,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "flex-end",
+                            mt: "auto",
                           }}
                         >
-                          {food.discountPrice || food.price}৳
-                        </Typography>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        onClick={() => handleAddToCart(food)}
-                        sx={{
-                          bgcolor: "primary.main",
-                          color: "white",
-                          minWidth: "40px",
-                          borderRadius: "5px",
-                          fontWeight: 700,
-                          textTransform: "none",
-                        }}
-                      >
-                        Add To Cart
-                      </Button>
-                    </Box>
-                  </Card>
-                ))}
-            </div>
-          </Box>
+                          <Box>
+                            {food.discountPrice < food.price && (
+                              <Typography
+                                sx={{
+                                  textDecoration: "line-through",
+                                  color: "error.light",
+                                  fontSize: "12px",
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {food.price}৳
+                              </Typography>
+                            )}
+                            <Typography
+                              sx={{
+                                color: "success.main",
+                                fontSize: "18px",
+                                fontWeight: 900,
+                              }}
+                            >
+                              {food.discountPrice || food.price}৳
+                            </Typography>
+                          </Box>
+                          <Button
+                            variant="contained"
+                            onClick={() => handleAddToCart(food)}
+                            sx={{
+                              bgcolor: "primary.main",
+                              color: "white",
+                              minWidth: "40px",
+                              borderRadius: "5px",
+                              fontWeight: 700,
+                              textTransform: "none",
+                            }}
+                          >
+                            Add To Cart
+                          </Button>
+                        </Box>
+                      </Card>
+                    ))}
+                </div>
+              </Box>
+            </>
+          )}
         </Box>
       </Box>
 
-      {/* FLOATING CART BUTTON */}
+      {/* FLOATING CART BUTTON (Keep existing code) */}
       <IconButton
         onClick={() => setIsDrawerOpen(true)}
         sx={{
@@ -416,7 +428,7 @@ export default function NewOrderPage() {
         </Badge>
       </IconButton>
 
-      {/* DRAWER */}
+      {/* DRAWER (Keep existing, added onClick to Trash) */}
       <Drawer
         anchor="right"
         open={isDrawerOpen}
@@ -488,7 +500,6 @@ export default function NewOrderPage() {
                         {item.unitPrice}৳ per unit
                       </Typography>
 
-                      {/* --- QUANTITY CONTROLS (Keeps style clean) --- */}
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
@@ -534,6 +545,7 @@ export default function NewOrderPage() {
                         icon={Trash2}
                         title="Delete"
                         colorType="error"
+                        onClick={() => removeFromCart(item.foodId)} // Added this!
                       />
                     </Box>
                   </Box>
@@ -541,7 +553,7 @@ export default function NewOrderPage() {
               </div>
             )}
           </Box>
-
+          {/* ... footer code same as yours */}
           {cart.length > 0 && (
             <Box sx={{ p: 3, borderTop: "1px solid", borderColor: "divider" }}>
               <TextField

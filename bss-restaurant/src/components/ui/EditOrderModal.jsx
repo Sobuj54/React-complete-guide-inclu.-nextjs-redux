@@ -8,12 +8,12 @@ import {
   Typography,
   Box,
   TextField,
-  Button,
   Autocomplete,
   Avatar,
   CircularProgress,
   Stack,
   InputAdornment,
+  useTheme,
 } from "@mui/material";
 import {
   X,
@@ -24,6 +24,7 @@ import {
   Table as TableIcon,
 } from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import MainButton from "../MainButton"; // Integrated your custom component
 
 export default function EditOrderModal({
   isOpen,
@@ -32,6 +33,7 @@ export default function EditOrderModal({
   onUpdate,
   isSubmitting,
 }) {
+  const theme = useTheme();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [items, setItems] = useState([]);
   const [foodItems, setFoodItems] = useState([]);
@@ -128,6 +130,24 @@ export default function EditOrderModal({
     onUpdate({ id: order.id, payload });
   };
 
+  const inputStyle = {
+    "& .MuiOutlinedInput-root": {
+      bgcolor: theme.palette.background.paper,
+      borderRadius: "7px",
+      "& fieldset": {
+        borderColor: theme.palette.secondary.light,
+        borderWidth: "1px",
+      },
+      "&:hover fieldset": {
+        borderColor: theme.palette.secondary[400],
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: theme.palette.primary.main,
+        borderWidth: "2px",
+      },
+    },
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -135,7 +155,11 @@ export default function EditOrderModal({
       fullWidth
       maxWidth="sm"
       PaperProps={{
-        sx: { borderRadius: "7px", p: 1, bgcolor: "#f8fafc" },
+        sx: {
+          borderRadius: "5px",
+          p: 1,
+          bgcolor: theme.palette.background.paper,
+        },
       }}
     >
       {/* Header */}
@@ -149,22 +173,28 @@ export default function EditOrderModal({
       >
         <Box>
           <Typography
-            sx={{ fontWeight: 900, color: "#0f172a", fontSize: "1.1rem" }}
+            sx={{
+              fontWeight: 900,
+              color: theme.palette.text.primary,
+              fontSize: "1.2rem",
+            }}
           >
             Edit Order
           </Typography>
           <Typography
-            sx={{ color: "#64748b", fontSize: "12px", fontWeight: 700 }}
+            sx={{
+              color: theme.palette.text.secondary,
+              fontSize: "12px",
+              fontWeight: 700,
+            }}
           >
             ORDER NUMBER:{" "}
-            <span className="text-orange-500">#{order?.orderNumber}</span>
+            <Box component="span" sx={{ color: theme.palette.primary.main }}>
+              #{order?.orderNumber}
+            </Box>
           </Typography>
         </Box>
-        <IconButton
-          onClick={onClose}
-          size="medium"
-          sx={{ bgcolor: "white", borderRadius: "7px" }}
-        >
+        <IconButton onClick={onClose} size="medium">
           <X size={18} />
         </IconButton>
       </DialogTitle>
@@ -177,25 +207,27 @@ export default function EditOrderModal({
               sx={{
                 flex: 1,
                 p: 2,
-                bgcolor: "white",
-                borderRadius: "7px",
-                boxShadow: 1,
+                bgcolor: theme.palette.background.paper,
+                borderRadius: "8px",
+                boxShadow: theme.shadows[1],
               }}
             >
               <Typography
                 sx={{
-                  fontSize: "12px",
+                  fontSize: "15px",
                   fontWeight: 600,
-                  color: "#94a3b8",
+                  color: theme.palette.secondary.main,
                   mb: 0.5,
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
                 }}
               >
-                <TableIcon size={16} /> Table
+                <TableIcon size={18} /> Table
               </Typography>
-              <Typography sx={{ fontWeight: 900, color: "#0f172a" }}>
+              <Typography
+                sx={{ fontWeight: 900, color: theme.palette.text.primary }}
+              >
                 {order?.table?.tableNumber || "Walk-in"}
               </Typography>
             </Box>
@@ -203,20 +235,19 @@ export default function EditOrderModal({
               sx={{
                 flex: 1,
                 p: 1,
-                bgcolor: "white",
-                borderRadius: "7px",
+                bgcolor: theme.palette.background.paper,
+                borderRadius: "8px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                fontSize: "13px",
-                boxShadow: 1,
+                boxShadow: theme.shadows[1],
               }}
             >
               <Typography
                 sx={{
-                  fontSize: "13px",
+                  fontSize: "15px",
                   fontWeight: 600,
-                  color: "#94a3b8",
+                  color: theme.palette.secondary.main,
                   mb: 0.5,
                   px: 1,
                   display: "flex",
@@ -224,7 +255,7 @@ export default function EditOrderModal({
                   gap: 1,
                 }}
               >
-                <Smartphone size={16} /> Phone
+                <Smartphone size={18} /> Phone
               </Typography>
               <TextField
                 variant="standard"
@@ -245,6 +276,7 @@ export default function EditOrderModal({
               sx={{
                 fontSize: "13px",
                 fontWeight: 600,
+                color: theme.palette.text.primary,
                 mb: 1,
                 px: 1,
               }}
@@ -260,19 +292,15 @@ export default function EditOrderModal({
                 <TextField
                   {...params}
                   placeholder="Search for food..."
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      bgcolor: "white",
-                      borderRadius: "7px",
-                      border: "1px solid oklch(55.4% 0.046 257.417)",
-                      "& fieldset": { border: "none" },
-                    },
-                  }}
+                  sx={inputStyle}
                   InputProps={{
                     ...params.InputProps,
                     startAdornment: (
                       <InputAdornment position="start" sx={{ pl: 1 }}>
-                        <Search size={18} className="text-slate-400" />
+                        <Search
+                          size={18}
+                          color={theme.palette.secondary.main}
+                        />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -290,11 +318,7 @@ export default function EditOrderModal({
                 <Box
                   component="li"
                   {...props}
-                  sx={{
-                    display: "flex",
-                    gap: 2,
-                    p: 1,
-                  }}
+                  sx={{ display: "flex", gap: 2, p: 1 }}
                 >
                   <Avatar
                     src={`https://restaurantapi.bssoln.com/images/food/${option.image}`}
@@ -307,7 +331,7 @@ export default function EditOrderModal({
                     </Typography>
                     <Typography
                       sx={{
-                        color: "orange",
+                        color: theme.palette.primary.main,
                         fontWeight: 900,
                         fontSize: "11px",
                       }}
@@ -323,8 +347,7 @@ export default function EditOrderModal({
           {/* Items List */}
           <Box
             sx={{
-              borderRadius: "7px",
-              p: 1,
+              borderRadius: "5px",
               maxHeight: 300,
               overflowY: "auto",
             }}
@@ -339,8 +362,8 @@ export default function EditOrderModal({
                     gap: 2,
                     p: 1.5,
                     mb: 1,
-                    backgroundColor: "oklch(96.8% 0.007 247.896)",
-                    borderRadius: "7px",
+                    backgroundColor: theme.palette.secondary.lighter,
+                    borderRadius: "5px",
                   }}
                 >
                   <Avatar
@@ -353,7 +376,7 @@ export default function EditOrderModal({
                       sx={{
                         fontWeight: 900,
                         fontSize: "13px",
-                        color: "#0f172a",
+                        color: theme.palette.text.primary,
                         textTransform: "uppercase",
                       }}
                     >
@@ -362,7 +385,7 @@ export default function EditOrderModal({
                     <Typography
                       sx={{
                         fontWeight: 700,
-                        color: "#64748b",
+                        color: theme.palette.text.secondary,
                         fontSize: "11px",
                       }}
                     >
@@ -385,7 +408,7 @@ export default function EditOrderModal({
                       sx={{
                         width: 60,
                         "& .MuiOutlinedInput-root": {
-                          bgcolor: "white",
+                          bgcolor: theme.palette.background.paper,
                           borderRadius: "5px",
                           "& fieldset": { border: "none" },
                         },
@@ -397,6 +420,7 @@ export default function EditOrderModal({
                         fontWeight: 900,
                         fontSize: "14px",
                         textAlign: "right",
+                        color: theme.palette.text.primary,
                       }}
                     >
                       {item.quantity * item.unitPrice} ৳
@@ -406,7 +430,7 @@ export default function EditOrderModal({
                       onClick={() =>
                         setItems(items.filter((_, i) => i !== idx))
                       }
-                      sx={{ color: "#fca5a5" }}
+                      sx={{ color: theme.palette.error.light }}
                     >
                       <Trash2 size={18} />
                     </IconButton>
@@ -414,10 +438,16 @@ export default function EditOrderModal({
                 </Box>
               ))
             ) : (
-              <Box sx={{ textAlign: "center", py: 4, color: "#94a3b8" }}>
+              <Box
+                sx={{
+                  textAlign: "center",
+                  py: 4,
+                  color: theme.palette.text.disabled,
+                }}
+              >
                 <UtensilsCrossed
                   size={40}
-                  className="mx-auto mb-2 opacity-20"
+                  style={{ margin: "0 auto 8px auto", opacity: 0.2 }}
                 />
                 <Typography sx={{ fontWeight: 700, fontSize: "13px" }}>
                   No items in this order
@@ -428,14 +458,14 @@ export default function EditOrderModal({
         </Stack>
       </DialogContent>
 
-      <DialogActions sx={{ p: 2, flexDirection: "column", gap: 1.5 }}>
+      <DialogActions sx={{ p: 2, flexDirection: "column", gap: 2 }}>
         {/* Total Summary */}
         <Box
           sx={{
             width: "100%",
-            bgcolor: "oklch(44.6% 0.043 257.281)",
+            bgcolor: theme.palette.success.main,
             p: 2,
-            borderRadius: "7px",
+            borderRadius: "5px",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -445,57 +475,39 @@ export default function EditOrderModal({
             sx={{
               color: "white",
               fontWeight: 600,
-              fontSize: "1.2rem",
-              letterSpacing: 1,
+              fontSize: "1.1rem",
+              letterSpacing: 0.5,
             }}
           >
             Total Amount
           </Typography>
           <Typography
-            sx={{ color: "#fb923c", fontWeight: 900, fontSize: "1.2rem" }}
+            sx={{
+              color: "white",
+              fontWeight: 900,
+              fontSize: "1.1rem",
+            }}
           >
             {totalAmount.toLocaleString()} ৳
           </Typography>
         </Box>
 
         <Box sx={{ width: "100%", display: "flex", gap: 2 }}>
-          <Button
+          <MainButton
             fullWidth
+            label="Cancel"
             onClick={onClose}
-            sx={{
-              py: 1.5,
-              color: "#64748b",
-              fontWeight: 900,
-              bgcolor: "white",
-              borderRadius: "7px",
-              textTransform: "none",
-              bgcolor: "oklch(86.9% 0.022 252.894)",
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
+            color="secondary"
+          />
+          <MainButton
             fullWidth
+            type="submit"
             onClick={handleSubmit}
             disabled={isSubmitting || items.length === 0}
-            variant="contained"
-            sx={{
-              py: 1.5,
-              bgcolor: "#f97316",
-              color: "white",
-              borderRadius: "7px",
-              fontWeight: 900,
-              textTransform: "none",
-              boxShadow: "none",
-              "&:hover": { bgcolor: "#ea580c", boxShadow: "none" },
-            }}
-          >
-            {isSubmitting ? (
-              <CircularProgress size={20} color="inherit" />
-            ) : (
-              "Update Order"
-            )}
-          </Button>
+            isLoading={isSubmitting}
+            label="Update Order"
+            color="primary"
+          />
         </Box>
       </DialogActions>
     </Dialog>

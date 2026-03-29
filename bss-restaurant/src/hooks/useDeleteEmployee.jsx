@@ -15,9 +15,7 @@ const useDeleteEmployee = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
 
-      toast.success("Employee deleted successfully!", {
-        style: { borderRadius: "1rem", fontWeight: "800" },
-      });
+      toast.success("Employee deleted successfully!");
     },
 
     onError: (error) => {

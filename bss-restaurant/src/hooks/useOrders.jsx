@@ -3,12 +3,6 @@ import toast from "react-hot-toast";
 import { queryClient } from "../main";
 import useAxiosSecure from "./useAxiosSecure";
 
-const toastStyle = {
-  borderRadius: "1.5rem",
-  fontWeight: "900",
-  border: "3px solid #f1f5f9",
-};
-
 export const useOrders = (params) => {
   const axiosSecure = useAxiosSecure();
   return useQuery({
@@ -28,12 +22,10 @@ export const useOrderMutations = () => {
       axiosSecure.put(`/Order/update-status/${id}`, { status }),
     onSuccess: () => {
       queryClient.invalidateQueries(["orders"]);
-      toast.success("Order status updated!", { style: toastStyle });
+      toast.success("Order status updated!");
     },
     onError: (err) =>
-      toast.error(err.response?.data?.message || "Error updating status", {
-        style: toastStyle,
-      }),
+      toast.error(err.response?.data?.message || "Error updating status"),
   });
 
   const updateOrder = useMutation({
@@ -41,24 +33,20 @@ export const useOrderMutations = () => {
       axiosSecure.put(`/Order/update/${id}`, payload),
     onSuccess: () => {
       queryClient.invalidateQueries(["orders"]);
-      toast.success("Order updated!", { style: toastStyle });
+      toast.success("Order updated!");
     },
     onError: (err) =>
-      toast.error(err.response?.data?.message || "Error updating order", {
-        style: toastStyle,
-      }),
+      toast.error(err.response?.data?.message || "Error updating order"),
   });
 
   const deleteOrder = useMutation({
     mutationFn: (id) => axiosSecure.delete(`/Order/delete/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries(["orders"]);
-      toast.error("Order deleted", { style: toastStyle });
+      toast.success("Order deleted");
     },
     onError: (err) =>
-      toast.error(err.response?.data?.message || "Error deleting order", {
-        style: toastStyle,
-      }),
+      toast.error(err.response?.data?.message || "Error deleting order"),
   });
 
   return { updateStatus, deleteOrder, updateOrder };

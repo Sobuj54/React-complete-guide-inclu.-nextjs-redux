@@ -3,13 +3,6 @@ import toast from "react-hot-toast";
 import { queryClient } from "../main";
 import useAxiosSecure from "./useAxiosSecure";
 
-const toastStyle = {
-  borderRadius: "1.5rem",
-  fontWeight: "900",
-  border: "3px solid #f1f5f9",
-  padding: "16px",
-};
-
 export const useOrderData = (selectedTableId) => {
   const axiosSecure = useAxiosSecure();
 
@@ -45,12 +38,10 @@ export const useOrderMutation = () => {
     mutationFn: (payload) => axiosSecure.post("/Order/create", payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
-      toast.success("Order Placed Successfully!", { style: toastStyle });
+      toast.success("Order Placed Successfully!");
     },
     onError: (err) => {
-      toast.error(err.response?.data?.message || "Order failed", {
-        style: toastStyle,
-      });
+      toast.error(err.response?.data?.message || "Order failed");
     },
   });
 };

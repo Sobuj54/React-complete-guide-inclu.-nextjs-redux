@@ -72,7 +72,7 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
             <div className="flex items-center gap-3">
               <Avatar
                 variant="rounded"
-                src={`https://restaurantapi.bssoln.com/images/food/${item.food?.image}`}
+                src={`${import.meta.env.VITE_IMG_URL}/images/food/${item.food?.image}`}
                 sx={{ width: 50, height: 50 }}
                 className=" rounded-[5px] border border-slate-100"
               />

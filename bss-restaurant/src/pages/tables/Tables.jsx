@@ -20,7 +20,6 @@ import {
   Stack,
   InputAdornment,
   Skeleton,
-  capitalize,
 } from "@mui/material";
 
 // Icons
@@ -39,7 +38,6 @@ import { useEmployees } from "../../hooks/useEmployees";
 // Components
 import ErrorState from "../../components/ErrorState";
 import AssignStaffModal from "../../components/ui/AssignStaffModal";
-import DeleteTableModal from "../../components/ui/DeleteTableModal";
 import TableFormModal from "../../components/ui/TableForm";
 import MainButton from "../../components/MainButton";
 import ActionButton from "../../components/ActionButton";
@@ -76,7 +74,6 @@ export default function Tables() {
   } = useTables(page + 1, perPage, debouncedSearch);
   const { data: employeesResponse } = useEmployees(1, 100);
 
-  // The logic for your image mapping remains exactly the same
   const employeeImageMap = useMemo(() => {
     const map = {};
     employeesResponse?.data?.forEach((emp) => {
@@ -149,9 +146,8 @@ export default function Tables() {
     setSelectedId(null);
   };
 
-  // Styles to minimize padding and maximize width
-  const headerCellStyle = { py: 1.5 };
-  const bodyCellStyle = { py: 0.5 };
+  const headerCellStyle = { py: 1.5, whiteSpace: "nowrap" };
+  const bodyCellStyle = { py: 0.5, whiteSpace: "nowrap" };
 
   if (isError) return <ErrorState />;
 
@@ -213,9 +209,10 @@ export default function Tables() {
           borderRadius: "5px",
           border: "1px solid #f0f0f0",
           width: "100%",
+          overflowX: "auto",
         }}
       >
-        <Table sx={{ width: "100%" }} size="small">
+        <Table sx={{ minWidth: 800 }} size="small">
           <TableHead sx={{ bgcolor: "#f8fafc" }}>
             <TableRow>
               <TableCell sx={headerCellStyle}>Preview</TableCell>
@@ -243,7 +240,7 @@ export default function Tables() {
                   <TableCell sx={bodyCellStyle}>
                     <Avatar
                       variant="rounded"
-                      src={`https://restaurantapi.bssoln.com/images/table/${table.image}`}
+                      src={`${import.meta.env.VITE_IMG_URL}/images/table/${table.image}`}
                       sx={{ width: 40, height: 40, borderRadius: "5px" }}
                     />
                   </TableCell>
@@ -280,7 +277,7 @@ export default function Tables() {
                         {table.employees?.map((emp) => (
                           <Tooltip key={emp.employeeId} title={emp.name}>
                             <Avatar
-                              src={`https://restaurantapi.bssoln.com/images/user/${employeeImageMap[emp.employeeId]}`}
+                              src={`${import.meta.env.VITE_IMG_URL}/images/user/${employeeImageMap[emp.employeeId]}`}
                             />
                           </Tooltip>
                         ))}
@@ -328,6 +325,12 @@ export default function Tables() {
           onRowsPerPageChange={(e) => {
             setPerPage(parseInt(e.target.value, 10));
             setPage(0);
+          }}
+          // Maintained desktop settings
+          rowsPerPageOptions={[5, 10, 25]}
+          labelRowsPerPage="Rows per page:"
+          sx={{
+            minWidth: 800, // Forces the pagination bar to scroll with the table
           }}
         />
       </TableContainer>

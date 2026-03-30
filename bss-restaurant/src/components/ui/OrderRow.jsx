@@ -280,7 +280,7 @@ const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
                         >
                           <Avatar
                             variant="rounded"
-                            src={`https://restaurantapi.bssoln.com/images/food/${item.food?.image}`}
+                            src={`${import.meta.env.VITE_IMG_URL}/images/food/${item.food?.image}`}
                             sx={{
                               width: 42,
                               height: 42,

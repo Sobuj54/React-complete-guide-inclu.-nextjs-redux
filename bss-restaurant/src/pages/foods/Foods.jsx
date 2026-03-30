@@ -93,6 +93,12 @@ export default function Foods() {
 
   const tableStyle = {
     py: 1.5,
+    whiteSpace: "nowrap", // Prevent text wrapping in header
+  };
+
+  const bodyCellStyle = {
+    py: 0,
+    whiteSpace: "nowrap", // Prevent text wrapping in body
   };
 
   return (
@@ -151,9 +157,10 @@ export default function Foods() {
           borderRadius: `${theme.shape.borderRadius}px`,
           borderColor: theme.palette.secondary.light,
           boxShadow: "none",
+          overflowX: "auto", // Enable horizontal scrolling
         }}
       >
-        <Table size="small">
+        <Table size="small" sx={{ minWidth: 800 }}>
           <TableHead
             sx={{
               bgcolor: "#f8fafc",
@@ -162,7 +169,7 @@ export default function Foods() {
             <TableRow>
               <TableCell sx={tableStyle}>Image</TableCell>
               <TableCell sx={tableStyle}>Name</TableCell>
-              <TableCell align="center" asx={tableStyle}>
+              <TableCell align="center" sx={tableStyle}>
                 Discount
               </TableCell>
               <TableCell sx={tableStyle}>Base Price</TableCell>
@@ -185,15 +192,15 @@ export default function Foods() {
             ) : (
               response?.data?.map((food) => (
                 <TableRow key={food.id} hover>
-                  <TableCell sx={{ py: 0 }}>
+                  <TableCell sx={bodyCellStyle}>
                     <img
-                      src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
+                      src={`${import.meta.env.VITE_IMG_URL}/images/food/${food.image}`}
                       className="w-10 h-10 object-cover border border-slate-100"
                       style={{ borderRadius: "4px" }}
                       alt={food.name}
                     />
                   </TableCell>
-                  <TableCell sx={{ py: 0 }}>
+                  <TableCell sx={bodyCellStyle}>
                     <Typography variant="body2" sx={{ fontWeight: 600, m: 0 }}>
                       {food.name}
                     </Typography>
@@ -207,7 +214,7 @@ export default function Foods() {
                       {food.description}
                     </Typography>
                   </TableCell>
-                  <TableCell align="center" sx={{ py: 0 }}>
+                  <TableCell align="center" sx={bodyCellStyle}>
                     {food.discountType !== "None" ? (
                       <Box
                         sx={{
@@ -231,7 +238,7 @@ export default function Foods() {
                   </TableCell>
                   <TableCell
                     sx={{
-                      py: 0,
+                      ...bodyCellStyle,
                       fontWeight: 600,
                       fontSize: "13px",
                     }}
@@ -240,7 +247,7 @@ export default function Foods() {
                   </TableCell>
                   <TableCell
                     sx={{
-                      py: 0,
+                      ...bodyCellStyle,
                       fontWeight: 600,
                       color: theme.palette.success.main,
                       fontSize: "15px",
@@ -290,6 +297,13 @@ export default function Foods() {
           onRowsPerPageChange={(e) => {
             setPerPage(parseInt(e.target.value, 10));
             setPage(0);
+          }}
+          // Maintained desktop settings & scrollable container
+          rowsPerPageOptions={[5, 10, 25]}
+          labelRowsPerPage="Rows per page:"
+          sx={{
+            minWidth: 800,
+            borderTop: "1px solid #f0f0f0",
           }}
         />
       </TableContainer>

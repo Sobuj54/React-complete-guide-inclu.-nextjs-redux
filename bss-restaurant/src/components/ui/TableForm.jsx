@@ -79,7 +79,7 @@ export default function TableFormModal({
 
   const existingImageUrl = useMemo(() => {
     if (isImageDeleted || !defaultValues?.image) return null;
-    return `https://restaurantapi.bssoln.com/images/table/${defaultValues.image}`;
+    return `${import.meta.env.VITE_IMG_URL}/images/table/${defaultValues.image}`;
   }, [defaultValues?.image, isImageDeleted]);
 
   const preview = useMemo(() => {

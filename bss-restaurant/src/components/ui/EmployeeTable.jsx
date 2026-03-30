@@ -138,7 +138,7 @@ const EmployeeTable = ({
                         <Avatar
                           src={
                             emp.user?.image
-                              ? `https://restaurantapi.bssoln.com/images/user/${emp.user.image}`
+                              ? `${import.meta.env.VITE_IMG_URL}/images/user/${emp.user.image}`
                               : ""
                           }
                           sx={{

@@ -103,7 +103,7 @@ export default function FoodForm({
       return URL.createObjectURL(selectedImage[0]);
     if (isImageDeleted) return null;
     return defaultValues?.image
-      ? `https://restaurantapi.bssoln.com/images/food/${defaultValues.image}`
+      ? `${import.meta.env.VITE_IMG_URL}/images/food/${defaultValues.image}`
       : null;
   }, [selectedImage, defaultValues, isImageDeleted]);
 

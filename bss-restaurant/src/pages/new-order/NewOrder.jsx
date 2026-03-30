@@ -131,7 +131,7 @@ export default function NewOrderPage() {
         <Box
           sx={{
             width: { xs: "100%", md: "300px" },
-            height: { xs: "200px", md: "100%" },
+            height: { xs: "250px", md: "100%" },
             flexShrink: 0,
             display: "flex",
             flexDirection: "column",
@@ -187,7 +187,7 @@ export default function NewOrderPage() {
                     }}
                   >
                     <img
-                      src={`https://restaurantapi.bssoln.com/images/table/${table.image}`}
+                      src={`${import.meta.env.VITE_IMG_URL}/images/table/${table.image}`}
                       className="w-full h-full object-cover"
                       alt=""
                       onError={(e) =>
@@ -319,7 +319,7 @@ export default function NewOrderPage() {
                         }}
                       >
                         <img
-                          src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
+                          src={`${import.meta.env.VITE_IMG_URL}/images/food/${food.image}`}
                           className="w-full h-40 object-cover rounded-lg"
                           alt={food.name}
                         />
@@ -409,7 +409,7 @@ export default function NewOrderPage() {
         onClick={() => setIsDrawerOpen(true)}
         sx={{
           position: "fixed",
-          right: 32,
+          right: 25,
           bottom: 32,
           bgcolor: "primary.main",
           color: "white",

@@ -134,7 +134,7 @@ export default function AssignStaffModal({
                         <Avatar
                           src={
                             imageFileName
-                              ? `https://restaurantapi.bssoln.com/images/user/${imageFileName}`
+                              ? `${import.meta.env.VITE_IMG_URL}/images/user/${imageFileName}`
                               : undefined
                           }
                           sx={{

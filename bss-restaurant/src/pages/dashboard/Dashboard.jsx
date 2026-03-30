@@ -191,7 +191,7 @@ export default function Dashboard() {
                     <TableCell sx={{ width: 60 }}>
                       <Avatar
                         variant="rounded"
-                        src={`https://restaurantapi.bssoln.com/images/food/${food.image}`}
+                        src={`${import.meta.env.VITE_IMG_URL}/images/food/${food.image}`}
                         sx={{ width: 45, height: 45, borderRadius: "5px" }}
                       />
                     </TableCell>

@@ -77,7 +77,7 @@ export default function EmployeeForm({
   const existingImageUrl = useMemo(() => {
     if (isImageDeleted) return null;
     return existingImageName
-      ? `https://restaurantapi.bssoln.com/images/user/${existingImageName}`
+      ? `${import.meta.env.VITE_IMG_URL}/images/user/${existingImageName}`
       : null;
   }, [existingImageName, isImageDeleted]);
 

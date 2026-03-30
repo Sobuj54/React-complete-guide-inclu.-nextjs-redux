@@ -321,7 +321,7 @@ export default function EditOrderModal({
                   sx={{ display: "flex", gap: 2, p: 1 }}
                 >
                   <Avatar
-                    src={`https://restaurantapi.bssoln.com/images/food/${option.image}`}
+                    src={`${import.meta.env.VITE_IMG_URL}/images/food/${option.image}`}
                     variant="rounded"
                     sx={{ width: 40, height: 40, borderRadius: "5px" }}
                   />
@@ -367,7 +367,7 @@ export default function EditOrderModal({
                   }}
                 >
                   <Avatar
-                    src={`https://restaurantapi.bssoln.com/images/food/${item.food?.imageUrl || item.food?.image}`}
+                    src={`${import.meta.env.VITE_IMG_URL}/images/food/${item.food?.imageUrl || item.food?.image}`}
                     variant="rounded"
                     sx={{ width: 45, height: 45, borderRadius: "7px" }}
                   />

@@ -94,7 +94,7 @@ export default function AssignStaffModal({
               </Typography>
             </Box>
           ) : staff?.length > 0 ? (
-            <List sx={{ width: "100%", p: 0 }}>
+            <List sx={{ width: "100%", p: 1 }}>
               {staff.map((emp) => {
                 // IMPORTANT: Match the employeeId from this list to the id in your map
                 const currentId = emp.employeeId;

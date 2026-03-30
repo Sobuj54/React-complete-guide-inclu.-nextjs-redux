@@ -122,7 +122,7 @@ export default function AssignStaffModal({
                       },
                       // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
-                    className="shadow-md rounded-md"
+                    className="rounded-md shadow-md"
                   >
                     <Box
                       onClick={() => onToggle(currentId)}

@@ -39,7 +39,7 @@ export default function AssignStaffModal({
         sx: {
           borderRadius: "5px",
           padding: 1,
-          bgcolor: "#F8FAFC", // This is the Slate 100 hex value
+          bgcolor: "secondary.100", // This is the Slate 100 hex value
         },
       }}
     >
@@ -109,7 +109,7 @@ export default function AssignStaffModal({
                     disablePadding
                     sx={{
                       mb: 2.5,
-                      border: "1px solid white",
+                      // border: "1px solid white",
                       borderColor: isSelected
                         ? "primary.light"
                         : "secondary.light",
@@ -120,8 +120,9 @@ export default function AssignStaffModal({
                         bgcolor: isSelected ? "#bae0ff" : "#f5f5f5",
                         borderColor: isSelected ? "#69b1ff" : "#d9d9d9",
                       },
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
+                    className="shadow-md rounded-md"
                   >
                     <Box
                       onClick={() => onToggle(currentId)}

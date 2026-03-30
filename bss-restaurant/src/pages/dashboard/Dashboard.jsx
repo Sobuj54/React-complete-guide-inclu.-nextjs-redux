@@ -225,6 +225,7 @@ export default function Dashboard() {
                           fontWeight: 800,
                           color: "success.main",
                           font: "17px",
+                          textTransform: "capitalize",
                         }}
                       >
                         {food.totalQuantitySold} sold

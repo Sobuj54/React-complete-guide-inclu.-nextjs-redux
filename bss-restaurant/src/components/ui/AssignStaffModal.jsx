@@ -36,7 +36,11 @@ export default function AssignStaffModal({
       fullWidth
       maxWidth="sm"
       PaperProps={{
-        sx: { borderRadius: "12px", padding: 1, bgcolor: "#ffffff" },
+        sx: {
+          borderRadius: "5px",
+          padding: 1,
+          bgcolor: "#F8FAFC", // This is the Slate 100 hex value
+        },
       }}
     >
       <DialogTitle
@@ -74,7 +78,7 @@ export default function AssignStaffModal({
                 flexDirection: "column",
                 alignItems: "center",
                 py: 8,
-                gap: 2,
+                gap: 3,
               }}
             >
               <CircularProgress
@@ -104,19 +108,19 @@ export default function AssignStaffModal({
                     key={currentId}
                     disablePadding
                     sx={{
-                      mb: 1.5,
-                      border: "1px solid",
-                      borderColor: isSelected ? "primary.light" : "#f0f0f0",
-                      bgcolor: isSelected
-                        ? "primary.lighter"
-                        : "secondary.lighter",
+                      mb: 2.5,
+                      border: "1px solid white",
+                      borderColor: isSelected
+                        ? "primary.light"
+                        : "secondary.light",
+                      bgcolor: isSelected ? "primary.lighter" : "white",
                       borderRadius: "5px",
                       transition: "all 0.2s",
                       "&:hover": {
                         bgcolor: isSelected ? "#bae0ff" : "#f5f5f5",
                         borderColor: isSelected ? "#69b1ff" : "#d9d9d9",
                       },
-                      boxShadow: 1,
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   >
                     <Box
@@ -125,7 +129,7 @@ export default function AssignStaffModal({
                         display: "flex",
                         width: "100%",
                         alignItems: "center",
-                        p: 1.5,
+                        p: 2,
                         cursor: "pointer",
                         gap: 1,
                       }}
@@ -138,8 +142,8 @@ export default function AssignStaffModal({
                               : undefined
                           }
                           sx={{
-                            width: 40,
-                            height: 40,
+                            width: 45,
+                            height: 45,
                             bgcolor: isSelected ? "#1677ff" : "#d9d9d9",
                             fontWeight: 700,
                           }}
@@ -151,8 +155,12 @@ export default function AssignStaffModal({
                       <ListItemText
                         primary={
                           <Typography
-                            variant="subtitle2"
-                            sx={{ fontWeight: 700, color: "#262626" }}
+                            sx={{
+                              fontWeight: 700,
+                              color: "#262626",
+                              font: "20px",
+                              textTransform: "capitalize",
+                            }}
                           >
                             {emp.name}
                           </Typography>
@@ -163,7 +171,7 @@ export default function AssignStaffModal({
                             sx={{
                               fontWeight: 600,
                               color: "#8c8c8c",
-                              textTransform: "uppercase",
+                              textTransform: "capitalize",
                             }}
                           >
                             {emp.designation || "Staff Member"}
@@ -219,16 +227,7 @@ export default function AssignStaffModal({
       </DialogContent>
 
       <DialogActions sx={{ p: 3, gap: 2 }}>
-        <MainButton
-          label="Cancel"
-          onClick={onClose}
-          sx={{
-            bgcolor: "#f5f5f5",
-            color: "#595959",
-            flex: 1,
-            "&:hover": { bgcolor: "#e8e8e8" },
-          }}
-        />
+        <MainButton label="Cancel" onClick={onClose} color="secondary" />
         <MainButton
           label={
             isSubmitting
@@ -238,7 +237,7 @@ export default function AssignStaffModal({
           onClick={onConfirm}
           disabled={selectedEmployees.length === 0 || isSubmitting}
           loading={isSubmitting}
-          sx={{ bgcolor: "#1677ff", flex: 1.5 }}
+          color="primary"
         />
       </DialogActions>
     </Dialog>

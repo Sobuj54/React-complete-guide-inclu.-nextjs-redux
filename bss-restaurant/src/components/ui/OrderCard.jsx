@@ -33,10 +33,10 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
       {/* 1. header: id & actions */}
       <div className="p-4 flex justify-between items-start flex-shrink-0">
         <div className="flex flex-col">
-          <span className="text-[15px] font-bold text-slate-700 tracking-tight">
+          <span className="text-lg font-bold text-slate-700 tracking-tight">
             {order.orderNumber}
           </span>
-          <span className="text-[12px] text-slate-400 font-medium">
+          <span className="text-sm text-slate-400 font-medium">
             {formattedDate}
           </span>
         </div>
@@ -77,11 +77,13 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
                 className=" rounded-[5px] border border-slate-100"
               />
               <div className="flex flex-col">
-                <span className=" font-semibold ">{item.food?.name}</span>
+                <span className=" font-semibold text-lg">
+                  {item.food?.name}
+                </span>
                 <span className="text-sm ">{item.unitPrice} ৳</span>
               </div>
             </div>
-            <span className=" text-sm">qty. {item.quantity}</span>
+            <span className=" text-base">qty. {item.quantity}</span>
           </div>
         ))}
       </div>
@@ -90,15 +92,15 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
       <div className="p-4 bg-white mt-auto border-t border-slate-300 flex-shrink-0 rounded-b-[5px]">
         <div className="flex justify-between items-end">
           <div className="flex flex-col gap-2">
-            <p className=" font-semibold ">
+            <p className="text-sm font-semibold ">
               Total Quantity:{" "}
               <span className="text-slate-700 ">
                 {order.orderItems?.reduce((a, b) => a + b.quantity, 0)}
               </span>
             </p>
-            <p className="font-semibold ">
+            <p className="font-semibold text-xl">
               Total Amount (৳):{" "}
-              <span className="text-[#1677ff]   pb-0.5">{order.amount}৳</span>
+              <span className="text-[#1677ff]">{order.amount}৳</span>
             </p>
           </div>
 

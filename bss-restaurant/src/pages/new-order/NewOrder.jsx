@@ -101,10 +101,13 @@ export default function NewOrderPage() {
   return (
     <Box
       sx={{
-        height: "calc(100vh - 80px)",
+        // FIXED: Ensuring the main container fills the available space and locks the body scroll
+        height: "calc(100vh - 100px)",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden",
+        overflow: "hidden", // This prevents the window/body from scrolling
+        position: "relative",
       }}
     >
       <Box
@@ -113,18 +116,19 @@ export default function NewOrderPage() {
           flexDirection: { xs: "column", md: "row" },
           gap: 2,
           flex: 1,
-          overflow: "hidden",
+          overflow: "hidden", // Ensures internal boxes handle their own scroll
+          height: "100%",
         }}
       >
         {/* LEFT: TABLES */}
         <Box
           sx={{
             width: { xs: "100%", md: "300px" },
-            height: { xs: "250px", md: "100%" },
+            height: { xs: "auto", md: "100%" },
             flexShrink: 0,
             display: "flex",
             flexDirection: "column",
-            pb: { xs: 0, md: 4 },
+            overflow: "hidden", // Boundary for the internal scroll
           }}
         >
           <Typography sx={{ mb: 2 }}>
@@ -134,7 +138,7 @@ export default function NewOrderPage() {
           <Box
             sx={{
               flex: 1,
-              overflowY: { xs: "hidden", md: "auto" },
+              overflowY: "auto", // Allows vertical scroll independently
               overflowX: { xs: "auto", md: "hidden" },
               pr: { md: 1 },
               display: "flex",
@@ -145,6 +149,8 @@ export default function NewOrderPage() {
                 bgcolor: "secondary.main",
                 borderRadius: "10px",
               },
+              // FIXED: overscroll-behavior stops the scroll event from reaching the window
+              overscrollBehavior: "contain",
             }}
           >
             {tablesQuery.isLoading
@@ -251,6 +257,8 @@ export default function NewOrderPage() {
             display: "flex",
             flexDirection: "column",
             height: "100%",
+            overflow: "hidden",
+            // Boundary for internal scroll
           }}
         >
           {!selectedTable ? (
@@ -262,7 +270,7 @@ export default function NewOrderPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 textAlign: "center",
-                m: { md: 2 },
+
                 p: 4,
               }}
             >
@@ -304,6 +312,8 @@ export default function NewOrderPage() {
                     borderRadius: "10px",
                   },
                   width: "full",
+                  // FIXED: overscroll-behavior stops the scroll event from reaching the window
+                  overscrollBehavior: "contain",
                 }}
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
@@ -539,6 +549,7 @@ export default function NewOrderPage() {
                       p: 1.5,
                       bgcolor: "secondary.lighter",
                       borderRadius: "5px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   >
                     <Box sx={{ flex: 1 }}>
@@ -564,7 +575,9 @@ export default function NewOrderPage() {
                           sx={{
                             border: "1px solid",
                             borderColor: "secondary.200",
-                            p: 0.5,
+                            bgcolor: "background.paper",
+                            p: 1,
+                            borderRadius: "5px",
                           }}
                         >
                           <Minus size={14} />
@@ -584,7 +597,10 @@ export default function NewOrderPage() {
                           sx={{
                             border: "1px solid",
                             borderColor: "secondary.200",
-                            p: 0.5,
+                            p: 1,
+                            bgcolor: "background.paper",
+
+                            borderRadius: "5px",
                           }}
                         >
                           <Plus size={14} />

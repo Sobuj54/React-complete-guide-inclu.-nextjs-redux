@@ -40,7 +40,7 @@ export default function TableFormModal({
 
   // EXACT input style with absolute error positioning
   const inputStyle = {
-    backgroundColor: "#ffffff",
+    backgroundColor: "white",
     borderRadius: "5px",
     "& .MuiFormHelperText-root": {
       position: "absolute",

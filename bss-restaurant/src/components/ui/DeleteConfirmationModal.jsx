@@ -93,41 +93,32 @@ export default function DeleteConfirmationModal({
 
       <DialogActions
         sx={{
-          flexDirection: "column",
+          flexDirection: "row",
           gap: 1.5,
           px: 3,
           pb: 3,
           pt: 1,
+          // Ensure the children expand to fill the cross-axis
+          alignItems: "stretch",
+          width: "100%",
         }}
       >
         {/* Using MainButton for Delete Action */}
-        <MainButton
-          fullWidth
-          label={isLoading ? "Deleting..." : "Delete"}
-          onClick={onConfirm}
-          disabled={isLoading}
-          sx={{
-            bgcolor: "error.main",
-            color: "white",
-            py: 1.5,
-            boxShadow: "none", // Remove default shadow
-          }}
-        />
 
-        {/* Using MainButton for Cancel Action */}
         <MainButton
           fullWidth
           label="Cancel"
           onClick={onClose}
           disabled={isLoading}
-          sx={{
-            color: "secondary.600",
-            bgcolor: "secondary.200",
-            py: 1.5,
-            fontSize: "0.95rem",
-            m: "0 !important",
-            boxShadow: "none", // Remove default shadow
-          }}
+          color="secondary"
+        />
+
+        <MainButton
+          fullWidth
+          label={isLoading ? "Deleting..." : "Delete"}
+          onClick={onConfirm}
+          disabled={isLoading}
+          color="primary"
         />
       </DialogActions>
     </Dialog>

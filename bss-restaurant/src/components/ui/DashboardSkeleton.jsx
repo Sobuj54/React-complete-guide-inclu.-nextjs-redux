@@ -1,49 +1,80 @@
+import {
+  Box,
+  Stack,
+  Skeleton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+
 const StatCardSkeleton = () => (
-  <div className="p-6 bg-white border border-slate-100 rounded-[2rem] shadow-sm flex flex-col items-center justify-center md:items-start animate-pulse">
-    <div className="w-12 h-12 rounded-2xl bg-slate-200 mb-4" />
-    <div className="h-3 w-20 bg-slate-100 rounded-full mb-3" />
-    <div className="h-8 w-28 bg-slate-200 rounded-lg" />
+  <div className="p-6 bg-white rounded-md shadow-sm border border-slate-50 flex flex-col items-start animate-pulse">
+    {/* Icon Square */}
+    <div className="w-12 h-12 rounded-md bg-slate-200 mb-4 shadow-sm" />
+    {/* Label */}
+    <div className="h-4 w-24 bg-slate-100 rounded-md mb-2" />
+    {/* Value */}
+    <div className="h-8 w-32 bg-slate-200 rounded-lg" />
   </div>
 );
 
 const OrderRowSkeleton = () => (
-  <tr className="border-b border-slate-50">
-    <td className="px-8 py-5">
-      <div className="h-4 w-32 bg-slate-200 rounded mb-2" />
-      <div className="h-3 w-16 bg-slate-100 rounded" />
-    </td>
-    <td className="px-8 py-5">
-      <div className="h-4 w-20 bg-slate-100 rounded" />
-    </td>
-    <td className="px-8 py-5">
-      <div className="flex justify-center">
-        <div className="h-6 w-16 bg-slate-100 rounded-full" />
-      </div>
-    </td>
-  </tr>
+  <TableRow sx={{ py: 0 }}>
+    <TableCell sx={{ py: 1.5 }}>
+      <Skeleton variant="text" width={60} height={25} />
+    </TableCell>
+    <TableCell sx={{ py: 1.5 }}>
+      <Skeleton variant="text" width={50} height={25} />
+    </TableCell>
+    <TableCell sx={{ py: 1.5 }}>
+      <Skeleton variant="text" width={70} height={25} />
+    </TableCell>
+    <TableCell sx={{ py: 1.5 }}>
+      <Skeleton
+        variant="rounded"
+        width={60}
+        height={24}
+        sx={{ borderRadius: "5px" }}
+      />
+    </TableCell>
+    <TableCell sx={{ py: 1.5 }}>
+      <Skeleton variant="text" width={80} height={25} />
+    </TableCell>
+  </TableRow>
 );
 
 const TopSellerSkeleton = () => (
-  <div className="flex items-center gap-4 animate-pulse">
-    <div className="w-14 h-14 rounded-2xl bg-slate-200 shrink-0" />
-    <div className="flex-1 space-y-2">
-      <div className="h-4 w-3/4 bg-slate-200 rounded" />
-      <div className="h-3 w-1/2 bg-slate-100 rounded" />
-    </div>
-    <div className="h-4 w-12 bg-slate-100 rounded" />
-  </div>
+  <TableRow>
+    <TableCell sx={{ width: 40 }}>
+      <Skeleton variant="text" width={20} />
+    </TableCell>
+    <TableCell sx={{ width: 60 }}>
+      <Skeleton
+        variant="rounded"
+        width={45}
+        height={45}
+        sx={{ borderRadius: "5px" }}
+      />
+    </TableCell>
+    <TableCell>
+      <Skeleton variant="text" width="80%" height={20} />
+      <Skeleton variant="text" width="40%" height={15} />
+    </TableCell>
+    <TableCell align="right">
+      <Skeleton variant="text" width={50} height={20} sx={{ ml: "auto" }} />
+      <Skeleton variant="text" width={70} height={15} sx={{ ml: "auto" }} />
+    </TableCell>
+  </TableRow>
 );
 
 export default function DashboardSkeleton() {
   return (
-    <div className="space-y-10">
-      {/* Header Skeleton */}
-      <div className="flex flex-col gap-2 animate-pulse">
-        <div className="h-10 w-64 bg-slate-200 rounded-xl" />
-        <div className="h-5 w-48 bg-slate-100 rounded-lg" />
-      </div>
-
-      {/* 4 Stat Cards */}
+    <Box className="space-y-10 animate-pulse">
+      {/* 4 Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[...Array(4)].map((_, i) => (
           <StatCardSkeleton key={i} />
@@ -51,31 +82,52 @@ export default function DashboardSkeleton() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        {/* Table Skeleton */}
-        <div className="xl:col-span-2 bg-white border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm">
-          <div className="p-8 border-b border-slate-50 flex justify-between items-center">
-            <div className="h-7 w-40 bg-slate-200 rounded-lg animate-pulse" />
-            <div className="h-6 w-24 bg-slate-100 rounded-full animate-pulse" />
-          </div>
-          <table className="w-full">
-            <tbody className="animate-pulse">
-              {[...Array(5)].map((_, i) => (
-                <OrderRowSkeleton key={i} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* Recent Orders Table Skeleton (xl:col-span-2) */}
+        <Box className="xl:col-span-2 overflow-hidden shadow-md bg-white rounded-md">
+          <Box className="p-6 border-b-[1px] border-slate-200 flex items-center justify-between">
+            <div className="h-6 w-32 bg-slate-200 rounded-md" />
+            <div className="h-6 w-24 bg-slate-100 rounded-xs" />
+          </Box>
+          <TableContainer>
+            <Table sx={{ minWidth: 600 }}>
+              <TableHead className="bg-slate-50">
+                <TableRow>
+                  {[...Array(5)].map((_, i) => (
+                    <TableCell key={i} sx={{ py: 1.5 }}>
+                      <Skeleton variant="text" width={50} />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {[...Array(5)].map((_, i) => (
+                  <OrderRowSkeleton key={i} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
 
-        {/* Top Sellers Skeleton */}
-        <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm space-y-8">
-          <div className="h-7 w-32 bg-slate-200 rounded-lg animate-pulse" />
-          <div className="space-y-6">
-            {[...Array(4)].map((_, i) => (
-              <TopSellerSkeleton key={i} />
-            ))}
-          </div>
-        </div>
+        {/* Top Selling Foods Skeleton (xl:col-span-1) */}
+        <Box className="bg-white rounded-md shadow-md">
+          <Box className="flex items-center justify-between bg-slate-50 p-6 border-b-[1px] border-b-slate-200">
+            <Stack direction="row" spacing={2} alignItems="center">
+              <div className="w-5 h-5 bg-slate-200 rounded-full" />
+              <div className="h-6 w-24 bg-slate-200 rounded-md" />
+            </Stack>
+            <div className="w-5 h-5 bg-slate-100 rounded-full" />
+          </Box>
+          <TableContainer>
+            <Table size="small">
+              <TableBody>
+                {[...Array(5)].map((_, i) => (
+                  <TopSellerSkeleton key={i} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </div>
-    </div>
+    </Box>
   );
 }

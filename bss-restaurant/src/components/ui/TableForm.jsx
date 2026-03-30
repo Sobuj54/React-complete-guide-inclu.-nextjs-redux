@@ -141,6 +141,7 @@ export default function TableFormModal({
             <div className="flex flex-col gap-8">
               <TextField
                 fullWidth
+                size="small"
                 label="Table Number *"
                 {...register("tableNumber")}
                 error={!!errors.tableNumber}
@@ -150,6 +151,7 @@ export default function TableFormModal({
               />
               <TextField
                 fullWidth
+                size="small"
                 label="Seating Capacity *"
                 {...register("numberOfSeats")}
                 error={!!errors.numberOfSeats}
@@ -164,7 +166,7 @@ export default function TableFormModal({
                 sx={{
                   border: "1px dashed #d9d9d9",
                   borderRadius: "5px",
-                  height: "145px", // Adjusted to match the row height of two text fields
+                  height: "115px", // Adjusted to match the row height of two text fields
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",

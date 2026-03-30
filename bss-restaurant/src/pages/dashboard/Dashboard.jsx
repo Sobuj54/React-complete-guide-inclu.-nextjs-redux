@@ -166,8 +166,8 @@ export default function Dashboard() {
         </Box>
 
         {/* Top Selling Foods */}
-        <Box className="bg-white rounded-md shadow-md">
-          <Box className="flex items-center justify-between mb-0 bg-slate-50 p-3 md:p-6 border-b-[1px] border-b-slate-200">
+        <Box className="bg-white rounded-[5px] shadow-md overflow-hidden">
+          <Box className="flex items-center justify-between mb-0 bg-slate-50 p-3 md:p-6 border-b-[1px] border-b-slate-200 rouned-t-[5px]">
             <Box className="flex items-center gap-2">
               <TrendingUp className="text-green-500" size={20} />
               <h2 className="text-lg font-bold">Top Sellers</h2>

@@ -41,7 +41,6 @@ export default function EmployeeForm({
     "& .MuiFormHelperText-root": {
       position: "absolute",
       bottom: "-20px",
-      fontSize: "0.75rem",
       margin: 0,
     },
     "& .MuiOutlinedInput-root": {
@@ -77,7 +76,7 @@ export default function EmployeeForm({
   const existingImageUrl = useMemo(() => {
     if (isImageDeleted) return null;
     return existingImageName
-      ? `${import.meta.env.VITE_IMG_URL}/images/user/${existingImageName}`
+      ? `https://restaurantapi.bssoln.com/images/user/${existingImageName}`
       : null;
   }, [existingImageName, isImageDeleted]);
 
@@ -105,6 +104,7 @@ export default function EmployeeForm({
         <div className="flex flex-col gap-8">
           <TextField
             fullWidth
+            size="small"
             label="First Name *"
             {...register("firstName")}
             error={!!errors.firstName}
@@ -114,6 +114,7 @@ export default function EmployeeForm({
           />
           <TextField
             fullWidth
+            size="small"
             label="Middle Name (Optional)"
             {...register("middleName")}
             error={!!errors.middleName}
@@ -123,6 +124,7 @@ export default function EmployeeForm({
           />
           <TextField
             fullWidth
+            size="small"
             label="Last Name *"
             {...register("lastName")}
             error={!!errors.lastName}
@@ -137,7 +139,7 @@ export default function EmployeeForm({
             sx={{
               border: "1px dashed #d9d9d9",
               borderRadius: "5px",
-              height: "235px",
+              height: "185px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -196,6 +198,7 @@ export default function EmployeeForm({
         <TextField
           fullWidth
           label="Spouse Name *"
+          size="small"
           {...register("spouseName")}
           error={!!errors.spouseName}
           helperText={errors.spouseName?.message}
@@ -204,6 +207,7 @@ export default function EmployeeForm({
         />
         <TextField
           fullWidth
+          size="small"
           label="Father's Name *"
           {...register("fatherName")}
           error={!!errors.fatherName}
@@ -214,6 +218,7 @@ export default function EmployeeForm({
         <TextField
           fullWidth
           label="Mother's Name *"
+          size="small"
           {...register("motherName")}
           error={!!errors.motherName}
           helperText={errors.motherName?.message}
@@ -226,6 +231,7 @@ export default function EmployeeForm({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
         <TextField
           fullWidth
+          size="small"
           label="Designation *"
           {...register("designation")}
           error={!!errors.designation}
@@ -235,6 +241,7 @@ export default function EmployeeForm({
         />
         <TextField
           fullWidth
+          size="small"
           label="Email Address *"
           {...register("email")}
           error={!!errors.email}
@@ -245,6 +252,7 @@ export default function EmployeeForm({
         <TextField
           fullWidth
           label="Phone *"
+          size="small"
           {...register("phone")}
           error={!!errors.phone}
           helperText={errors.phone?.message}
@@ -258,8 +266,8 @@ export default function EmployeeForm({
         <TextField
           select
           fullWidth
+          size="small"
           label="Gender *"
-          defaultValue=""
           {...register("gender")}
           error={!!errors.gender}
           helperText={errors.gender?.message}
@@ -273,6 +281,7 @@ export default function EmployeeForm({
         <TextField
           fullWidth
           type="date"
+          size="small"
           label="Date of Birth *"
           InputLabelProps={{ shrink: true }}
           {...register("dob")}
@@ -283,6 +292,7 @@ export default function EmployeeForm({
         <TextField
           fullWidth
           type="date"
+          size="small"
           label="Join Date *"
           InputLabelProps={{ shrink: true }}
           {...register("joinDate")}
@@ -293,6 +303,7 @@ export default function EmployeeForm({
         <TextField
           fullWidth
           label="NID Card *"
+          size="small"
           {...register("nid")}
           error={!!errors.nid}
           helperText={errors.nid?.message}

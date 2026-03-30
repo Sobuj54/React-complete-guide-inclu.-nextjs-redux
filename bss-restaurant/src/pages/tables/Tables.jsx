@@ -228,92 +228,126 @@ export default function Tables() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading || isFetching ? (
-              <TableRow>
-                <TableCell colSpan={6}>
-                  <Skeleton variant="rectangular" height={200} />
-                </TableCell>
-              </TableRow>
-            ) : (
-              response?.data?.map((table) => (
-                <TableRow key={table.id} hover>
-                  <TableCell sx={bodyCellStyle}>
-                    <Avatar
-                      variant="rounded"
-                      src={`${import.meta.env.VITE_IMG_URL}/images/table/${table.image}`}
-                      sx={{ width: 40, height: 40, borderRadius: "5px" }}
-                    />
-                  </TableCell>
-                  <TableCell sx={bodyCellStyle}>
-                    <Typography variant="body2">{table.tableNumber}</Typography>
-                  </TableCell>
-                  <TableCell sx={bodyCellStyle} align="center">
-                    <Typography>{table.numberOfSeats}</Typography>
-                  </TableCell>
-                  <TableCell sx={bodyCellStyle}>
-                    <Chip
-                      label={table.isOccupied ? "Occupied" : "Available"}
-                      size="small"
-                      sx={{
-                        fontWeight: 700,
-                        borderRadius: "4px",
-                        bgcolor: table.isOccupied ? "#fff1f0" : "#f6ffed",
-                        color: table.isOccupied ? "#ff4d4f" : "#52c41a",
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell sx={bodyCellStyle}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <AvatarGroup
-                        max={4}
-                        sx={{
-                          "& .MuiAvatar-root": {
-                            width: 28,
-                            height: 28,
-                            fontSize: "0.6rem",
-                          },
-                        }}
+            {isLoading || isFetching
+              ? [...Array(perPage)].map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell sx={bodyCellStyle}>
+                      <Skeleton variant="rounded" width={40} height={40} />
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle}>
+                      <Skeleton width="40%" />
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle}>
+                      <Skeleton width="20%" sx={{ mx: "auto" }} />
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle}>
+                      <Skeleton variant="rounded" width={70} height={24} />
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle}>
+                      <Skeleton variant="circular" width={28} height={28} />
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle} align="right">
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        justifyContent="flex-end"
                       >
-                        {table.employees?.map((emp) => (
-                          <Tooltip key={emp.employeeId} title={emp.name}>
-                            <Avatar
-                              src={`${import.meta.env.VITE_IMG_URL}/images/user/${employeeImageMap[emp.employeeId]}`}
-                            />
-                          </Tooltip>
-                        ))}
-                      </AvatarGroup>
-                      <IconButton
+                        <Skeleton
+                          variant="rectangular"
+                          width={32}
+                          height={32}
+                        />
+                        <Skeleton
+                          variant="rectangular"
+                          width={32}
+                          height={32}
+                        />
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : response?.data?.map((table) => (
+                  <TableRow key={table.id} hover>
+                    <TableCell sx={bodyCellStyle}>
+                      <Avatar
+                        variant="rounded"
+                        src={`${import.meta.env.VITE_IMG_URL}/images/table/${table.image}`}
+                        sx={{ width: 40, height: 40, borderRadius: "5px" }}
+                      />
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle}>
+                      <Typography variant="body2">
+                        {table.tableNumber}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle} align="center">
+                      <Typography>{table.numberOfSeats}</Typography>
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle}>
+                      <Chip
+                        label={table.isOccupied ? "Occupied" : "Available"}
                         size="small"
-                        onClick={() => handleOpenAssign(table.id)}
-                        sx={{ color: "#1677ff", border: "1px dotted" }}
+                        sx={{
+                          fontWeight: 700,
+                          borderRadius: "4px",
+                          bgcolor: table.isOccupied ? "#fff1f0" : "#f6ffed",
+                          color: table.isOccupied ? "#ff4d4f" : "#52c41a",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
-                        <UserPlus size={16} />
-                      </IconButton>
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={bodyCellStyle} align="right">
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      justifyContent="flex-end"
-                    >
-                      <ActionButton
-                        icon={Edit2}
-                        onClick={() => handleEdit(table)}
-                        title="Edit"
-                        colorType="primary"
-                      />
-                      <ActionButton
-                        icon={Trash2}
-                        onClick={() => handleDeleteClick(table)}
-                        title="Delete"
-                        colorType="error"
-                      />
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
+                        <AvatarGroup
+                          max={4}
+                          sx={{
+                            "& .MuiAvatar-root": {
+                              width: 28,
+                              height: 28,
+                              fontSize: "0.6rem",
+                            },
+                          }}
+                        >
+                          {table.employees?.map((emp) => (
+                            <Tooltip key={emp.employeeId} title={emp.name}>
+                              <Avatar
+                                src={`${import.meta.env.VITE_IMG_URL}/images/user/${employeeImageMap[emp.employeeId]}`}
+                              />
+                            </Tooltip>
+                          ))}
+                        </AvatarGroup>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleOpenAssign(table.id)}
+                          sx={{ color: "#1677ff", border: "1px dotted" }}
+                        >
+                          <UserPlus size={16} />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={bodyCellStyle} align="right">
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        justifyContent="flex-end"
+                      >
+                        <ActionButton
+                          icon={Edit2}
+                          onClick={() => handleEdit(table)}
+                          title="Edit"
+                          colorType="primary"
+                        />
+                        <ActionButton
+                          icon={Trash2}
+                          onClick={() => handleDeleteClick(table)}
+                          title="Delete"
+                          colorType="error"
+                        />
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
         <TablePagination
@@ -326,11 +360,10 @@ export default function Tables() {
             setPerPage(parseInt(e.target.value, 10));
             setPage(0);
           }}
-          // Maintained desktop settings
           rowsPerPageOptions={[5, 10, 25]}
           labelRowsPerPage="Rows per page:"
           sx={{
-            minWidth: 800, // Forces the pagination bar to scroll with the table
+            minWidth: 800,
           }}
         />
       </TableContainer>

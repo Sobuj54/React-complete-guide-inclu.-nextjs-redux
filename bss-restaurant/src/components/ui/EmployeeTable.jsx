@@ -85,11 +85,11 @@ const EmployeeTable = ({
                       <Skeleton variant="text" width="120px" />
                     </TableCell>
                     <TableCell align="center">
-                      <Skeleton
-                        variant="circular"
-                        width={16}
-                        height={16}
-                        sx={{ margin: "auto" }}
+                      <Star
+                        size={16}
+                        color="grey"
+                        fill="grey"
+                        className="animate-pulse"
                       />
                     </TableCell>
                     <TableCell>

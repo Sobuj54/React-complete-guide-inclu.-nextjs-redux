@@ -93,7 +93,7 @@ const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
   const cellStyle = {
     color: "#1e293b",
     py: 1,
-    borderBottom: "1px solid #f1f5f9",
+    borderBottom: "1px solid secondary.main",
     fontSize: "14px",
   };
 

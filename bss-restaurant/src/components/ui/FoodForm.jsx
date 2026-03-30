@@ -113,6 +113,7 @@ export default function FoodForm({
         <div className="flex flex-col gap-8">
           <TextField
             fullWidth
+            size="small"
             label="Food Name *"
             {...register("name", { required: "Name is required" })}
             error={!!errors.name}
@@ -123,7 +124,8 @@ export default function FoodForm({
           <TextField
             fullWidth
             multiline
-            rows={5}
+            size="small"
+            rows={4}
             label="Description *"
             {...register("description", {
               required: "Description is required",
@@ -140,7 +142,7 @@ export default function FoodForm({
             sx={{
               border: `1px dashed ${theme.palette.secondary.light}`,
               borderRadius: `${theme.shape.borderRadius}px`,
-              height: "235px",
+              height: "180px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -202,6 +204,7 @@ export default function FoodForm({
         <TextField
           fullWidth
           label="Price *"
+          size="small"
           type="number"
           {...register("price", {
             required: "Price is required.",
@@ -219,6 +222,7 @@ export default function FoodForm({
         <TextField
           select
           fullWidth
+          size="small"
           label="Discount Type"
           value={discountType || "None"}
           {...register("discountType")}
@@ -233,6 +237,7 @@ export default function FoodForm({
 
         <TextField
           fullWidth
+          size="small"
           label={getDiscountLabel()}
           type="number"
           disabled={discountType === "None"}
@@ -243,6 +248,7 @@ export default function FoodForm({
 
         <TextField
           fullWidth
+          size="small"
           label="Final Price"
           value={discountedPrice}
           InputProps={{ readOnly: true }}

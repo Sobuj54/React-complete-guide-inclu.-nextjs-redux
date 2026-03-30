@@ -59,12 +59,11 @@ export default function Header({ toggleSidebar, isSidebarOpen }) {
           <IconButton
             onClick={toggleSidebar}
             sx={{
-              bgcolor: "secondary.lighter",
               borderRadius: 1,
               color: "text.primary",
             }}
           >
-            {isSidebarOpen ? <X size={20} /> : <MenuIcon size={20} />}
+            <MenuIcon size={20} />
           </IconButton>
         </Stack>
 
@@ -78,28 +77,38 @@ export default function Header({ toggleSidebar, isSidebarOpen }) {
               pl: 2,
               cursor: "pointer",
               p: 0.5,
-              borderRadius: "8px",
+              borderRadius: "5px",
               transition: "0.2s",
-              "&:hover": { bgcolor: "secondary.lighter" },
             }}
           >
             <Box
-              sx={{ textAlign: "right", display: { xs: "none", sm: "block" } }}
+              sx={{
+                textAlign: "right",
+                display: { xs: "none", sm: "block" },
+              }}
             >
-              <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                {user?.fullName || "Admin User"}
-              </Typography>
-              <Typography
-                variant="caption"
-                color="primary"
-                sx={{
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  fontSize: "10px",
-                }}
-              >
-                {user?.role || "Administrator"}
-              </Typography>
+              <Stack spacing={0.5}>
+                {" "}
+                {/* Adjust spacing value here */}
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: 700, lineHeight: 1.2 }}
+                >
+                  {user?.fullName || "Admin User"}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="primary"
+                  sx={{
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    fontSize: "10px",
+                    lineHeight: 1, // Tighten line height
+                  }}
+                >
+                  {user?.role || "Administrator"}
+                </Typography>
+              </Stack>
             </Box>
             <Avatar
               sx={{
@@ -131,7 +140,7 @@ export default function Header({ toggleSidebar, isSidebarOpen }) {
                 overflow: "visible",
                 filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.1))",
                 mt: 1.5,
-                borderRadius: "12px",
+                borderRadius: "5px",
                 border: `1px solid ${theme.palette.divider}`,
                 "& .MuiAvatar-root": {
                   width: 32,

@@ -110,6 +110,7 @@ export default function DeleteConfirmationModal({
             bgcolor: "error.main",
             color: "white",
             py: 1.5,
+            boxShadow: "none", // Remove default shadow
           }}
         />
 
@@ -120,12 +121,12 @@ export default function DeleteConfirmationModal({
           onClick={onClose}
           disabled={isLoading}
           sx={{
-            color: "secondary.600", // secondary.600
-            bgcolor: "secondary.100", // secondary.100
-            "&:hover": { bgcolor: "#f0f0f0" },
+            color: "secondary.600",
+            bgcolor: "secondary.200",
             py: 1.5,
             fontSize: "0.95rem",
-            m: "0 !important", // Force remove MUI DialogActions margin
+            m: "0 !important",
+            boxShadow: "none", // Remove default shadow
           }}
         />
       </DialogActions>

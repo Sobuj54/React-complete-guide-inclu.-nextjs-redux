@@ -29,7 +29,7 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
 
   return (
     /* added h-[400px] to fix the card height */
-    <div className="bg-white rounded-[5px] shadow-md flex flex-col h-[400px]">
+    <div className="bg-white rounded-[5px] flex flex-col h-[400px] shadow-lg">
       {/* 1. header: id & actions */}
       <div className="p-4 flex justify-between items-start flex-shrink-0">
         <div className="flex flex-col">
@@ -87,24 +87,22 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
       </div>
 
       {/* 3. footer: totals and table - flex-shrink-0 ensures it stays at the bottom */}
-      <div className="p-4 bg-white mt-auto border-t border-slate-300 flex-shrink-0">
+      <div className="p-4 bg-white mt-auto border-t border-slate-300 flex-shrink-0 rounded-b-[5px]">
         <div className="flex justify-between items-end">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             <p className=" font-semibold ">
-              total quantity:{" "}
-              <span className="text-slate-700 font-extrabold">
+              Total Quantity:{" "}
+              <span className="text-slate-700 ">
                 {order.orderItems?.reduce((a, b) => a + b.quantity, 0)}
               </span>
             </p>
-            <p className="font-bold ">
-              total amount (৳):{" "}
-              <span className="text-[#1677ff] font-extrabold border-b-2 border-blue-100 pb-0.5">
-                {order.amount}৳
-              </span>
+            <p className="font-semibold ">
+              Total Amount (৳):{" "}
+              <span className="text-[#1677ff]   pb-0.5">{order.amount}৳</span>
             </p>
           </div>
 
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end gap-2">
             <span className={` mb-1 font-bold ${status.color}`}>
               {status.text}
             </span>

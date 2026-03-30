@@ -202,14 +202,14 @@ export default function EditOrderModal({
       <DialogContent sx={{ p: 2 }}>
         <Stack spacing={3}>
           {/* Quick Info Bar */}
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, pt: 1 }}>
             <Box
               sx={{
                 flex: 1,
                 p: 2,
                 bgcolor: theme.palette.background.paper,
-                borderRadius: "8px",
-                boxShadow: theme.shadows[1],
+                borderRadius: "5px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;",
               }}
             >
               <Typography
@@ -226,7 +226,7 @@ export default function EditOrderModal({
                 <TableIcon size={18} /> Table
               </Typography>
               <Typography
-                sx={{ fontWeight: 900, color: theme.palette.text.primary }}
+                sx={{ fontWeight: 600, color: theme.palette.text.primary }}
               >
                 {order?.table?.tableNumber || "Walk-in"}
               </Typography>
@@ -234,13 +234,11 @@ export default function EditOrderModal({
             <Box
               sx={{
                 flex: 1,
-                p: 1,
+                p: 2,
                 bgcolor: theme.palette.background.paper,
-                borderRadius: "8px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                boxShadow: theme.shadows[1],
+                borderRadius: "5px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;",
+                border: "1px solid secondary.light",
               }}
             >
               <Typography
@@ -263,7 +261,12 @@ export default function EditOrderModal({
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 InputProps={{
                   disableUnderline: true,
-                  sx: { px: 1, fontWeight: 700, fontSize: "14px" },
+                  sx: {
+                    px: 1,
+                    fontWeight: 700,
+                    fontSize: "14px",
+                    color: theme.palette.text.primary,
+                  },
                 }}
                 fullWidth
               />
@@ -291,6 +294,7 @@ export default function EditOrderModal({
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  size="small"
                   placeholder="Search for food..."
                   sx={inputStyle}
                   InputProps={{
@@ -319,6 +323,7 @@ export default function EditOrderModal({
                   component="li"
                   {...props}
                   sx={{ display: "flex", gap: 2, p: 1 }}
+                  className="border-b border-b-slate-300"
                 >
                   <Avatar
                     src={`${import.meta.env.VITE_IMG_URL}/images/food/${option.image}`}
@@ -326,7 +331,7 @@ export default function EditOrderModal({
                     sx={{ width: 40, height: 40, borderRadius: "5px" }}
                   />
                   <Box>
-                    <Typography sx={{ fontWeight: 800, fontSize: "13px" }}>
+                    <Typography sx={{ fontWeight: 800, fontSize: "15px" }}>
                       {option.name}
                     </Typography>
                     <Typography
@@ -463,7 +468,7 @@ export default function EditOrderModal({
         <Box
           sx={{
             width: "100%",
-            bgcolor: theme.palette.success.main,
+            bgcolor: theme.palette.secondary.lighter,
             p: 2,
             borderRadius: "5px",
             display: "flex",
@@ -473,7 +478,6 @@ export default function EditOrderModal({
         >
           <Typography
             sx={{
-              color: "white",
               fontWeight: 600,
               fontSize: "1.1rem",
               letterSpacing: 0.5,
@@ -483,8 +487,7 @@ export default function EditOrderModal({
           </Typography>
           <Typography
             sx={{
-              color: "white",
-              fontWeight: 900,
+              fontWeight: 600,
               fontSize: "1.1rem",
             }}
           >

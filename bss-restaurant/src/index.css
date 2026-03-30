@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+* {
+  font-family: "Public Sans", sans-serif !important;
+}
+
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {

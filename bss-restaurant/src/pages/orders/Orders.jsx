@@ -26,6 +26,7 @@ import EditOrderModal from "../../components/ui/EditOrderModal";
 import OrderRow from "../../components/ui/OrderRow";
 import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import OrderCard from "../../components/ui/OrderCard";
+import OrderCardSkeleton from "../../components/ui/OrderCardSkeleton";
 
 // numeric status mapping for the api
 const STATUS_MAP = {
@@ -38,7 +39,7 @@ const STATUS_MAP = {
 };
 
 export default function Orders() {
-  const [viewMode, setViewMode] = useState("table");
+  const [viewMode, setViewMode] = useState("grid");
   const [filters, setFilters] = useState({
     Page: 1,
     Per_Page: 10,
@@ -184,12 +185,7 @@ export default function Orders() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <Skeleton
-              key={i}
-              variant="rectangular"
-              height={350}
-              className="rounded-xl"
-            />
+            <OrderCardSkeleton key={i} />
           ))}
         </div>
       ) : viewMode === "table" ? (

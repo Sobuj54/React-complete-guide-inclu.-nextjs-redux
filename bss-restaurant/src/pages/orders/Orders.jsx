@@ -32,7 +32,7 @@ const STATUS_MAP = {
   pending: 0,
   confirmed: 1,
   preparing: 2,
-  "p.t.s": 3,
+  preparedToServe: 3,
   served: 4,
   paid: 5,
 };
@@ -283,8 +283,8 @@ export default function Orders() {
           paper: { sx: { borderRadius: "12px", minWidth: "180px", mt: 1 } },
         }}
       >
-        <div className="px-4 py-2 border-b border-slate-100">
-          <p className="text-[10px] font-black text-slate-400">update status</p>
+        <div className="px-4 py-2 border-b border-slate-300">
+          <p className="font-semibold">Select Status</p>
         </div>
         {Object.entries(STATUS_MAP).map(([name, value]) => (
           <MenuItem

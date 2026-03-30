@@ -184,9 +184,19 @@ export default function Dashboard() {
                     sx={{ "&:last-child td": { border: 0 } }}
                   >
                     <TableCell
-                      sx={{ width: 40, fontWeight: 700, color: "success.main" }}
+                      sx={{
+                        width: 40,
+                      }}
                     >
-                      #{index + 1}
+                      <Typography
+                        sx={{
+                          font: "15px",
+                          fontWeight: 700,
+                          color: "success.main",
+                        }}
+                      >
+                        #{index + 1}
+                      </Typography>
                     </TableCell>
                     <TableCell sx={{ width: 60 }}>
                       <Avatar
@@ -196,28 +206,30 @@ export default function Dashboard() {
                       />
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          font: "17px",
+                          textTransform: "capitalize",
+                        }}
+                      >
                         {food.name}
                       </Typography>
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{ fontStyle: "italic" }}
-                      >
+                      <Typography variant="caption">
                         ৳ {food.price.toLocaleString()}
                       </Typography>
                     </TableCell>
                     <TableCell align="right">
                       <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 800, color: "success.main" }}
+                        sx={{
+                          fontWeight: 800,
+                          color: "success.main",
+                          font: "17px",
+                        }}
                       >
                         {food.totalQuantitySold} sold
                       </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{ fontWeight: 700, color: "text.secondary" }}
-                      >
+                      <Typography variant="body2" sx={{ fontWeight: 700 }}>
                         ৳{" "}
                         {(food.totalQuantitySold * food.price).toLocaleString()}
                       </Typography>

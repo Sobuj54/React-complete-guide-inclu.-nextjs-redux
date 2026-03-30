@@ -101,12 +101,11 @@ export default function NewOrderPage() {
   return (
     <Box
       sx={{
-        // FIXED: Ensuring the main container fills the available space and locks the body scroll
         height: "calc(100vh - 100px)",
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden", // This prevents the window/body from scrolling
+        overflow: "hidden",
         position: "relative",
       }}
     >
@@ -116,7 +115,7 @@ export default function NewOrderPage() {
           flexDirection: { xs: "column", md: "row" },
           gap: 2,
           flex: 1,
-          overflow: "hidden", // Ensures internal boxes handle their own scroll
+          overflow: "hidden",
           height: "100%",
         }}
       >
@@ -128,7 +127,7 @@ export default function NewOrderPage() {
             flexShrink: 0,
             display: "flex",
             flexDirection: "column",
-            overflow: "hidden", // Boundary for the internal scroll
+            overflow: "hidden",
           }}
         >
           <Typography sx={{ mb: 2 }}>
@@ -138,18 +137,18 @@ export default function NewOrderPage() {
           <Box
             sx={{
               flex: 1,
-              overflowY: "auto", // Allows vertical scroll independently
+              overflowY: "auto",
               overflowX: { xs: "auto", md: "hidden" },
               pr: { md: 1 },
               display: "flex",
               flexDirection: { xs: "row", md: "column" },
               gap: 2,
+              pb: 3,
               "&::-webkit-scrollbar": { width: "5px", height: "5px" },
               "&::-webkit-scrollbar-thumb": {
                 bgcolor: "secondary.main",
                 borderRadius: "10px",
               },
-              // FIXED: overscroll-behavior stops the scroll event from reaching the window
               overscrollBehavior: "contain",
             }}
           >
@@ -185,10 +184,11 @@ export default function NewOrderPage() {
                         minWidth: { xs: "140px", md: "100%" },
                         p: 1.5,
                         cursor: "pointer",
-                        border: "2px solid",
+                        border: "1px solid",
+
                         borderColor: isSelected
                           ? "primary.main"
-                          : "secondary.200",
+                          : "secondary.light",
                         bgcolor: isSelected
                           ? "primary.lighter"
                           : "background.paper",
@@ -205,7 +205,9 @@ export default function NewOrderPage() {
                         }}
                       >
                         <img
-                          src={`${import.meta.env.VITE_IMG_URL}/images/table/${table.image}`}
+                          src={`${import.meta.env.VITE_IMG_URL}/images/table/${
+                            table.image
+                          }`}
                           className="w-full h-full object-cover"
                           alt=""
                           onError={(e) =>
@@ -217,7 +219,7 @@ export default function NewOrderPage() {
                       <Typography
                         sx={{
                           fontWeight: 800,
-                          fontSize: "14px",
+                          fontSize: "17px",
                           textAlign: "center",
                           color: isSelected ? "primary.dark" : "secondary.A200",
                         }}
@@ -236,7 +238,7 @@ export default function NewOrderPage() {
                         <Users size={12} color="#8c8c8c" />
                         <Typography
                           sx={{
-                            fontSize: "13px",
+                            fontSize: "14px",
                             color: "secondary.main",
                             fontWeight: 600,
                           }}
@@ -258,7 +260,6 @@ export default function NewOrderPage() {
             flexDirection: "column",
             height: "100%",
             overflow: "hidden",
-            // Boundary for internal scroll
           }}
         >
           {!selectedTable ? (
@@ -270,7 +271,6 @@ export default function NewOrderPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 textAlign: "center",
-
                 p: 4,
               }}
             >
@@ -312,13 +312,12 @@ export default function NewOrderPage() {
                     borderRadius: "10px",
                   },
                   width: "full",
-                  // FIXED: overscroll-behavior stops the scroll event from reaching the window
                   overscrollBehavior: "contain",
                 }}
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-7 ">
                   {foodsQuery.isLoading
-                    ? Array.from(new Array(6)).map((_, index) => (
+                    ? Array.from(new Array(9)).map((_, index) => (
                         <Card
                           key={index}
                           elevation={0}
@@ -372,11 +371,12 @@ export default function NewOrderPage() {
                             elevation={0}
                             sx={{
                               p: 2,
-                              border: "1px solid",
-                              borderColor: "secondary.200",
+                              border: "1px solid ",
+                              borderColor: "secondary.light",
                               borderRadius: "5px",
                               display: "flex",
                               flexDirection: "column",
+
                               gap: 2,
                               "&:hover": {
                                 boxShadow: "0 8px 24px -12px rgba(0,0,0,0.2)",
@@ -384,7 +384,9 @@ export default function NewOrderPage() {
                             }}
                           >
                             <img
-                              src={`${import.meta.env.VITE_IMG_URL}/images/food/${food.image}`}
+                              src={`${
+                                import.meta.env.VITE_IMG_URL
+                              }/images/food/${food.image}`}
                               className="w-full h-40 object-cover rounded-lg"
                               alt={food.name}
                             />
@@ -392,7 +394,7 @@ export default function NewOrderPage() {
                               <Typography
                                 sx={{
                                   fontWeight: 800,
-                                  fontSize: "16px",
+                                  fontSize: "20px",
                                   color: "secondary.A200",
                                   mb: 0.5,
                                 }}
@@ -401,7 +403,7 @@ export default function NewOrderPage() {
                               </Typography>
                               <Typography
                                 sx={{
-                                  fontSize: "12px",
+                                  fontSize: "15px",
                                   color: "secondary.main",
                                   height: "36px",
                                   overflow: "hidden",
@@ -427,8 +429,8 @@ export default function NewOrderPage() {
                                   <Typography
                                     sx={{
                                       textDecoration: "line-through",
-                                      color: "error.light",
-                                      fontSize: "12px",
+                                      color: "error.main",
+                                      fontSize: "14px",
                                       fontWeight: 600,
                                     }}
                                   >
@@ -438,7 +440,7 @@ export default function NewOrderPage() {
                                 <Typography
                                   sx={{
                                     color: "success.main",
-                                    fontSize: "18px",
+                                    fontSize: "19px",
                                     fontWeight: 900,
                                   }}
                                 >
@@ -499,7 +501,7 @@ export default function NewOrderPage() {
         open={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         PaperProps={{
-          sx: { width: { xs: "100%", sm: 400 } },
+          sx: { width: { xs: "100%", sm: 400 }, bgcolor: "secondary.lighter" },
         }}
       >
         <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -547,18 +549,42 @@ export default function NewOrderPage() {
                       display: "flex",
                       gap: 2,
                       p: 1.5,
-                      bgcolor: "secondary.lighter",
+                      bgcolor: "background.paper",
                       borderRadius: "5px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      border: "1px solid",
+                      borderColor: "secondary.light",
                     }}
                   >
+                    {/* Cart Item Image */}
+                    <Box
+                      sx={{
+                        width: 80,
+                        height: 85,
+                        borderRadius: "5px",
+                        overflow: "hidden",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <img
+                        src={`${import.meta.env.VITE_IMG_URL}/images/food/${
+                          item.image
+                        }`}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src =
+                            "https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg";
+                        }}
+                      />
+                    </Box>
+
                     <Box sx={{ flex: 1 }}>
-                      <Typography sx={{ fontWeight: 700, fontSize: "14px" }}>
+                      <Typography sx={{ fontWeight: 700, fontSize: "17px" }}>
                         {item.name}
                       </Typography>
                       <Typography
                         sx={{
-                          fontSize: "12px",
+                          fontSize: "14px",
                           color: "secondary.main",
                           mb: 1,
                         }}
@@ -599,7 +625,6 @@ export default function NewOrderPage() {
                             borderColor: "secondary.200",
                             p: 1,
                             bgcolor: "background.paper",
-
                             borderRadius: "5px",
                           }}
                         >
@@ -637,7 +662,12 @@ export default function NewOrderPage() {
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
               >
-                <Typography sx={{ color: "secondary.main", fontWeight: 600 }}>
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: "20px",
+                  }}
+                >
                   Total Amount
                 </Typography>
                 <Typography

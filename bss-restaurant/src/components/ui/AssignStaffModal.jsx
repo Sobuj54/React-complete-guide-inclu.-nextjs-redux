@@ -62,7 +62,10 @@ export default function AssignStaffModal({
         </IconButton>
       </DialogTitle>
 
-      <DialogContent dividers sx={{ py: 2, borderTop: "1px solid #f0f0f0" }}>
+      <DialogContent
+        dividers
+        sx={{ py: 2, borderTop: "1px solid", borderColor: "secondary.light" }}
+      >
         <Typography
           variant="body2"
           sx={{ mb: 2, fontWeight: 600, color: "#595959" }}
@@ -108,21 +111,16 @@ export default function AssignStaffModal({
                     key={currentId}
                     disablePadding
                     sx={{
-                      mb: 2.5,
-                      // border: "1px solid white",
+                      mb: 1.5,
+                      border: "1px solid",
+                      borderColor: "secondary.main",
                       borderColor: isSelected
                         ? "primary.light"
                         : "secondary.light",
                       bgcolor: isSelected ? "primary.lighter" : "white",
                       borderRadius: "5px",
                       transition: "all 0.2s",
-                      "&:hover": {
-                        bgcolor: isSelected ? "#bae0ff" : "#f5f5f5",
-                        borderColor: isSelected ? "#69b1ff" : "#d9d9d9",
-                      },
-                      // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
-                    className="rounded-md shadow-md"
                   >
                     <Box
                       onClick={() => onToggle(currentId)}

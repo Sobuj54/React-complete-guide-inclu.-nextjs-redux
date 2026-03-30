@@ -29,7 +29,7 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
 
   return (
     /* added h-[400px] to fix the card height */
-    <div className="bg-white rounded-[5px] flex flex-col h-[400px] shadow-lg">
+    <div className="bg-white rounded-[5px] flex flex-col h-[430px] shadow-lg py-5 px-2">
       {/* 1. header: id & actions */}
       <div className="p-4 flex justify-between items-start flex-shrink-0">
         <div className="flex flex-col">
@@ -64,7 +64,6 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
       </div>
 
       <div className="border-b border-slate-400 mx-4 flex-shrink-0" />
-
       {/* 2. body: items list - added overflow-y-auto to allow scrolling */}
       <div className="p-4 flex-grow space-y-5 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
         {order.orderItems?.map((item, idx) => (
@@ -88,8 +87,10 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
         ))}
       </div>
 
+      <div className="border-b border-slate-400 mx-4 flex-shrink-0" />
+
       {/* 3. footer: totals and table - flex-shrink-0 ensures it stays at the bottom */}
-      <div className="p-4 bg-white mt-auto border-t border-slate-300 flex-shrink-0 rounded-b-[5px]">
+      <div className="p-4 bg-white mt-auto  flex-shrink-0 rounded-b-[5px]">
         <div className="flex justify-between items-end">
           <div className="flex flex-col gap-2">
             <p className="text-sm font-semibold ">

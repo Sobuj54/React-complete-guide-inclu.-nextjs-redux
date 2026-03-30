@@ -244,7 +244,11 @@ export default function Tables() {
                       <Skeleton variant="rounded" width={70} height={24} />
                     </TableCell>
                     <TableCell sx={bodyCellStyle}>
-                      <Skeleton variant="circular" width={28} height={28} />
+                      <Box className="flex">
+                        <Skeleton variant="circular" width={28} height={28} />
+                        <Skeleton variant="circular" width={28} height={28} />
+                        <Skeleton variant="circular" width={28} height={28} />
+                      </Box>
                     </TableCell>
                     <TableCell sx={bodyCellStyle} align="right">
                       <Stack
@@ -291,7 +295,7 @@ export default function Tables() {
                           fontWeight: 700,
                           borderRadius: "4px",
                           bgcolor: table.isOccupied ? "#fff1f0" : "#f6ffed",
-                          color: table.isOccupied ? "#ff4d4f" : "#52c41a",
+                          color: table.isOccupied ? "#ff4d4f" : "success.dark",
                         }}
                       />
                     </TableCell>
@@ -303,9 +307,8 @@ export default function Tables() {
                           max={4}
                           sx={{
                             "& .MuiAvatar-root": {
-                              width: 28,
-                              height: 28,
-                              fontSize: "0.6rem",
+                              width: 35,
+                              height: 35,
                             },
                           }}
                         >
@@ -322,7 +325,7 @@ export default function Tables() {
                           onClick={() => handleOpenAssign(table.id)}
                           sx={{ color: "#1677ff", border: "1px dotted" }}
                         >
-                          <UserPlus size={16} />
+                          <UserPlus size={20} />
                         </IconButton>
                       </Box>
                     </TableCell>

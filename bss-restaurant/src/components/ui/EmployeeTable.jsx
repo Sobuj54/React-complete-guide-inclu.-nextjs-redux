@@ -58,7 +58,7 @@ const EmployeeTable = ({
       }}
     >
       <TableContainer>
-        <Table sx={{ minWidth: 800 }} aria-label="employee table">
+        <Table sx={{ minWidth: 1000 }} aria-label="employee table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#f8fafc", py: 0 }}>
               <TableCell sx={{ width: 80, py: 0.5 }} />

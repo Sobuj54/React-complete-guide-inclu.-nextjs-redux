@@ -185,7 +185,7 @@ const EmployeeTable = ({
                           >
                             <Typography
                               variant="body2"
-                              className="max-w-[70px] lg:max-w-full truncate cursor-pointer md:cursor-default"
+                              className="max-w-[60px] lg:max-w-full truncate cursor-pointer md:cursor-default"
                             >
                               {emp.user?.fullName}
                             </Typography>

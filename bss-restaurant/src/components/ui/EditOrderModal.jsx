@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import MainButton from "../MainButton"; // Integrated your custom component
+import ResponsiveTooltip from "../ResponsiveTooltip";
 
 export default function EditOrderModal({
   isOpen,
@@ -202,11 +203,11 @@ export default function EditOrderModal({
       <DialogContent sx={{ p: 2 }}>
         <Stack spacing={3}>
           {/* Quick Info Bar */}
-          <Box sx={{ display: "flex", gap: 2, pt: 1 }}>
+          <Box className="flex flex-col md:flex-row gap-2">
             <Box
               sx={{
                 flex: 1,
-                p: 2,
+                p: { xs: 1.5, md: 2 },
                 bgcolor: theme.palette.background.paper,
                 borderRadius: "5px",
                 boxShadow: "rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;",
@@ -214,7 +215,7 @@ export default function EditOrderModal({
             >
               <Typography
                 sx={{
-                  fontSize: "15px",
+                  fontSize: { xs: "13px", md: "15px" },
                   fontWeight: 600,
                   color: theme.palette.secondary.main,
                   mb: 0.5,
@@ -234,7 +235,7 @@ export default function EditOrderModal({
             <Box
               sx={{
                 flex: 1,
-                p: 2,
+                p: { xs: 1.5, md: 2 },
                 bgcolor: theme.palette.background.paper,
                 borderRadius: "5px",
                 boxShadow: "rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;",
@@ -243,7 +244,7 @@ export default function EditOrderModal({
             >
               <Typography
                 sx={{
-                  fontSize: "15px",
+                  fontSize: { xs: "13px", md: "15px" },
                   fontWeight: 600,
                   color: theme.palette.secondary.main,
                   mb: 0.5,
@@ -364,8 +365,9 @@ export default function EditOrderModal({
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 2,
-                    p: 1.5,
+                    justifyContent: "space-between",
+                    gap: { xs: 1, md: 2 },
+                    p: { xs: 1, md: 1.5 },
                     mb: 1,
                     backgroundColor: theme.palette.secondary.lighter,
                     borderRadius: "5px",
@@ -374,19 +376,31 @@ export default function EditOrderModal({
                   <Avatar
                     src={`${import.meta.env.VITE_IMG_URL}/images/food/${item.food?.imageUrl || item.food?.image}`}
                     variant="rounded"
-                    sx={{ width: 45, height: 45, borderRadius: "7px" }}
+                    sx={{
+                      width: { xs: 35, md: 45 },
+                      height: { xs: 35, md: 45 },
+                      borderRadius: "5px",
+                    }}
                   />
                   <Box sx={{ flex: 1 }}>
-                    <Typography
-                      sx={{
-                        fontWeight: 900,
-                        fontSize: "13px",
-                        color: theme.palette.text.primary,
-                        textTransform: "uppercase",
-                      }}
+                    <ResponsiveTooltip
+                      title={item.food?.name}
+                      id={item.food.name}
                     >
-                      {item.food?.name}
-                    </Typography>
+                      <Typography
+                        sx={{
+                          fontWeight: 900,
+                          fontSize: "13px",
+                          color: theme.palette.text.primary,
+                          textTransform: "capitalize",
+                          maxWidth: { xs: "60px", md: "100%" },
+                        }}
+                        className="truncate"
+                      >
+                        {item.food?.name}
+                      </Typography>
+                    </ResponsiveTooltip>
+
                     <Typography
                       sx={{
                         fontWeight: 700,
@@ -397,7 +411,7 @@ export default function EditOrderModal({
                       {item.unitPrice} ৳ / unit
                     </Typography>
                   </Box>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Box className="flex gap-2 items-center">
                     <TextField
                       type="number"
                       size="small"
@@ -408,6 +422,7 @@ export default function EditOrderModal({
                           textAlign: "center",
                           fontWeight: 900,
                           fontSize: "12px",
+                          padding: { xs: "5px", md: "5px" },
                         },
                       }}
                       sx={{
@@ -419,17 +434,19 @@ export default function EditOrderModal({
                         },
                       }}
                     />
+
                     <Typography
                       sx={{
                         minWidth: 60,
                         fontWeight: 900,
-                        fontSize: "14px",
+                        fontSize: { xs: "12px", md: "14px" },
                         textAlign: "right",
                         color: theme.palette.text.primary,
                       }}
                     >
                       {item.quantity * item.unitPrice} ৳
                     </Typography>
+
                     <IconButton
                       size="small"
                       onClick={() =>

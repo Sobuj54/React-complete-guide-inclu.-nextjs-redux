@@ -2,6 +2,7 @@ import React from "react";
 import { Avatar } from "@mui/material";
 import { Edit3, Trash2, ArrowRightLeft } from "lucide-react";
 import ActionButton from "../ActionButton";
+import ResponsiveTooltip from "../ResponsiveTooltip";
 
 const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
   const getStatusInfo = (status) => {
@@ -99,7 +100,7 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
                 {order.orderItems?.reduce((a, b) => a + b.quantity, 0)}
               </span>
             </p>
-            <p className="font-semibold text-xl">
+            <p className="font-semibold text-lg md:text-xl">
               Total Amount (৳):{" "}
               <span className="text-[#1677ff]">{order.amount}৳</span>
             </p>
@@ -109,9 +110,14 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
             <span className={` mb-1 font-bold ${status.color}`}>
               {status.text}
             </span>
-            <span className="text-[20px] font-medium leading-none text-slate-500">
-              {order.table?.tableNumber || "n/a"}
-            </span>
+            <ResponsiveTooltip
+              title={order.table?.tableNumber}
+              id={order.orderNumber}
+            >
+              <p className="text-[20px] font-medium leading-none text-slate-500 max-w-[50px] md:max-w-full truncate">
+                {"jjjjddfgsgfjjjj" || "n/a"}
+              </p>
+            </ResponsiveTooltip>
           </div>
         </div>
       </div>

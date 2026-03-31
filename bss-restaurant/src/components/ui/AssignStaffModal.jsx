@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { Check, X, Users, User } from "lucide-react";
 import MainButton from "../MainButton";
+import ResponsiveTooltip from "../ResponsiveTooltip";
 
 export default function AssignStaffModal({
   isOpen,
@@ -64,11 +65,21 @@ export default function AssignStaffModal({
 
       <DialogContent
         dividers
-        sx={{ py: 2, borderTop: "1px solid", borderColor: "secondary.light" }}
+        sx={{
+          py: 2,
+          borderTop: "1px solid",
+          borderColor: "secondary.light",
+          px: { xs: 1, md: 1 },
+        }}
       >
         <Typography
           variant="body2"
-          sx={{ mb: 2, fontWeight: 600, color: "#595959" }}
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            color: "#595959",
+            ml: { xs: 0, md: 1 },
+          }}
         >
           Select staff members to assign to this table:
         </Typography>
@@ -97,7 +108,7 @@ export default function AssignStaffModal({
               </Typography>
             </Box>
           ) : staff?.length > 0 ? (
-            <List sx={{ width: "100%", p: 1 }}>
+            <List sx={{ width: "100%", p: { xs: 0, md: 1 } }}>
               {staff.map((emp) => {
                 // IMPORTANT: Match the employeeId from this list to the id in your map
                 const currentId = emp.employeeId;
@@ -153,16 +164,20 @@ export default function AssignStaffModal({
                       </ListItemAvatar>
                       <ListItemText
                         primary={
-                          <Typography
-                            sx={{
-                              fontWeight: 700,
-                              color: "#262626",
-                              font: "20px",
-                              textTransform: "capitalize",
-                            }}
-                          >
-                            {emp.name}
-                          </Typography>
+                          <ResponsiveTooltip title={emp.name} id={currentId}>
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                color: "#262626",
+                                font: { xs: "15px", md: "20px" },
+                                textTransform: "capitalize",
+                                maxWidth: { xs: 100, md: "100%" },
+                              }}
+                              className="truncate"
+                            >
+                              {emp.name}
+                            </Typography>
+                          </ResponsiveTooltip>
                         }
                         secondary={
                           <Typography
@@ -225,7 +240,7 @@ export default function AssignStaffModal({
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: 3, gap: 2 }}>
+      <DialogActions sx={{ p: { xs: 1, md: 2 }, gap: 1 }}>
         <MainButton label="Cancel" onClick={onClose} color="secondary" />
         <MainButton
           label={

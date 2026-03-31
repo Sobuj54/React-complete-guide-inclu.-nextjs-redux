@@ -14,7 +14,8 @@ import {
   TablePagination,
   Box,
   Skeleton,
-  TableFooter,
+  Tooltip,
+  ClickAwayListener,
 } from "@mui/material";
 import {
   Edit2,
@@ -25,6 +26,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import ActionButton from "../ActionButton";
+import ResponsiveTooltip from "../ResponsiveTooltip";
 
 const EmployeeTable = ({
   employees,
@@ -57,13 +59,20 @@ const EmployeeTable = ({
         border: "1px solid #e2e8f0",
       }}
     >
-      <TableContainer>
-        <Table sx={{ minWidth: 1000 }} aria-label="employee table">
+      <TableContainer sx={{ overflowX: "auto" }}>
+        <Table sx={{ minWidth: 750 }} aria-label="employee table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#f8fafc", py: 0 }}>
               <TableCell sx={{ width: 80, py: 0.5 }} />
-              <TableCell sx={{ py: 0.5 }}>Name</TableCell>
-              <TableCell align="center" sx={{ width: 50, py: 0.5 }} />
+              <TableCell sx={{ py: 0.5, minWidth: "80px" }}>Name</TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  width: 50,
+                  py: 0.5,
+                  display: { xs: "none", md: "table-cell" },
+                }}
+              />
               <TableCell sx={{ py: 0.5 }}>Email</TableCell>
               <TableCell sx={{ py: 0.5 }}>Designation</TableCell>
               <TableCell sx={{ py: 0.5 }}>Join Date</TableCell>
@@ -84,7 +93,10 @@ const EmployeeTable = ({
                     <TableCell>
                       <Skeleton variant="text" width="120px" />
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell
+                      align="center"
+                      sx={{ display: { xs: "none", md: "table-cell" } }}
+                    >
                       <Star
                         size={16}
                         color="grey"
@@ -128,6 +140,14 @@ const EmployeeTable = ({
                 ))
               : employees.map((emp) => {
                   const isFav = favorites.includes(emp.id);
+                  const formattedDate = new Date(
+                    emp.joinDate,
+                  ).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  });
+
                   return (
                     <TableRow
                       key={emp.id}
@@ -152,11 +172,43 @@ const EmployeeTable = ({
                         </Avatar>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">
-                          {emp.user?.fullName}
-                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "1px",
+                          }}
+                        >
+                          <ResponsiveTooltip
+                            title={emp.user?.fullName}
+                            id={`${emp.id}-name`}
+                          >
+                            <Typography
+                              variant="body2"
+                              className="max-w-[70px] lg:max-w-full truncate cursor-pointer md:cursor-default"
+                            >
+                              {emp.user?.fullName}
+                            </Typography>
+                          </ResponsiveTooltip>
+                          <Box sx={{ display: { xs: "block", md: "none" } }}>
+                            <IconButton
+                              onClick={() => toggleFavorite(emp.id)}
+                              size="small"
+                              sx={{ p: 0 }}
+                            >
+                              <Star
+                                size={14}
+                                className={`${isFav ? "text-yellow-500 fill-yellow-500" : "text-yellow-600"}`}
+                              />
+                            </IconButton>
+                          </Box>
+                        </Box>
                       </TableCell>
-                      <TableCell align="left">
+
+                      <TableCell
+                        align="left"
+                        sx={{ display: { xs: "none", md: "table-cell" } }}
+                      >
                         <IconButton
                           onClick={() => toggleFavorite(emp.id)}
                           size="small"
@@ -168,37 +220,61 @@ const EmployeeTable = ({
                         </IconButton>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">
-                          {emp.user?.email}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={emp.designation}
-                          size="small"
-                          sx={{
-                            bgcolor: "oklch(93.5% 0.084 155.995)",
-                            color: "oklch(44.8% 0.119 151.328)",
-                            borderRadius: "3px",
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body2"
-                          sx={{ whiteSpace: "nowrap" }}
+                        <ResponsiveTooltip
+                          title={emp.user?.email}
+                          id={`${emp.id}-email`}
                         >
-                          {new Date(emp.joinDate).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                        </Typography>
+                          <Typography
+                            variant="body2"
+                            className="max-w-[60px] lg:max-w-full truncate cursor-pointer md:cursor-default"
+                          >
+                            {emp.user?.email}
+                          </Typography>
+                        </ResponsiveTooltip>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">
-                          {emp.user?.phoneNumber}
-                        </Typography>
+                        <ResponsiveTooltip
+                          title={emp.designation}
+                          id={`${emp.id}-designation`}
+                        >
+                          <Chip
+                            label={emp.designation}
+                            size="small"
+                            sx={{
+                              bgcolor: "oklch(93.5% 0.084 155.995)",
+                              color: "oklch(44.8% 0.119 151.328)",
+                              borderRadius: "3px",
+                              cursor: "pointer",
+                            }}
+                          />
+                        </ResponsiveTooltip>
+                      </TableCell>
+                      <TableCell>
+                        <ResponsiveTooltip
+                          title={formattedDate}
+                          id={`${emp.id}-date`}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ whiteSpace: "nowrap" }}
+                            className="max-w-[60px] lg:max-w-full truncate cursor-pointer md:cursor-default"
+                          >
+                            {formattedDate}
+                          </Typography>
+                        </ResponsiveTooltip>
+                      </TableCell>
+                      <TableCell>
+                        <ResponsiveTooltip
+                          title={emp.user?.phoneNumber}
+                          id={`${emp.id}-phone`}
+                        >
+                          <Typography
+                            variant="body2"
+                            className="max-w-[60px] lg:max-w-full truncate cursor-pointer md:cursor-default"
+                          >
+                            {emp.user?.phoneNumber}
+                          </Typography>
+                        </ResponsiveTooltip>
                       </TableCell>
                       <TableCell align="right">
                         <Box
@@ -226,31 +302,28 @@ const EmployeeTable = ({
                   );
                 })}
           </TableBody>
-
-          <TableFooter sx={{ borderTop: "1px solid #e2e8f0" }}>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 20, 50]}
-                colSpan={8}
-                count={totalEntries || 0}
-                rowsPerPage={perPage}
-                page={page - 1}
-                onPageChange={(e, newPage) => onPageChange(newPage + 1)}
-                onRowsPerPageChange={(e) =>
-                  onPerPageChange(parseInt(e.target.value, 10))
-                }
-                // Using slotProps to replace default MUI icons with Lucide
-                slotProps={{
-                  actions: {
-                    nextButton: { children: <ChevronRight size={20} /> },
-                    previousButton: { children: <ChevronLeft size={20} /> },
-                  },
-                }}
-              />
-            </TableRow>
-          </TableFooter>
         </Table>
       </TableContainer>
+
+      <Box sx={{ borderTop: "1px solid #e2e8f0", width: "100%" }}>
+        <TablePagination
+          component="div"
+          rowsPerPageOptions={[5, 10, 20, 50]}
+          count={totalEntries || 0}
+          rowsPerPage={perPage}
+          page={page - 1}
+          onPageChange={(e, newPage) => onPageChange(newPage + 1)}
+          onRowsPerPageChange={(e) =>
+            onPerPageChange(parseInt(e.target.value, 10))
+          }
+          slotProps={{
+            actions: {
+              nextButton: { children: <ChevronRight size={20} /> },
+              previousButton: { children: <ChevronLeft size={20} /> },
+            },
+          }}
+        />
+      </Box>
     </Paper>
   );
 };

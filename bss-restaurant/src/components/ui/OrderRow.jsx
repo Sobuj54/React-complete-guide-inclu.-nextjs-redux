@@ -22,11 +22,11 @@ import {
 } from "lucide-react";
 import ActionButton from "../ActionButton";
 import MainButton from "../MainButton";
+import ResponsiveTooltip from "../ResponsiveTooltip"; // Ensure correct path
 
 const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
   const [open, setOpen] = useState(false);
 
-  // Status Styles using your specific STATUS_CONFIG background colors
   const getStatusStyles = (status) => {
     switch (status) {
       case "Pending":
@@ -97,6 +97,12 @@ const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
     fontSize: "14px",
   };
 
+  const customerName =
+    order.orderedBy?.fullName !== "Unknown"
+      ? order.orderedBy?.fullName
+      : "Guest User";
+  const tableNum = order.table?.tableNumber || "No Table";
+
   return (
     <>
       <TableRow
@@ -123,40 +129,66 @@ const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
         </TableCell>
 
         <TableCell sx={cellStyle}>
-          <Typography sx={{ fontWeight: 500, fontSize: "13px" }}>
-            #{order.orderNumber}
-          </Typography>
-        </TableCell>
-
-        <TableCell sx={cellStyle}>
-          <Typography
-            variant="body2"
-            sx={{ fontSize: "12px", color: "#64748b" }}
+          <ResponsiveTooltip
+            title={`#${order.orderNumber}`}
+            id={`${order.id}-order`}
           >
-            {formattedDate}
-          </Typography>
+            <Typography
+              sx={{ fontWeight: 500, fontSize: "13px" }}
+              className="truncate max-w-[60px] md:max-w-full cursor-pointer"
+            >
+              #{order.orderNumber}
+            </Typography>
+          </ResponsiveTooltip>
         </TableCell>
 
         <TableCell sx={cellStyle}>
-          <Typography variant="body2" sx={{ color: "#334155" }}>
-            {order.orderedBy?.fullName !== "Unknown"
-              ? order.orderedBy?.fullName
-              : "Guest User"}
-          </Typography>
+          <ResponsiveTooltip
+            title={`#${formattedDate}`}
+            id={`${order.id}-order`}
+          >
+            <Typography
+              variant="body2"
+              sx={{ fontSize: "12px", color: "#64748b" }}
+              className="max-w-[60px] md:max-w-full truncate"
+            >
+              {formattedDate}
+            </Typography>
+          </ResponsiveTooltip>
         </TableCell>
 
         <TableCell sx={cellStyle}>
-          <Chip
-            label={order.table?.tableNumber || "No Table"}
-            size="small"
-            sx={{
-              borderRadius: "4px",
-              bgcolor: "#f1f5f9",
-              fontWeight: 700,
-              fontSize: "11px",
-              color: "#475569",
-            }}
-          />
+          <ResponsiveTooltip title={customerName} id={`${order.id}-cust`}>
+            <Typography
+              variant="body2"
+              sx={{ color: "#334155" }}
+              className="truncate max-w-[60px] md:max-w-full cursor-pointer"
+            >
+              {customerName}
+            </Typography>
+          </ResponsiveTooltip>
+        </TableCell>
+
+        <TableCell sx={cellStyle}>
+          <ResponsiveTooltip title={tableNum} id={`${order.id}-table`}>
+            <Chip
+              label={tableNum}
+              size="small"
+              sx={{
+                borderRadius: "4px",
+                bgcolor: "#f1f5f9",
+                fontWeight: 700,
+                fontSize: "11px",
+                color: "#475569",
+                maxWidth: "60px",
+                cursor: "pointer",
+                "& .MuiChip-label": {
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
+              }}
+            />
+          </ResponsiveTooltip>
         </TableCell>
 
         <TableCell sx={cellStyle}>
@@ -177,7 +209,7 @@ const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
           </Box>
         </TableCell>
 
-        <TableCell sx={{ ...cellStyle, color: "#0f172a", fontWeight: 500 }}>
+        <TableCell sx={{ ...cellStyle, color: "#0f172a" }}>
           {order.amount?.toLocaleString()} ৳
         </TableCell>
 
@@ -189,14 +221,12 @@ const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
               colorType="warning"
               onClick={onStatusUpdate}
             />
-
             <ActionButton
               icon={Edit3}
               title="Edit Order"
               colorType="primary"
               onClick={onEdit}
             />
-
             <ActionButton
               icon={Trash2}
               title="Delete Order"
@@ -250,7 +280,7 @@ const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
                 <TableHead>
                   <TableRow sx={{ bgcolor: "#f8fafc" }}>
                     <TableCell
-                      sx={{ fontWeight: 700, color: "#64748b", py: 1.5 }}
+                      sx={{ fontWeight: 700, color: "#64748b", py: 0.5 }}
                     >
                       Food Item
                     </TableCell>
@@ -272,9 +302,9 @@ const OrderRow = ({ order, onEdit, onDelete, onStatusUpdate }) => {
                   {order.orderItems?.map((item, idx) => (
                     <TableRow
                       key={item.id || idx}
-                      sx={{ "&:last-child td": { border: 0 } }}
+                      sx={{ "&:last-child td": { border: 0, py: 0 } }}
                     >
-                      <TableCell sx={{ py: 1.5 }}>
+                      <TableCell sx={{ py: 0.5 }}>
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 2 }}
                         >

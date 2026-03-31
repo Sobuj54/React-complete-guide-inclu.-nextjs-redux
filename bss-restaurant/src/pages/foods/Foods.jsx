@@ -28,6 +28,7 @@ import Modal from "../../components/ui/Modal";
 import FoodForm from "../../components/ui/FoodForm";
 import ActionButton from "../../components/ActionButton";
 import MainButton from "../../components/MainButton";
+import ResponsiveTooltip from "../../components/ResponsiveTooltip";
 
 export default function Foods() {
   const theme = useTheme();
@@ -151,180 +152,193 @@ export default function Foods() {
         </Stack>
       </Box>
 
-      <TableContainer
-        component={Paper}
+      <Paper
         variant="outlined"
         sx={{
           borderRadius: `${theme.shape.borderRadius}px`,
           borderColor: theme.palette.secondary.light,
           boxShadow: "none",
-          overflowX: "auto",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden", // Ensures children don't overflow the rounded paper
         }}
       >
-        <Table size="small" sx={{ minWidth: 800 }}>
-          <TableHead
-            sx={{
-              bgcolor: "#f8fafc",
-            }}
-          >
-            <TableRow>
-              <TableCell sx={tableStyle}>Image</TableCell>
-              <TableCell sx={tableStyle}>Name</TableCell>
-              <TableCell align="center" sx={tableStyle}>
-                Discount
-              </TableCell>
-              <TableCell sx={tableStyle}>Base Price</TableCell>
-              <TableCell sx={tableStyle}>Final Price</TableCell>
-              <TableCell align="right" sx={tableStyle}>
-                Actions
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isPending
-              ? Array.from(new Array(perPage)).map((_, index) => (
-                  <TableRow key={index}>
-                    <TableCell sx={bodyCellStyle}>
-                      <Skeleton variant="rounded" width={40} height={40} />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Skeleton variant="text" width="60%" height={20} />
-                      <Skeleton variant="text" width="40%" height={15} />
-                    </TableCell>
-                    <TableCell align="center" sx={bodyCellStyle}>
-                      <Skeleton
-                        variant="rectangular"
-                        width={60}
-                        height={20}
-                        sx={{ mx: "auto", borderRadius: "3px" }}
-                      />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Skeleton variant="text" width={50} height={20} />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Skeleton variant="text" width={50} height={25} />
-                    </TableCell>
-                    <TableCell align="right" sx={bodyCellStyle}>
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        justifyContent="flex-end"
-                      >
+        <TableContainer>
+          <Table size="small" sx={{ minWidth: 600 }} stickyHeader>
+            <TableHead
+              sx={{
+                bgcolor: "#f8fafc",
+                "& th": { bgcolor: "#f8fafc" }, // MUI stickyHeader requirement
+              }}
+            >
+              <TableRow>
+                <TableCell sx={tableStyle}>Image</TableCell>
+                <TableCell sx={tableStyle}>Name</TableCell>
+                <TableCell align="center" sx={tableStyle}>
+                  Discount
+                </TableCell>
+                <TableCell sx={tableStyle}>Base Price</TableCell>
+                <TableCell sx={tableStyle}>Final Price</TableCell>
+                <TableCell align="right" sx={tableStyle}>
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {isPending
+                ? Array.from(new Array(perPage)).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell sx={bodyCellStyle}>
+                        <Skeleton variant="rounded" width={40} height={40} />
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle}>
+                        <Skeleton variant="text" width="60%" height={20} />
+                        <Skeleton variant="text" width="40%" height={15} />
+                      </TableCell>
+                      <TableCell align="center" sx={bodyCellStyle}>
                         <Skeleton
                           variant="rectangular"
-                          width={32}
-                          height={32}
+                          width={60}
+                          height={20}
+                          sx={{ mx: "auto", borderRadius: "3px" }}
                         />
-                        <Skeleton
-                          variant="rectangular"
-                          width={32}
-                          height={32}
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle}>
+                        <Skeleton variant="text" width={50} height={20} />
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle}>
+                        <Skeleton variant="text" width={50} height={25} />
+                      </TableCell>
+                      <TableCell align="right" sx={bodyCellStyle}>
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          justifyContent="flex-end"
+                        >
+                          <Skeleton
+                            variant="rectangular"
+                            width={32}
+                            height={32}
+                          />
+                          <Skeleton
+                            variant="rectangular"
+                            width={32}
+                            height={32}
+                          />
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : response?.data?.map((food) => (
+                    <TableRow key={food.id} hover>
+                      <TableCell sx={bodyCellStyle}>
+                        <img
+                          src={`${import.meta.env.VITE_IMG_URL}/images/food/${
+                            food.image
+                          }`}
+                          className="w-10 h-10 object-cover border border-slate-100"
+                          style={{ borderRadius: "4px" }}
+                          alt={food.name}
                         />
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))
-              : response?.data?.map((food) => (
-                  <TableRow key={food.id} hover>
-                    <TableCell sx={bodyCellStyle}>
-                      <img
-                        src={`${import.meta.env.VITE_IMG_URL}/images/food/${food.image}`}
-                        className="w-10 h-10 object-cover border border-slate-100"
-                        style={{ borderRadius: "4px" }}
-                        alt={food.name}
-                      />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 600, m: 0 }}
-                      >
-                        {food.name}
-                      </Typography>
-                      <Typography
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle}>
+                        <ResponsiveTooltip
+                          title={food.name}
+                          id={`${food.id}-cust`}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, m: 0 }}
+                            className="truncate max-w-[60px] sm:max-w-none"
+                          >
+                            {food.name}
+                          </Typography>
+                        </ResponsiveTooltip>
+                        <Typography
+                          sx={{
+                            fontSize: "11px",
+                            color: theme.palette.secondary.main,
+                          }}
+                          className="line-clamp-1 m-0 truncate max-w-[60px] sm:max-w-none"
+                        >
+                          {food.description}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center" sx={bodyCellStyle}>
+                        {food.discountType !== "None" ? (
+                          <Box
+                            sx={{
+                              bgcolor: theme.palette.error.lighter,
+                              color: theme.palette.error.main,
+                              border: `1px solid ${theme.palette.error.light}`,
+                              px: 1,
+                              py: 0.2,
+                              borderRadius: "3px",
+                              display: "inline-block",
+                              fontSize: "10px",
+                              fontWeight: 800,
+                            }}
+                          >
+                            {food.discount}
+                            {food.discountType === "Percentage" ? "%" : "৳"} OFF
+                          </Box>
+                        ) : (
+                          <span className="text-slate-400 text-xs">N/A</span>
+                        )}
+                      </TableCell>
+                      <TableCell
                         sx={{
-                          fontSize: "11px",
-                          color: theme.palette.secondary.main,
+                          ...bodyCellStyle,
+                          fontWeight: 600,
+                          fontSize: "13px",
                         }}
-                        className="line-clamp-1 m-0"
                       >
-                        {food.description}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center" sx={bodyCellStyle}>
-                      {food.discountType !== "None" ? (
+                        {food.price}৳
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          ...bodyCellStyle,
+                          fontWeight: 600,
+                          color: theme.palette.success.main,
+                          fontSize: "15px",
+                        }}
+                      >
+                        {food.discountPrice}৳
+                      </TableCell>
+                      <TableCell align="right" sx={{ py: 1 }}>
                         <Box
                           sx={{
-                            bgcolor: theme.palette.error.lighter,
-                            color: theme.palette.error.main,
-                            border: `1px solid ${theme.palette.error.light}`,
-                            px: 1,
-                            py: 0.2,
-                            borderRadius: "3px",
-                            display: "inline-block",
-                            fontSize: "10px",
-                            fontWeight: 800,
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            gap: 1,
                           }}
                         >
-                          {food.discount}
-                          {food.discountType === "Percentage" ? "%" : "৳"} OFF
+                          <ActionButton
+                            icon={Edit2}
+                            title="Edit Item"
+                            colorType="primary"
+                            onClick={() => {
+                              setSelectedFoodId(food.id);
+                              setIsModalOpen(true);
+                            }}
+                          />
+                          <ActionButton
+                            icon={Trash2}
+                            title="Delete Item"
+                            colorType="error"
+                            onClick={() => {
+                              setFoodToDelete(food);
+                              setIsDeleteModalOpen(true);
+                            }}
+                          />
                         </Box>
-                      ) : (
-                        <span className="text-slate-400 text-xs">N/A</span>
-                      )}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        ...bodyCellStyle,
-                        fontWeight: 600,
-                        fontSize: "13px",
-                      }}
-                    >
-                      {food.price}৳
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        ...bodyCellStyle,
-                        fontWeight: 600,
-                        color: theme.palette.success.main,
-                        fontSize: "15px",
-                      }}
-                    >
-                      {food.discountPrice}৳
-                    </TableCell>
-                    <TableCell align="right" sx={{ py: 1 }}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          gap: 1,
-                        }}
-                      >
-                        <ActionButton
-                          icon={Edit2}
-                          title="Edit Item"
-                          colorType="primary"
-                          onClick={() => {
-                            setSelectedFoodId(food.id);
-                            setIsModalOpen(true);
-                          }}
-                        />
-                        <ActionButton
-                          icon={Trash2}
-                          title="Delete Item"
-                          colorType="error"
-                          onClick={() => {
-                            setFoodToDelete(food);
-                            setIsDeleteModalOpen(true);
-                          }}
-                        />
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-          </TableBody>
-        </Table>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {/* Pagination outside TableContainer stays visible while content scrolls */}
         <TablePagination
           component="div"
           count={response?.total || 0}
@@ -336,13 +350,14 @@ export default function Foods() {
             setPage(0);
           }}
           rowsPerPageOptions={[5, 10, 25]}
-          labelRowsPerPage="Rows per page:"
+          labelRowsPerPage="Rows:"
           sx={{
-            minWidth: 800,
             borderTop: "1px solid #f0f0f0",
+            bgcolor: "white",
+            ".MuiTablePagination-toolbar": { px: 1 },
           }}
         />
-      </TableContainer>
+      </Paper>
 
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}

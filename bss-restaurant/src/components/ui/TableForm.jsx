@@ -137,7 +137,7 @@ export default function TableFormModal({
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-8 pt-4"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
             <div className="flex flex-col gap-8">
               <TextField
                 fullWidth
@@ -164,7 +164,8 @@ export default function TableFormModal({
             <div className="flex flex-col">
               <Box
                 sx={{
-                  border: "1px dashed #d9d9d9",
+                  border: "1px dashed ",
+                  borderColor: "secondary.light",
                   borderRadius: "5px",
                   height: "115px", // Adjusted to match the row height of two text fields
                   display: "flex",

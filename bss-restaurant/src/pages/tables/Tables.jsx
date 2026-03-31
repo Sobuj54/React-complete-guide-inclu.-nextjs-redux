@@ -20,6 +20,8 @@ import {
   Stack,
   InputAdornment,
   Skeleton,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 // Icons
@@ -42,8 +44,12 @@ import TableFormModal from "../../components/ui/TableForm";
 import MainButton from "../../components/MainButton";
 import ActionButton from "../../components/ActionButton";
 import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
+import ResponsiveTooltip from "../../components/ResponsiveTooltip";
 
 export default function Tables() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -152,11 +158,7 @@ export default function Tables() {
   if (isError) return <ErrorState />;
 
   return (
-    <Container
-      maxWidth={false}
-      disableGutters
-      sx={{ px: { xs: 2, md: 0 }, width: "100%" }}
-    >
+    <Container maxWidth={false} disableGutters sx={{ px: 0, width: "100%" }}>
       <Box
         sx={{
           mb: 3,
@@ -202,174 +204,208 @@ export default function Tables() {
         </Stack>
       </Box>
 
-      <TableContainer
-        component={Paper}
+      <Paper
         elevation={0}
         sx={{
           borderRadius: "5px",
           border: "1px solid #f0f0f0",
           width: "100%",
-          overflowX: "auto",
+          overflow: "hidden",
         }}
       >
-        <Table sx={{ minWidth: 800 }} size="small">
-          <TableHead sx={{ bgcolor: "#f8fafc" }}>
-            <TableRow>
-              <TableCell sx={headerCellStyle}>Preview</TableCell>
-              <TableCell sx={headerCellStyle}>Table No.</TableCell>
-              <TableCell sx={headerCellStyle} align="center">
-                Seats
-              </TableCell>
-              <TableCell sx={headerCellStyle}>Status</TableCell>
-              <TableCell sx={headerCellStyle}>Assigned Staff</TableCell>
-              <TableCell sx={headerCellStyle} align="right">
-                Actions
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading || isFetching
-              ? [...Array(perPage)].map((_, index) => (
-                  <TableRow key={index}>
-                    <TableCell sx={bodyCellStyle}>
-                      <Skeleton variant="rounded" width={40} height={40} />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Skeleton width="40%" />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Skeleton width="20%" sx={{ mx: "auto" }} />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Skeleton variant="rounded" width={70} height={24} />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Box className="flex">
-                        <Skeleton variant="circular" width={28} height={28} />
-                        <Skeleton variant="circular" width={28} height={28} />
-                        <Skeleton variant="circular" width={28} height={28} />
-                      </Box>
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle} align="right">
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        justifyContent="flex-end"
-                      >
-                        <Skeleton
-                          variant="rectangular"
-                          width={32}
-                          height={32}
-                        />
-                        <Skeleton
-                          variant="rectangular"
-                          width={32}
-                          height={32}
-                        />
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))
-              : response?.data?.map((table) => (
-                  <TableRow key={table.id} hover>
-                    <TableCell sx={bodyCellStyle}>
-                      <Avatar
-                        variant="rounded"
-                        src={`${import.meta.env.VITE_IMG_URL}/images/table/${table.image}`}
-                        sx={{ width: 40, height: 40, borderRadius: "5px" }}
-                      />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Typography variant="body2">
-                        {table.tableNumber}
-                      </Typography>
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle} align="center">
-                      <Typography>{table.numberOfSeats}</Typography>
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Chip
-                        label={table.isOccupied ? "Occupied" : "Available"}
-                        size="small"
-                        sx={{
-                          fontWeight: 700,
-                          borderRadius: "4px",
-                          bgcolor: table.isOccupied ? "#fff1f0" : "#f6ffed",
-                          color: table.isOccupied ? "#ff4d4f" : "success.dark",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle}>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                      >
-                        <AvatarGroup
-                          max={4}
-                          sx={{
-                            "& .MuiAvatar-root": {
-                              width: 35,
-                              height: 35,
-                            },
-                          }}
+        <TableContainer sx={{ width: "100%", overflowX: "auto" }}>
+          <Table sx={{ minWidth: 700 }} size="small">
+            <TableHead sx={{ bgcolor: "#f8fafc" }}>
+              <TableRow>
+                <TableCell sx={headerCellStyle}>Preview</TableCell>
+                <TableCell sx={headerCellStyle}>Table No.</TableCell>
+                <TableCell sx={headerCellStyle} align="center">
+                  Seats
+                </TableCell>
+                <TableCell sx={headerCellStyle}>Status</TableCell>
+                <TableCell sx={headerCellStyle}>Assigned Staff</TableCell>
+                <TableCell sx={headerCellStyle} align="right">
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {isLoading || isFetching
+                ? [...Array(perPage)].map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell sx={bodyCellStyle}>
+                        <Skeleton variant="rounded" width={40} height={40} />
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle}>
+                        <Skeleton width="40%" />
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle}>
+                        <Skeleton width="20%" sx={{ mx: "auto" }} />
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle}>
+                        <Skeleton variant="rounded" width={70} height={24} />
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle}>
+                        <Box sx={{ display: "flex", gap: 0.5 }}>
+                          <Skeleton variant="circular" width={28} height={28} />
+                          <Skeleton variant="circular" width={28} height={28} />
+                        </Box>
+                      </TableCell>
+                      <TableCell sx={bodyCellStyle} align="right">
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          justifyContent="flex-end"
                         >
-                          {table.employees?.map((emp) => (
-                            <Tooltip key={emp.employeeId} title={emp.name}>
-                              <Avatar
-                                src={`${import.meta.env.VITE_IMG_URL}/images/user/${employeeImageMap[emp.employeeId]}`}
-                              />
-                            </Tooltip>
-                          ))}
-                        </AvatarGroup>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleOpenAssign(table.id)}
-                          sx={{ color: "#1677ff", border: "1px dotted" }}
+                          <Skeleton
+                            variant="rectangular"
+                            width={32}
+                            height={32}
+                          />
+                          <Skeleton
+                            variant="rectangular"
+                            width={32}
+                            height={32}
+                          />
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : response?.data?.map((table) => (
+                    <TableRow key={table.id} hover>
+                      <TableCell sx={bodyCellStyle}>
+                        <Avatar
+                          variant="rounded"
+                          src={`${import.meta.env.VITE_IMG_URL}/images/table/${table.image}`}
+                          sx={{ width: 40, height: 40, borderRadius: "5px" }}
+                        />
+                      </TableCell>
+
+                      <TableCell sx={bodyCellStyle}>
+                        <ResponsiveTooltip
+                          title={table.tableNumber}
+                          id={`${table.id}-num`}
                         >
-                          <UserPlus size={20} />
-                        </IconButton>
-                      </Box>
-                    </TableCell>
-                    <TableCell sx={bodyCellStyle} align="right">
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        justifyContent="flex-end"
-                      >
-                        <ActionButton
-                          icon={Edit2}
-                          onClick={() => handleEdit(table)}
-                          title="Edit"
-                          colorType="primary"
-                        />
-                        <ActionButton
-                          icon={Trash2}
-                          onClick={() => handleDeleteClick(table)}
-                          title="Delete"
-                          colorType="error"
-                        />
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          component="div"
-          count={response?.total || 0}
-          page={page}
-          onPageChange={(e, p) => setPage(p)}
-          rowsPerPage={perPage}
-          onRowsPerPageChange={(e) => {
-            setPerPage(parseInt(e.target.value, 10));
-            setPage(0);
-          }}
-          rowsPerPageOptions={[5, 10, 25]}
-          labelRowsPerPage="Rows per page:"
-          sx={{
-            minWidth: 800,
-          }}
-        />
-      </TableContainer>
+                          <Typography
+                            variant="body2"
+                            className="max-w-[50px] lg:max-w-full truncate cursor-pointer md:cursor-default"
+                          >
+                            {table.tableNumber}
+                          </Typography>
+                        </ResponsiveTooltip>
+                      </TableCell>
+
+                      <TableCell sx={bodyCellStyle} align="center">
+                        <Typography variant="body2">
+                          {table.numberOfSeats}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell sx={bodyCellStyle}>
+                        <ResponsiveTooltip
+                          title={table.isOccupied ? "Occupied" : "Available"}
+                          id={`${table.id}-status`}
+                        >
+                          <Chip
+                            label={table.isOccupied ? "Occupied" : "Available"}
+                            size="small"
+                            sx={{
+                              fontWeight: 700,
+                              borderRadius: "4px",
+                              bgcolor: table.isOccupied ? "#fff1f0" : "#f6ffed",
+                              color: table.isOccupied
+                                ? "#ff4d4f"
+                                : "success.dark",
+                              maxWidth: { xs: 60, md: "100%" },
+                              cursor: "pointer",
+                            }}
+                            className="truncate"
+                          />
+                        </ResponsiveTooltip>
+                      </TableCell>
+
+                      <TableCell sx={bodyCellStyle}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
+                          <AvatarGroup
+                            max={isMobile ? 3 : 4}
+                            sx={{
+                              "& .MuiAvatar-root": {
+                                width: 32,
+                                height: 32,
+                                fontSize: "0.75rem",
+                                border: "2px solid #fff",
+                              },
+                            }}
+                          >
+                            {table.employees?.map((emp) => (
+                              <Tooltip
+                                key={emp.employeeId}
+                                title={emp.name}
+                                arrow
+                              >
+                                <Avatar
+                                  src={`${import.meta.env.VITE_IMG_URL}/images/user/${employeeImageMap[emp.employeeId]}`}
+                                />
+                              </Tooltip>
+                            ))}
+                          </AvatarGroup>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleOpenAssign(table.id)}
+                            sx={{
+                              color: "#1677ff",
+                              border: "1px dotted #1677ff",
+                            }}
+                          >
+                            <UserPlus size={18} />
+                          </IconButton>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell sx={bodyCellStyle} align="right">
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          justifyContent="flex-end"
+                        >
+                          <ActionButton
+                            icon={Edit2}
+                            onClick={() => handleEdit(table)}
+                            title="Edit"
+                            colorType="primary"
+                          />
+                          <ActionButton
+                            icon={Trash2}
+                            onClick={() => handleDeleteClick(table)}
+                            title="Delete"
+                            colorType="error"
+                          />
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <Box sx={{ borderTop: "1px solid #f0f0f0", width: "100%" }}>
+          <TablePagination
+            component="div"
+            count={response?.total || 0}
+            page={page}
+            onPageChange={(e, p) => setPage(p)}
+            rowsPerPage={perPage}
+            onRowsPerPageChange={(e) => {
+              setPerPage(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+            rowsPerPageOptions={[5, 10, 25]}
+            labelRowsPerPage="Rows per page:"
+          />
+        </Box>
+      </Paper>
 
       {/* Modals */}
       <TableFormModal

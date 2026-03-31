@@ -194,7 +194,7 @@ export default function Orders() {
           elevation={0}
           className="border border-slate-200 rounded-[5px] overflow-hidden shadow-sm"
         >
-          <Table sx={{ minWidth: "1000px" }}>
+          <Table sx={{ minWidth: "800px" }}>
             <TableHead sx={{ bgcolor: "#f8fafc" }}>
               <TableRow>
                 <TableCell sx={{ py: 0 }} />

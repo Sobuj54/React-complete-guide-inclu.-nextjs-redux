@@ -313,7 +313,7 @@ export default function EmployeeForm({
       </div>
 
       {/* Footer Buttons */}
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+      <div className="flex justify-end gap-3 md:pt-4 border-t border-gray-100">
         <MainButton label="Cancel" onClick={onCancel} color="secondary" />
         <MainButton
           type="submit"

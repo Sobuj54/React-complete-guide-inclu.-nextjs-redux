@@ -100,8 +100,8 @@ export default function EmployeeForm({
       className="space-y-8 pt-3"
     >
       {/* Top Section: Names & Image */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="flex flex-col gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
+        <div className="flex flex-col gap-7">
           <TextField
             fullWidth
             size="small"
@@ -139,7 +139,7 @@ export default function EmployeeForm({
             sx={{
               border: "1px dashed #d9d9d9",
               borderRadius: "5px",
-              height: "185px",
+              height: "177px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -194,7 +194,7 @@ export default function EmployeeForm({
       </div>
 
       {/* Grid: Family Details */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-7">
         <TextField
           fullWidth
           label="Spouse Name *"
@@ -228,7 +228,7 @@ export default function EmployeeForm({
       </div>
 
       {/* Grid: Professional Details */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-7">
         <TextField
           fullWidth
           size="small"
@@ -262,7 +262,7 @@ export default function EmployeeForm({
       </div>
 
       {/* Grid: Identity & Dates */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-5 gap-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-5 gap-y-7">
         <TextField
           select
           fullWidth

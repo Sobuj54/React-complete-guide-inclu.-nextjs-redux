@@ -109,7 +109,7 @@ export default function FoodForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 pt-3">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
         <div className="flex flex-col gap-8">
           <TextField
             fullWidth
@@ -200,7 +200,7 @@ export default function FoodForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-5 gap-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-5 gap-y-7">
         <TextField
           fullWidth
           label="Price *"

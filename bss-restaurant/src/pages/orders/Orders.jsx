@@ -267,7 +267,7 @@ export default function Orders() {
             Page: 1,
           }))
         }
-        sx={{ bgcolor: "background.paper", borderRadius: "5px" }}
+        sx={{ bgcolor: "background.paper", borderRadius: "5px", mb: 3 }}
       />
 
       {/* update status menu */}

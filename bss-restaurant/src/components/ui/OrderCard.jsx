@@ -106,7 +106,7 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
               </span>
             </p>
             <p className="font-semibold text-lg md:text-xl">
-              Total Amount <span className="hidden md:block">(৳)</span>:
+              Total Amount <span className="hidden md:inline-block">(৳)</span>:
               <span className="text-[#1677ff]">{order.amount}৳</span>
             </p>
           </div>

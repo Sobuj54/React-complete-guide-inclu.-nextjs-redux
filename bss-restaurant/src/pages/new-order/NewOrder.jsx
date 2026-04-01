@@ -130,7 +130,7 @@ export default function NewOrderPage() {
             overflow: "hidden",
           }}
         >
-          <Typography sx={{ mb: 2 }}>
+          <Typography sx={{ mb: { xs: 0.5, md: 2 } }}>
             Select Table ({tablesQuery.data?.length || 0})
           </Typography>
 
@@ -143,7 +143,7 @@ export default function NewOrderPage() {
               display: "flex",
               flexDirection: { xs: "row", md: "column" },
               gap: 2,
-              pb: 3,
+              pb: { xs: 0.5, md: 3 },
               "&::-webkit-scrollbar": { width: "5px", height: "5px" },
               "&::-webkit-scrollbar-thumb": {
                 bgcolor: "secondary.main",
@@ -198,7 +198,7 @@ export default function NewOrderPage() {
                     >
                       <Box
                         sx={{
-                          height: 120,
+                          height: { xs: 70, md: 120 },
                           borderRadius: "5px",
                           overflow: "hidden",
                           mb: 1.5,
@@ -296,7 +296,7 @@ export default function NewOrderPage() {
             </Box>
           ) : (
             <>
-              <Typography sx={{ mb: 2 }}>
+              <Typography sx={{ mb: { xs: 0.5, md: 2 } }}>
                 Food Menu ({foodsQuery.data?.length || 0}) for Table{" "}
                 {selectedTable.tableNumber}
               </Typography>

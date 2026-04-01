@@ -172,29 +172,64 @@ export default function EditOrderModal({
           alignItems: "center",
         }}
       >
-        <Box>
+        <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography
             sx={{
               fontWeight: 900,
               color: theme.palette.text.primary,
               fontSize: "1.2rem",
+              lineHeight: 1.2,
             }}
           >
             Edit Order
           </Typography>
-          <Typography
+
+          {/* Label and Number Wrapper */}
+          <Box
             sx={{
-              color: theme.palette.text.secondary,
-              fontSize: "12px",
-              fontWeight: 700,
+              display: "flex",
+              alignItems: "baseline",
+              gap: 0.5,
+              mt: 0.5,
             }}
           >
-            ORDER NUMBER:{" "}
-            <Box component="span" sx={{ color: theme.palette.primary.main }}>
-              #{order?.orderNumber}
-            </Box>
-          </Typography>
+            <Typography
+              sx={{
+                color: theme.palette.text.secondary,
+                fontSize: "12px",
+                fontWeight: 700,
+                whiteSpace: "nowrap",
+                lineHeight: 1,
+              }}
+            >
+              ORDER NUMBER:
+            </Typography>
+
+            <ResponsiveTooltip
+              title={`#${order?.orderNumber}`}
+              id={`order-no-${order?.orderNumber}`}
+            >
+              <Typography
+                component="p"
+                sx={{
+                  color: theme.palette.primary.main,
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  lineHeight: 1,
+
+                  maxWidth: { xs: "70px", md: "none" },
+                  display: "inline-block",
+                  overflow: { xs: "hidden", md: "visible" },
+                  textOverflow: { xs: "ellipsis", md: "clip" },
+                  whiteSpace: "nowrap",
+                }}
+              >
+                #{order?.orderNumber}
+              </Typography>
+            </ResponsiveTooltip>
+          </Box>
         </Box>
+
         <IconButton onClick={onClose} size="medium">
           <X size={18} />
         </IconButton>
@@ -329,7 +364,12 @@ export default function EditOrderModal({
                   <Avatar
                     src={`${import.meta.env.VITE_IMG_URL}/images/food/${option.image}`}
                     variant="rounded"
-                    sx={{ width: 40, height: 40, borderRadius: "5px" }}
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: "5px",
+                      display: { xs: "none", md: "flex" }, // Hidden on mobile
+                    }}
                   />
                   <Box>
                     <Typography sx={{ fontWeight: 800, fontSize: "15px" }}>
@@ -380,6 +420,7 @@ export default function EditOrderModal({
                       width: { xs: 35, md: 45 },
                       height: { xs: 35, md: 45 },
                       borderRadius: "5px",
+                      display: { xs: "none", md: "flex" }, // Hidden on mobile
                     }}
                   />
                   <Box sx={{ flex: 1 }}>
@@ -393,7 +434,7 @@ export default function EditOrderModal({
                           fontSize: "13px",
                           color: theme.palette.text.primary,
                           textTransform: "capitalize",
-                          maxWidth: { xs: "60px", md: "100%" },
+                          maxWidth: { xs: "80px", md: "100%" }, // Slightly increased for mobile visibility
                         }}
                         className="truncate"
                       >
@@ -422,7 +463,7 @@ export default function EditOrderModal({
                           textAlign: "center",
                           fontWeight: 900,
                           fontSize: "12px",
-                          padding: { xs: "5px", md: "5px" },
+                          padding: "5px",
                         },
                       }}
                       sx={{
@@ -525,7 +566,7 @@ export default function EditOrderModal({
             onClick={handleSubmit}
             disabled={isSubmitting || items.length === 0}
             isLoading={isSubmitting}
-            label="Update Order"
+            label="Update"
             color="primary"
           />
         </Box>

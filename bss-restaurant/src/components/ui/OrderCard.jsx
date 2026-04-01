@@ -9,7 +9,7 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
     const map = {
       Pending: { text: "pending", color: "text-orange-400" },
       Paid: { text: "paid", color: "text-green-500" },
-      PreparedToServe: { text: "p.t.s", color: "text-teal-500" },
+      PreparedToServe: { text: "PreparedToServe", color: "text-teal-500" },
       Cancelled: { text: "cancelled", color: "text-red-500" },
     };
     return (
@@ -34,9 +34,14 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
       {/* 1. header: id & actions */}
       <div className="p-4 flex justify-between items-start flex-shrink-0">
         <div className="flex flex-col">
-          <span className="text-lg font-bold text-slate-700 tracking-tight">
-            {order.orderNumber}
-          </span>
+          <ResponsiveTooltip
+            title={order.orderNumber}
+            id={`order-${order.orderNumber}`}
+          >
+            <span className="text-lg font-bold text-slate-700 tracking-tight truncate max-w-[150px] md:max-w-full block">
+              {order.orderNumber}
+            </span>
+          </ResponsiveTooltip>
           <span className="text-sm text-slate-400 font-medium">
             {formattedDate}
           </span>
@@ -92,8 +97,8 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
 
       {/* 3. footer: totals and table - flex-shrink-0 ensures it stays at the bottom */}
       <div className="p-4 bg-white mt-auto  flex-shrink-0 rounded-b-[5px]">
-        <div className="flex justify-between items-end">
-          <div className="flex flex-col gap-2">
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-1">
             <p className="text-sm font-semibold ">
               Total Quantity:{" "}
               <span className="text-slate-700 ">
@@ -101,21 +106,25 @@ const OrderCard = ({ order, onEdit, onDelete, onStatusUpdate }) => {
               </span>
             </p>
             <p className="font-semibold text-lg md:text-xl">
-              Total Amount (৳):{" "}
+              Total Amount <span className="hidden md:block">(৳)</span>:
               <span className="text-[#1677ff]">{order.amount}৳</span>
             </p>
           </div>
 
-          <div className="flex flex-col items-end gap-2">
-            <span className={` mb-1 font-bold ${status.color}`}>
-              {status.text}
-            </span>
+          <div className="flex flex-col items-end gap-1">
+            <ResponsiveTooltip title={status.text} id={order.orderNumber}>
+              <p
+                className={` mb-1 font-bold ${status.color} leading-tight max-w-[70px] md:max-w-full truncate`}
+              >
+                {status.text}
+              </p>
+            </ResponsiveTooltip>
             <ResponsiveTooltip
               title={order.table?.tableNumber}
               id={order.orderNumber}
             >
-              <p className="text-[20px] font-medium leading-none text-slate-500 max-w-[50px] md:max-w-full truncate">
-                {"jjjjddfgsgfjjjj" || "n/a"}
+              <p className="text-lg font-medium leading-none text-slate-500 max-w-[50px] md:max-w-full truncate">
+                {order.table?.tableNumber || "n/a"}
               </p>
             </ResponsiveTooltip>
           </div>

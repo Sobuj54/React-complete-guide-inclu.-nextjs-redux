@@ -136,9 +136,10 @@ export default function Orders() {
               bgcolor: "white",
               "&:hover": { bgcolor: "#f8fafc" },
               py: 1,
+              minWidth: { xs: "40px", md: "auto" },
             }}
           >
-            {getActiveFilterLabel()}
+            <span className="hidden md:inline">{getActiveFilterLabel()}</span>
           </Button>
 
           <Menu
@@ -194,7 +195,7 @@ export default function Orders() {
           elevation={0}
           className="border border-slate-200 rounded-[5px] overflow-hidden shadow-sm"
         >
-          <Table sx={{ minWidth: "800px" }}>
+          <Table sx={{ minWidth: "850px" }}>
             <TableHead sx={{ bgcolor: "#f8fafc" }}>
               <TableRow>
                 <TableCell sx={{ py: 0 }} />

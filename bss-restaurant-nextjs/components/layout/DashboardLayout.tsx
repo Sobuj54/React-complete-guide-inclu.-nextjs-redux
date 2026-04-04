@@ -27,7 +27,6 @@ export default function DashboardLayout({
           display: "flex",
           flexDirection: "column",
           minWidth: 0,
-          // Removed ml: { lg: ... } to fix the huge gap
           transition: theme.transitions.create(["margin", "width"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,

@@ -16,16 +16,17 @@ import {
 } from "@mui/material";
 import { Menu as MenuIcon, LogOut, Mail } from "lucide-react";
 import { useAuthContext } from "@/context/AuthContext";
+import { HeaderProps } from "@/types";
 
-export default function Header({ toggleSidebar, isSidebarOpen }) {
+export default function Header({ toggleSidebar, isSidebarOpen }: HeaderProps) {
   const { user, logout } = useAuthContext();
   const theme = useTheme();
 
   // --- MENU STATE LOGIC ---
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -100,7 +101,7 @@ export default function Header({ toggleSidebar, isSidebarOpen }) {
                     lineHeight: 1, // Tighten line height
                   }}
                 >
-                  {user?.role || "Administrator"}
+                  {user?.userName || "Administrator"}
                 </Typography>
               </Stack>
             </Box>

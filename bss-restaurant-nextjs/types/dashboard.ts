@@ -10,3 +10,8 @@ export interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+export interface HeaderProps {
+  toggleSidebar: () => void;
+  isSidebarOpen: boolean;
+}

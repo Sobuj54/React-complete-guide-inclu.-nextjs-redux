@@ -83,8 +83,6 @@ export default function Header({ toggleSidebar, isSidebarOpen }: HeaderProps) {
               }}
             >
               <Stack spacing={0.5}>
-                {" "}
-                {/* Adjust spacing value here */}
                 <Typography
                   variant="body2"
                   sx={{ fontWeight: 700, lineHeight: 1.2 }}
@@ -98,7 +96,7 @@ export default function Header({ toggleSidebar, isSidebarOpen }: HeaderProps) {
                     fontWeight: 700,
                     textTransform: "uppercase",
                     fontSize: "10px",
-                    lineHeight: 1, // Tighten line height
+                    lineHeight: 1,
                   }}
                 >
                   {user?.userName || "Administrator"}
@@ -112,7 +110,7 @@ export default function Header({ toggleSidebar, isSidebarOpen }: HeaderProps) {
                 bgcolor: "primary.main",
                 fontWeight: 800,
                 fontSize: "0.85rem",
-                borderRadius: "8px", // Clean squared-round look
+                borderRadius: "5px",
               }}
             >
               {user?.userName?.[0].toUpperCase() || "A"}
@@ -188,7 +186,7 @@ export default function Header({ toggleSidebar, isSidebarOpen }: HeaderProps) {
             <MenuItem
               onClick={handleLogout}
               sx={{
-                borderRadius: "8px",
+                borderRadius: "5px",
                 py: 1,
                 color: "error.main",
                 "&:hover": { bgcolor: "error.lighter" },

@@ -41,8 +41,8 @@ const navItems: NavItem[] = [
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
-  const pathname = usePathname(); // Get current URL in Next.js
-  const { logout } = useAuthContext() as any; // Cast as any if context isn't fully typed yet
+  const pathname = usePathname();
+  const { logout } = useAuthContext();
 
   const drawerWidth = isOpen ? 280 : 80;
 

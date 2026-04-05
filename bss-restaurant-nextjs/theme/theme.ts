@@ -1,5 +1,18 @@
 import { createTheme } from "@mui/material/styles";
 
+declare module "@mui/material/styles" {
+  interface PaletteColor {
+    lighter?: string;
+    darker?: string;
+    A300?: string;
+  }
+  interface SimplePaletteColorOptions {
+    lighter?: string;
+    darker?: string;
+    A300?: string;
+  }
+}
+
 const theme = createTheme({
   palette: {
     primary: {

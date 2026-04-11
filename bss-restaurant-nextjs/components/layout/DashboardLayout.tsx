@@ -33,7 +33,7 @@ export default function DashboardLayout({
           }),
         }}
       >
-        <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+        <Header toggleSidebar={toggleSidebar} />
 
         <Box
           sx={{

@@ -20,7 +20,7 @@ import { logOut } from "@/actions/auth-actions";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export default function Header({ toggleSidebar, isSidebarOpen }: HeaderProps) {
+export default function Header({ toggleSidebar }: HeaderProps) {
   const theme = useTheme();
   const router = useRouter();
 

@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation"; // Next.js version of location
-import { useAuthContext } from "@/context/AuthContext";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Drawer,
   List,
@@ -71,7 +70,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             p: 1,
             bgcolor: "primary.main",
             color: "white",
-            borderRadius: `${theme.shape.borderRadius}px`,
+            borderRadius: `${theme.shape.borderRadius}`,
             display: "flex",
             boxShadow: "0 4px 10px rgba(22, 119, 255, 0.2)",
           }}

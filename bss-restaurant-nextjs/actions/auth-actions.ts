@@ -3,7 +3,6 @@
 import { ApiError, LoginFormFields, LoginResponse } from "@/types";
 import { clearAuthCookies, setAuthCookies } from "@/utils/auth-utils";
 import axios, { AxiosError } from "axios";
-import { redirect } from "next/navigation";
 
 export async function loginActon(loginData: LoginFormFields) {
   try {

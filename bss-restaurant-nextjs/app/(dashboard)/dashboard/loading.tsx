@@ -2,7 +2,6 @@ import {
   Box,
   Stack,
   Skeleton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -71,7 +70,7 @@ const TopSellerSkeleton = () => (
   </TableRow>
 );
 
-export default function DashboardSkeleton() {
+export default function Loading() {
   return (
     <Box className="space-y-10 animate-pulse">
       {/* 4 Stat Cards Grid */}

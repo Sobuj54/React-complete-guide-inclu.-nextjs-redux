@@ -1,38 +1,34 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { useAuthContext } from "@/context/AuthContext";
-import axiosPublic from "@/lib/axios/axiosPublic";
 import { useRouter } from "next/navigation";
-import { ApiError, LoginFormFields, LoginResponse } from "@/types";
-import { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { LoginFormFields } from "@/types";
+import { loginActon } from "@/actions/auth-actions";
 
 export const useAuth = () => {
-  const { login } = useAuthContext();
   const router = useRouter();
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginFormFields) => {
-      const { data } = await axiosPublic.post("/Auth/signIn", credentials);
-      return data;
+      const result = await loginActon(credentials);
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+      return result;
     },
-    onSuccess: (data: LoginResponse) => {
-      login(data);
+    onSuccess: () => {
       toast.success("Login Successful!");
       router.push("/dashboard");
+      router.refresh(); // Forces Next.js to re-check the cookies/middleware
     },
-    onError: (error) => {
-      const message =
-        (error as AxiosError<ApiError>).response?.data?.message ||
-        "Log in failed!";
-      toast.error(message);
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
 
   return {
     login: loginMutation.mutate,
     isLoading: loginMutation.isPending,
-    error: loginMutation.error,
   };
 };

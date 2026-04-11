@@ -1,4 +1,3 @@
-import ProtectedRoute from "@/components/AuthGuard";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Metadata } from "next";
 
@@ -14,9 +13,7 @@ export default function LayoutDashboard({
 }>) {
   return (
     <>
-      <ProtectedRoute>
-        <DashboardLayout>{children}</DashboardLayout>
-      </ProtectedRoute>
+      <DashboardLayout>{children}</DashboardLayout>
     </>
   );
 }

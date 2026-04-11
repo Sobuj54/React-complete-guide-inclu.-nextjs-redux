@@ -15,12 +15,21 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import { Menu as MenuIcon, LogOut, Mail } from "lucide-react";
-import { useAuthContext } from "@/context/AuthContext";
 import { HeaderProps } from "@/types";
+import { logOut } from "@/actions/auth-actions";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function Header({ toggleSidebar, isSidebarOpen }: HeaderProps) {
-  const { user, logout } = useAuthContext();
   const theme = useTheme();
+  const router = useRouter();
+
+  const user = {
+    fullName: "test",
+    userName: "test",
+    email: "ex@mail",
+    id: "22",
+  };
 
   // --- MENU STATE LOGIC ---
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -34,8 +43,12 @@ export default function Header({ toggleSidebar, isSidebarOpen }: HeaderProps) {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    const res = await logOut();
+    if (!res.success) toast.error("Logout Failed!");
+
+    toast.success("Logout Successful!");
+    router.push("/");
   };
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Next.js version of location
+import { usePathname, useRouter } from "next/navigation"; // Next.js version of location
 import { useAuthContext } from "@/context/AuthContext";
 import {
   Drawer,
@@ -28,6 +28,8 @@ import {
   Table,
 } from "lucide-react";
 import { NavItem, SidebarProps } from "@/types";
+import { logOut } from "@/actions/auth-actions";
+import toast from "react-hot-toast";
 
 const navItems: NavItem[] = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -42,7 +44,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const pathname = usePathname();
-  const { logout } = useAuthContext();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const res = await logOut();
+    if (!res.success) toast.error("Logout Failed!");
+
+    toast.success("Logout Successful!");
+    router.push("/");
+  };
 
   const drawerWidth = isOpen ? 280 : 80;
 
@@ -146,7 +156,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <Button
           fullWidth
           variant="contained"
-          onClick={logout}
+          onClick={handleLogout}
           sx={{
             bgcolor: "primary.main",
             minWidth: 0,

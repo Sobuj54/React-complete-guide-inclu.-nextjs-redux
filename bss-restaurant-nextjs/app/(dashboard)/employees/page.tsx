@@ -1,5 +1,11 @@
 import { getEmployees } from "@/actions/employee-actions";
 import TableShell from "@/components/features/employees/TableShell";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Employees | BSS Restaurant",
+  description: "BSS Resto app Employees",
+};
 
 export default async function EmployeesPage({
   searchParams,

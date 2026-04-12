@@ -57,7 +57,7 @@ export default async function Dashboard() {
   ];
 
   return (
-    <Box className="space-y-10 animate-in fade-in duration-700">
+    <Box className="space-y-10 animate-in fade-in duration-700 font-public">
       {/* Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (

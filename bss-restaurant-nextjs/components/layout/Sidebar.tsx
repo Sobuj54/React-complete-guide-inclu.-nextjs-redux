@@ -78,11 +78,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <ChefHat size={20} />
         </Box>
         {isOpen && (
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: 600, letterSpacing: -0.5, ml: 2 }}
-          >
-            BSS Resto
+          <Typography variant="h6" sx={{ fontWeight: 700, ml: 2 }}>
+            BSS Restaurant
           </Typography>
         )}
       </Toolbar>

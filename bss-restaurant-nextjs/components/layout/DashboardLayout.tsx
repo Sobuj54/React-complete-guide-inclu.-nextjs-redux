@@ -16,7 +16,12 @@ export default function DashboardLayout({
 
   return (
     <Box
-      sx={{ display: "flex", minHeight: "100vh", bgcolor: "secondary.lighter" }}
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        bgcolor: "secondary.lighter",
+        fontFamily: "public-sans",
+      }}
     >
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 

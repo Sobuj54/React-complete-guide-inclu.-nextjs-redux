@@ -14,6 +14,18 @@ declare module "@mui/material/styles" {
 }
 
 const theme = createTheme({
+  typography: {
+    fontFamily: "var(--font-public-sans), sans-serif",
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none", // optional: makes buttons look more modern
+        },
+      },
+    },
+  },
   palette: {
     primary: {
       lighter: "#e6f4ff",

@@ -11,11 +11,7 @@ export const useAuth = () => {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginFormFields) => {
-      const result = await loginActon(credentials);
-      if (!result.success) {
-        throw new Error(result.message);
-      }
-      return result;
+      await loginActon(credentials);
     },
     onSuccess: () => {
       toast.success("Login Successful!");

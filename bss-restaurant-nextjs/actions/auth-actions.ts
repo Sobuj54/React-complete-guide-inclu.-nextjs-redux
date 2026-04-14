@@ -13,8 +13,6 @@ export async function loginActon(loginData: LoginFormFields) {
       loginData,
     );
     await setAuthCookies(data);
-
-    return { success: true };
   });
 }
 

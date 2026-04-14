@@ -1,3 +1,5 @@
+"use server";
+
 import { LoginResponse } from "@/types";
 import { cookies } from "next/headers";
 import { COOKIE_KEYS, cookieOptions } from "./constants";

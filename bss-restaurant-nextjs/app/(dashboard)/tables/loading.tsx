@@ -10,6 +10,7 @@ import {
   Skeleton,
   Stack,
 } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface TablesSkeletonProps {
   rowCount?: number;
@@ -61,7 +62,8 @@ export default function TablesSkeleton({ rowCount = 10 }: TablesSkeletonProps) {
                   <Skeleton variant="rounded" width={70} height={24} />
                 </TableCell>
                 <TableCell sx={bodyCellStyle}>
-                  <Box sx={{ display: "flex", gap: 0.5 }}>
+                  <Box sx={{ display: "flex" }}>
+                    <Skeleton variant="circular" width={28} height={28} />
                     <Skeleton variant="circular" width={28} height={28} />
                     <Skeleton variant="circular" width={28} height={28} />
                   </Box>
@@ -77,6 +79,23 @@ export default function TablesSkeleton({ rowCount = 10 }: TablesSkeletonProps) {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Box
+        sx={{
+          p: 1.5,
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <Skeleton variant="text" width={80} />
+        <Skeleton variant="rectangular" width={30} height={18} />
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <ChevronLeft size={18} color="#cbd5e1" />
+          <ChevronRight size={18} color="#cbd5e1" />
+        </Box>
+      </Box>
     </Paper>
   );
 }

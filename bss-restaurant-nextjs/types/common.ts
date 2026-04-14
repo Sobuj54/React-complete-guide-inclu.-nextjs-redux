@@ -11,4 +11,9 @@ export interface ApiError {
   message: string;
 }
 
-export type colorType = "primary" | "secondary" | "success" | "error";
+export type colorType =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "error"
+  | "warning";

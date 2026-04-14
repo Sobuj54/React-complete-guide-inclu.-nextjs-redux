@@ -1,8 +1,9 @@
 import AuthForm from "@/components/features/auth/LoginForm";
 import { ChefHat } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Sign In | BSS Restaurant",
   description: "BSS Resto app Sign In",
 };

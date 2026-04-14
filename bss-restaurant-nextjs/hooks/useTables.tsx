@@ -42,9 +42,8 @@ export function useTables({
     queryKey: ["tables", page, perPage, debouncedSearch],
     queryFn: () => getTablesAction(page + 1, perPage, debouncedSearch),
     initialData:
-      page === 0 && debouncedSearch === "" ? initialTables : undefined,
+      page === 1 && debouncedSearch === "" ? initialTables : undefined,
     placeholderData: keepPreviousData,
-    staleTime: 10000,
   });
 
   const tableDetailsQuery = useQuery({

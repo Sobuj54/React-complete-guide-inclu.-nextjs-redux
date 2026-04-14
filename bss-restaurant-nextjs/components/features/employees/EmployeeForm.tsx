@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload, X } from "lucide-react";
 import {
@@ -37,6 +37,7 @@ export default function EmployeeForm({
     reset,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(employeeschema),
@@ -114,7 +115,7 @@ export default function EmployeeForm({
           <TextField
             fullWidth
             size="small"
-            label="first name *"
+            label="First Name *"
             {...register("firstName")}
             error={!!errors.firstName}
             helperText={errors.firstName?.message as string}
@@ -124,7 +125,7 @@ export default function EmployeeForm({
           <TextField
             fullWidth
             size="small"
-            label="middle name (optional)"
+            label="Middle Name (optional)"
             {...register("middleName")}
             error={!!errors.middleName}
             helperText={errors.middleName?.message as string}
@@ -134,7 +135,7 @@ export default function EmployeeForm({
           <TextField
             fullWidth
             size="small"
-            label="last name *"
+            label="Last Name *"
             {...register("lastName")}
             error={!!errors.lastName}
             helperText={errors.lastName?.message as string}
@@ -208,7 +209,7 @@ export default function EmployeeForm({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-7">
         <TextField
           fullWidth
-          label="spouse name *"
+          label="Spouse Name *"
           size="small"
           {...register("spouseName")}
           error={!!errors.spouseName}
@@ -218,7 +219,7 @@ export default function EmployeeForm({
         />
         <TextField
           fullWidth
-          label="father's name *"
+          label="Father's Name *"
           size="small"
           {...register("fatherName")}
           error={!!errors.fatherName}
@@ -228,7 +229,7 @@ export default function EmployeeForm({
         />
         <TextField
           fullWidth
-          label="mother's name *"
+          label="Mother's Name *"
           size="small"
           {...register("motherName")}
           error={!!errors.motherName}
@@ -242,7 +243,7 @@ export default function EmployeeForm({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-7">
         <TextField
           fullWidth
-          label="designation *"
+          label="Designation *"
           size="small"
           {...register("designation")}
           error={!!errors.designation}
@@ -252,7 +253,7 @@ export default function EmployeeForm({
         />
         <TextField
           fullWidth
-          label="email address *"
+          label="Email Address *"
           size="small"
           {...register("email")}
           error={!!errors.email}
@@ -262,7 +263,7 @@ export default function EmployeeForm({
         />
         <TextField
           fullWidth
-          label="phone *"
+          label="Phone *"
           size="small"
           {...register("phone")}
           error={!!errors.phone}
@@ -274,25 +275,32 @@ export default function EmployeeForm({
 
       {/* grid: identity & dates */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-x-5 gap-y-7">
-        <TextField
-          select
-          fullWidth
-          label="gender *"
-          size="small"
-          {...register("gender")}
-          error={!!errors.gender}
-          helperText={errors.gender?.message as string}
-          sx={inputStyle}
-          InputLabelProps={{ shrink: true }}
-        >
-          <MenuItem value="">select gender</MenuItem>
-          <MenuItem value="Male">male</MenuItem>
-          <MenuItem value="Female">female</MenuItem>
-        </TextField>
+        <Controller
+          name="gender"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <TextField
+              {...field}
+              select
+              fullWidth
+              label="Gender *"
+              size="small"
+              error={!!errors.gender}
+              helperText={errors.gender?.message as string}
+              sx={inputStyle}
+              InputLabelProps={{ shrink: true }}
+            >
+              <MenuItem value="">select gender</MenuItem>
+              <MenuItem value="Male">male</MenuItem>
+              <MenuItem value="Female">female</MenuItem>
+            </TextField>
+          )}
+        />
         <TextField
           fullWidth
           type="date"
-          label="date of birth *"
+          label="Date of birth *"
           size="small"
           {...register("dob")}
           error={!!errors.dob}
@@ -303,7 +311,7 @@ export default function EmployeeForm({
         <TextField
           fullWidth
           type="date"
-          label="join date *"
+          label="Join Date *"
           size="small"
           {...register("joinDate")}
           error={!!errors.joinDate}
@@ -313,7 +321,7 @@ export default function EmployeeForm({
         />
         <TextField
           fullWidth
-          label="nid card *"
+          label="NID Card Number *"
           size="small"
           {...register("nid")}
           error={!!errors.nid}

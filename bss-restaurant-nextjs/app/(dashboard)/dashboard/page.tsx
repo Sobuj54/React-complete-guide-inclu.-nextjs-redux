@@ -19,6 +19,7 @@ import {
   Chip,
 } from "@mui/material";
 import { serverApi } from "@/lib/axios/axios-server";
+import ResponsiveTooltip from "@/components/ui/ResponsiveTooltip";
 
 export default async function Dashboard() {
   const api = await serverApi();
@@ -103,14 +104,31 @@ export default async function Dashboard() {
                     hover
                     sx={{ "&:last-child td": { border: 0 }, py: 0 }}
                   >
-                    <TableCell
-                      className="truncate max-w-20 md:max-w-full"
-                      sx={{ py: 1.5 }}
-                    >
-                      # {order.orderNumber}
+                    <TableCell sx={{ py: 1.5 }}>
+                      <ResponsiveTooltip
+                        title={order.orderNumber}
+                        id={order.orderNumber}
+                      >
+                        <Typography
+                          className="truncate max-w-20 md:max-w-full"
+                          variant="body2"
+                        >
+                          # {order.orderNumber}
+                        </Typography>
+                      </ResponsiveTooltip>
                     </TableCell>
                     <TableCell sx={{ py: 1.5 }}>
-                      {order.tableNumber || "Walk-in"}
+                      <ResponsiveTooltip
+                        title={order.tableNumber}
+                        id={order.tableNumber}
+                      >
+                        <Typography
+                          className="truncate max-w-20 md:max-w-full"
+                          variant="body2"
+                        >
+                          {order.tableNumber || "Walk-in"}
+                        </Typography>
+                      </ResponsiveTooltip>
                     </TableCell>
                     <TableCell sx={{ color: "success.dark", py: 1.5 }}>
                       ৳ {order.amount.toLocaleString()}

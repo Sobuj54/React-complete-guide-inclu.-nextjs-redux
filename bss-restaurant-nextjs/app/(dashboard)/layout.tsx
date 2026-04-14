@@ -3,7 +3,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard | BSS Resto",
+  title: "Dashboard | BSS Restaurant",
   description: "Dashboard analytics",
 };
 

@@ -10,9 +10,9 @@ export const employeeschema = z.object({
   motherName: z.string().min(1, "mother name is required"),
   designation: z.string().min(1, "designation is required"),
   email: z.email("invalid email address"),
-  phone: z.string().min(1, "phone is required"),
+  phone: z.string().min(5, "phone is required"),
   gender: z.enum(["Male", "Female", ""]),
   dob: z.string().min(1, "date of birth is required"),
   joinDate: z.string().min(1, "join date is required"),
-  nid: z.string().min(1, "nid is required"),
+  nid: z.string().min(5, "nid is required"),
 });

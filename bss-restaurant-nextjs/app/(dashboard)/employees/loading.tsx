@@ -112,7 +112,6 @@ export default function Loading() {
 
         <Box
           sx={{
-            borderTop: "1px solid #e2e8f0",
             p: 1.5,
             display: "flex",
             justifyContent: "flex-end",

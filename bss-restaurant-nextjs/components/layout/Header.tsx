@@ -20,16 +20,12 @@ import { logOut } from "@/actions/auth-actions";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export default function Header({ toggleSidebar }: HeaderProps) {
+export default function Header({
+  toggleSidebar,
+  userProfile: user,
+}: HeaderProps) {
   const theme = useTheme();
   const router = useRouter();
-
-  const user = {
-    fullName: "test",
-    userName: "test",
-    email: "ex@mail",
-    id: "22",
-  };
 
   // --- MENU STATE LOGIC ---
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

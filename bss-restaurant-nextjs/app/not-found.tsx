@@ -39,7 +39,7 @@ export default function NotFound() {
                 size={20}
                 className="transition-transform group-hover:-translate-x-1"
               />
-              Go Back
+              Login
             </button>
           </Link>
 

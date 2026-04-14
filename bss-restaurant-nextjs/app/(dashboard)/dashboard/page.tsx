@@ -192,7 +192,7 @@ export default async function Dashboard() {
                       <Typography
                         sx={{
                           fontWeight: 700,
-                          fontSize: "17px",
+                          fontSize: "16px",
                           textTransform: "capitalize",
                         }}
                       >
@@ -207,7 +207,7 @@ export default async function Dashboard() {
                         sx={{
                           fontWeight: 800,
                           color: "success.main",
-                          fontSize: "17px",
+                          fontSize: "16px",
                           textTransform: "capitalize",
                         }}
                       >

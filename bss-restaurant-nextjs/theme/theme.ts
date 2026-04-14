@@ -21,7 +21,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none", // optional: makes buttons look more modern
+          textTransform: "none",
         },
       },
     },

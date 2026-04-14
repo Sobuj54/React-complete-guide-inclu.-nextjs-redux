@@ -4,7 +4,6 @@ import {
   DialogContent,
   IconButton,
   Typography,
-  Box,
 } from "@mui/material";
 import { X } from "lucide-react";
 import React from "react";

@@ -35,14 +35,14 @@ import { useemployeemutations } from "@/hooks/useEmployeeMutations";
 import EmployeeForm from "./EmployeeForm";
 import ResponsiveTooltip from "@/components/ui/ResponsiveTooltip";
 import ActionButton from "@/components/ui/button/ActionButton";
-import { EmployeesResponse, paginatedresponse } from "@/types";
+import { EmployeesResponse, paginatedEmployeesResponse } from "@/types";
 import DeleteConfirmationModal from "@/components/ui/modal/DeleteConfirmationModal";
 import Modal from "@/components/ui/modal/Modal";
 import MainButton from "@/components/ui/button/MainButton";
 import { toBase64 } from "@/utils/to-base65";
 
 interface tableshellprops {
-  initialData: paginatedresponse;
+  initialData: paginatedEmployeesResponse;
   page: number;
   perpage: number;
 }

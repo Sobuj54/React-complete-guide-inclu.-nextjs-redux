@@ -3,10 +3,13 @@ import React, { useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import { User } from "@/types";
 
 export default function DashboardLayout({
+  userProfile,
   children,
 }: {
+  userProfile: User;
   children: React.ReactNode;
 }) {
   const theme = useTheme();
@@ -38,7 +41,7 @@ export default function DashboardLayout({
           }),
         }}
       >
-        <Header toggleSidebar={toggleSidebar} />
+        <Header toggleSidebar={toggleSidebar} userProfile={userProfile} />
 
         <Box
           sx={{

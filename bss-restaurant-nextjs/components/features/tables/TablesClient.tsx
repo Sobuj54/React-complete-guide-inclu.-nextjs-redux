@@ -26,7 +26,7 @@ import {
 } from "@mui/material";
 import { Plus, Search, Edit2, Trash2, UserPlus } from "lucide-react";
 
-import { toBase64 } from "@/utils/to-base65";
+import { toBase64 } from "@/utils/to-base64";
 import MainButton from "@/components/ui/button/MainButton";
 import ResponsiveTooltip from "@/components/ui/ResponsiveTooltip";
 import ActionButton from "@/components/ui/button/ActionButton";
@@ -37,8 +37,6 @@ import { useTables } from "@/hooks/useTables";
 import TablesSkeleton from "@/app/(dashboard)/tables/loading";
 import { PaginatedTableResponse } from "@/types/tables";
 import { paginatedEmployeesResponse } from "@/types/employees";
-import { TableForm } from "@/lib/validation/tables-schema";
-import toast from "react-hot-toast";
 
 interface Props {
   initialTables: PaginatedTableResponse;

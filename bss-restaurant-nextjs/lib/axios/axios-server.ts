@@ -1,20 +1,9 @@
-import {
-  getAuthCookies,
-  setAuthCookies,
-  clearAuthCookies,
-} from "@/utils/auth-utils";
+import { logOut } from "@/actions/auth-actions";
+import { getAuthCookies, setAuthCookies } from "@/utils/auth-utils";
 import axios from "axios";
 
 export const serverApi = async () => {
-  const { accessToken, refreshToken, expiry } = await getAuthCookies();
-
-  const now = Date.now();
-  const isRefreshExpired = !expiry || now > Date.parse(expiry);
-
-  if (isRefreshExpired) {
-    await clearAuthCookies();
-    return axios.create({ baseURL: process.env.API_URL });
-  }
+  const { accessToken, refreshToken } = await getAuthCookies();
 
   const instance = axios.create({
     baseURL: process.env.API_URL,
@@ -49,7 +38,7 @@ export const serverApi = async () => {
             return instance(originalRequest);
           }
         } catch (refreshError) {
-          await clearAuthCookies();
+          await logOut();
           return Promise.reject(refreshError);
         }
       }

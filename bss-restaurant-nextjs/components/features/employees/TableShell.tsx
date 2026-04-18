@@ -39,7 +39,7 @@ import { EmployeesResponse, paginatedEmployeesResponse } from "@/types";
 import DeleteConfirmationModal from "@/components/ui/modal/DeleteConfirmationModal";
 import Modal from "@/components/ui/modal/Modal";
 import MainButton from "@/components/ui/button/MainButton";
-import { toBase64 } from "@/utils/to-base65";
+import { toBase64 } from "@/utils/to-base64";
 
 interface tableshellprops {
   initialData: paginatedEmployeesResponse;

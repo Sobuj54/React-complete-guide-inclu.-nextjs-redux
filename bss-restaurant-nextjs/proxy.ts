@@ -8,11 +8,12 @@ export async function proxy(request: NextRequest) {
   }
 
   const accessToken = request.cookies.get(COOKIE_KEYS.ACCESS)?.value;
-  const refreshToken = request.cookies.get(COOKIE_KEYS.REFRESH)?.value;
+  if (!accessToken) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   const expiry = request.cookies.get(COOKIE_KEYS.EXPIRY)?.value;
-
   const expiryTime = expiry ? Date.parse(expiry) : 0;
-
   const isTokenExpired = !expiryTime || Date.now() > expiryTime - 5000;
 
   if (isTokenExpired) {
@@ -23,11 +24,6 @@ export async function proxy(request: NextRequest) {
     res.cookies.delete(COOKIE_KEYS.EXPIRY);
 
     return res;
-  }
-
-  //  If no tokens at all → redirect early
-  if (!accessToken && !refreshToken) {
-    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();

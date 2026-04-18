@@ -72,7 +72,7 @@ The module follows a **decoupled hook-based architecture**, separating business 
     ```bash
     git clone https://github.com/Sobuj54/React-complete-guide-inclu.-nextjs-redux.git
     ```
-2.  Change into `bss-restaurant-nextjs` file:
+2.  Switch to `bss-restaurant-nextjs` directory:
     ```bash
     cd bss-restaurant-nextjs
     ```

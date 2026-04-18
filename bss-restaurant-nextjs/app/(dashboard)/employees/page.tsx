@@ -21,7 +21,6 @@ export default async function EmployeesPage({
 
   return (
     <main className="">
-      {/* pass data to client shell for interactivity */}
       <TableShell initialData={initialData} page={Page} perpage={PerPage} />
     </main>
   );

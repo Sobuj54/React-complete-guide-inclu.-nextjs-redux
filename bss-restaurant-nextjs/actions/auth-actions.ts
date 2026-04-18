@@ -2,7 +2,7 @@
 
 import { serverApi } from "@/lib/axios/axios-server";
 import { LoginFormFields, LoginResponse, User } from "@/types";
-import { clearAuthCookies, setAuthCookies } from "@/utils/auth-utils";
+import { setAuthCookies } from "@/utils/auth-utils";
 import { COOKIE_KEYS } from "@/utils/constants";
 import { handleAction } from "@/utils/handle-action";
 import axios from "axios";

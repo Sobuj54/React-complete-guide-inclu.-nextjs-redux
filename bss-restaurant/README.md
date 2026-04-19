@@ -7,6 +7,8 @@
 
 A high-performance Single Page Application (SPA) designed for real-time restaurant management. This version focuses on a highly interactive, client-side architecture, managing complex state and external .NET API communication with speed and precision.
 
+- **Live Demo:** [BSS Restaurnat](https://bss-resto.vercel.app/)
+
 ---
 
 ## Core Features
